@@ -8227,7 +8227,7 @@ __metadata:
     hmpo-components: "npm:2.6.5"
     ioredis: "npm:^5.8.2"
     joi: "npm:17.2.1"
-    js-base64: "npm:^3.7.5"
+    js-base64: "npm:^3.9.2"
     jsonwebtoken: "npm:^8.5.1"
     lab: "npm:18.0.2"
     lighthouse: "npm:^7.1.0"
@@ -19853,10 +19853,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-base64@npm:^3.7.5":
-  version: 3.7.8
-  resolution: "js-base64@npm:3.7.8"
-  checksum: b2d8b2f9c51fef4f09e2a6bf73b13bb89cac39543304abf24e179c5a1a3b016b88ebcdb2692bac23166e700c18bca2cc45c98d6e6e46d610e747ea95880844f5
+"js-base64@npm:^3.9.2":
+  version: 3.9.2
+  resolution: "js-base64@npm:3.9.2"
+  checksum: d1bbb6654d6ddcf86612e3ae152344189999382f8d3bbe0a0fb2e98f1870b66b60e104c030fed830f98c939069109be5f65a396e1511f4e8b1671afc9ef19972
   languageName: node
   linkType: hard
 

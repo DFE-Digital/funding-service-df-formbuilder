@@ -86,7 +86,7 @@
     "hmpo-components": "2.6.5",
     "ioredis": "^5.8.2",
     "joi": "17.2.1",
-    "js-base64": "^3.7.5",
+    "js-base64": "^3.9.2",
     "jsonwebtoken": "^8.5.1",
     "lighthouse": "^7.1.0",
     "lodash-es": "^4.17.21",
