@@ -1,0 +1,49 @@
+{% from "hint/macro.njk" import govukHint %}
+{% from "label/macro.njk" import govukLabel %}
+
+{% macro TableDataset(component) %}
+
+  {% set params = component.model %}
+  {{ govukLabel({
+    html: params.label.html,
+    text: params.label.text,
+    classes: params.label.classes,
+    isPageHeading: params.label.isPageHeading,
+    attributes: params.label.attributes,
+    for: params.id
+  }) | indent(2) | trim }}
+  {% if params.hint %}
+    {% set hintId = params.id + '-hint' %}
+    {% set describedBy = describedBy + ' ' + hintId if describedBy else 
+      hintId %}
+    {{ govukHint({
+      id: hintId,
+      classes: params.hint.classes,
+      attributes: params.hint.attributes,
+      html: params.hint.html,
+      text: params.hint.text
+      }) | indent(2) | trim 
+    }}
+  {% endif %}
+  {% if component.model.tableData %}
+    <table class="govuk-table">
+      <tbody class="govuk-table__body">
+        {% for items in component.model.tableData %}
+          <tr class="govuk-table__row">
+            {% for item in items %}
+
+              {% if item.bold %}
+                <th scope="row" class="govuk-table__header app-custom-class">{{ item.value }}</th>
+              {% else %}
+                <td class="govuk-table__cell">{{ item.value }}</td>
+              {% endif %}
+
+            {% endfor %}
+          </tr>
+        {% else %}
+          <li>Nothing to display</li>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endmacro %}

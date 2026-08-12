@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+  {%set formName = name if name else serviceName %}
+
+  {{ DFDialog({
+    title:'Are you sure?',
+    description: ("<span>Do you want to <span class='dialog-bold'>sign out</span> of the <span class='dialog-bold'>"+ formName +"</span> form? Your form details are saved for when you next sign in.") | safe,
+    redirect:'#',
+    type:'logout',
+    heading: ''
+  }) }} 
+  {{ DfgovukHeader({
+    homepageUrl: "https://gov.uk",
+    containerClasses: "govuk-width-container",
+    serviceName: name if name else serviceName,
+    serviceUrl: serviceStartPage,
+    navigation: navigation,
+    signOutHref : isAuthenticated
+  }) }}
+
+{% endblock %}
+
+{% block content %}
+{%set formName = name if name else serviceName %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h1 class="govuk-heading-xl">Cookies</h1>
+        <p class="govuk-body">Cookies are small files saved on your phone, tablet or computer when you visit a website.</p>
+        <p class="govuk-body">We use cookies to make {{ formName }} work and collect information about how you use our service.</p>
+
+        <h2 class="govuk-heading-l">Essential cookies</h2>
+        <p class="govuk-body">Essential cookies keep your information secure while you use {{ formName }}. We do not need to ask permission to use them.</p>
+        <table class="govuk-table cookies-table">
+            <thead>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="col">Name</th>
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="col">Purpose</th>
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="col">Expires</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">{{ formName }}_session</td>
+                    <td class="govuk-table__cell">Used to remember information you have entered into a form</td>
+                    <td class="govuk-table__cell">At the end of the session</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">crumb</td>
+                    <td class="govuk-table__cell">Helps us to prevent cross site scripting attacks</td>
+                    <td class="govuk-table__cell">At the end of the session</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">BNES_session</td>
+                    <td class="govuk-table__cell">Used to manage site security</td>
+                    <td class="govuk-table__cell">At the end of the session</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">BNIS___utm_is1</td>
+                    <td class="govuk-table__cell">Used to manage site security</td>
+                    <td class="govuk-table__cell">1 year</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">BNIS___utm_is2</td>
+                    <td class="govuk-table__cell">Used to manage site security</td>
+                    <td class="govuk-table__cell">3 hours</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">BNIS___utm_is3</td>
+                    <td class="govuk-table__cell">Used to manage site security</td>
+                    <td class="govuk-table__cell">At the end of the session</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">BNIS_vid</td>
+                    <td class="govuk-table__cell">Used to manage site security</td>
+                    <td class="govuk-table__cell">At the end of the session</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

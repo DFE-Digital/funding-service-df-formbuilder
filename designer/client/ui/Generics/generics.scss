@@ -1,0 +1,30 @@
+.generics-component-container {
+    display: inline-flex;
+    background-color: #ffffff;
+    padding: 7px 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.generics-color-green {
+    background-color: #CCE2D8;
+    color: #005A30;
+}
+.generics-color-red {
+    background-color: #F4CDC6;
+    color: #2A0B06;
+}
+.generics-color-light-green {
+    background-color: #D4ECEA;
+    color: #10403C !important;
+    div {
+        color: #10403C !important;
+    }
+}
+.generics-color-light-red {
+    background-color: #EFDFED;
+    color: #491644 !important;
+    div {
+        color: #491644 !important;
+    }
+}

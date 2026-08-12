@@ -1,0 +1,25 @@
+﻿variables:
+  SharedResourceGroupName: $(ResourcePrefix)rg-uks-df-shared
+  AppServiceResourceGroupName: $(ResourcePrefix)rg-uks-df-app-services
+  SharedKeyVaultName: $(ResourcePrefix)kv-df-shared
+  SharedVirtualNetworkName: $(ResourcePrefix)vnet-df-shared
+  SharedSubnetName: $(ResourcePrefix)subnet-df-shared
+  RunnerSubnetName: $(ResourcePrefix)subnet-df-runner
+  SharedRedisInstanceName: $(ResourcePrefix)rds-df-shared
+  SharedAppServicePlanName: $(ResourcePrefix)asp-df-shared
+  RunnerAppServicePlanName: $(ResourcePrefix)asp-df-runner
+  SharedAppInsightsName: $(ResourcePrefix)ai-df-shared
+  SharedLogAnalyticsName: $(ResourcePrefix)la-df-shared
+  DesignerAppServiceName: $(ResourcePrefix)as-df-designer
+  LiveRunnerAppServiceName: $(ResourcePrefix)as-df-runner
+  PreviewRunnerAppServiceName: $(ResourcePrefix)as-df-preview
+  # Tags
+  ServiceTag: "Funding and Allocations"
+  ServiceLineTag: "Funding"
+  ParentBusinessTag: "Funding and Allocations"
+  PortfolioTag: "Education And Skills Funding Agency"
+  ProductTag: "Funding Service - Digital Forms"
+  ServiceOfferingTag: "Digital Forms"
+
+  # Alerting
+  SharedActionGroup: $(ResourcePrefix)ag-shared

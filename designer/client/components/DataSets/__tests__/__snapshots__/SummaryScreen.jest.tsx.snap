@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Summary Screen snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="import-data-container"
+  >
+    <p
+      class="govuk-body govuk-!-margin-top-7 govuk-!-margin-top-6"
+    />
+    <table
+      class="govuk-table"
+    >
+      <thead
+        class="govuk-table__head"
+      >
+        <tr
+          class="govuk-table__row"
+        >
+          <th
+            class="govuk-table__header"
+            scope="col"
+          />
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+            label 1
+          </th>
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+            label 2
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="govuk-table__body"
+      >
+        <tr
+          class="govuk-table__row"
+        >
+          <td
+            class="govuk-table__cell govuk-!-padding-right-0 custom-radio-input"
+          >
+            <div
+              class="govuk-radios"
+              data-module="govuk-radios"
+            >
+              <div
+                class="govuk-radios__item"
+              >
+                <input
+                  class="govuk-radios__input"
+                  data-testid="data-set-radio-input"
+                  id="29ssmkx"
+                  name="29ssmkx"
+                  type="radio"
+                  value="29ssmkx"
+                />
+                <label
+                  class="govuk-label govuk-radios__label"
+                  for="29ssmkx"
+                />
+              </div>
+            </div>
+          </td>
+          <td
+            class="govuk-table__cell vertical-align"
+          >
+            <div
+              class="flex-ellipsis"
+            >
+              <div
+                class=""
+              >
+                Title 1
+              </div>
+            </div>
+          </td>
+          <td
+            class="govuk-table__cell vertical-align"
+          >
+            <div
+              class="flex-ellipsis"
+            >
+              <div
+                class=""
+              >
+                2022-08-01T14:56:46.442Z
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr
+          class="govuk-table__row"
+        >
+          <td
+            class="govuk-table__cell govuk-!-padding-right-0 custom-radio-input"
+          >
+            <div
+              class="govuk-radios"
+              data-module="govuk-radios"
+            >
+              <div
+                class="govuk-radios__item"
+              >
+                <input
+                  class="govuk-radios__input"
+                  data-testid="data-set-radio-input"
+                  id="45ssmkx"
+                  name="45ssmkx"
+                  type="radio"
+                  value="45ssmkx"
+                />
+                <label
+                  class="govuk-label govuk-radios__label"
+                  for="45ssmkx"
+                />
+              </div>
+            </div>
+          </td>
+          <td
+            class="govuk-table__cell vertical-align"
+          >
+            <div
+              class="flex-ellipsis"
+            >
+              <div
+                class=""
+              >
+                Title 2
+              </div>
+            </div>
+          </td>
+          <td
+            class="govuk-table__cell vertical-align"
+          >
+            <div
+              class="flex-ellipsis"
+            >
+              <div
+                class=""
+              >
+                2022-08-03T14:56:46.442Z
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      class="govuk-button-group"
+    >
+      <button
+        class="govuk-button govuk-!-margin-top-4"
+        data-testid="add-data-set"
+        id="add-data-set"
+        title="Add data set"
+        type="submit"
+      />
+      <button
+        class="govuk-button govuk-button--secondary govuk-!-margin-right-8"
+        data-testid="edit-data-set"
+        disabled=""
+        id="edit-data-set"
+        title="Edit data set"
+        type="submit"
+      />
+    </div>
+    <br />
+  </div>
+</DocumentFragment>
+`;

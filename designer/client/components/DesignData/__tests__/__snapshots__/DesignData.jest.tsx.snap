@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Design Data snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="import-data-container"
+  >
+    <p
+      class="govuk-body govuk-!-margin-top-7 govuk-!-margin-top-6"
+    >
+      Design or edit any pre-designed data set either by selecting the imported csv file or by manually manually entering custom data . This data set can be later used by different components in the form builder tool.
+    </p>
+    <table
+      class="govuk-table"
+    >
+      <thead
+        class="govuk-table__head"
+      >
+        <tr
+          class="govuk-table__row"
+        >
+          <th
+            class="govuk-table__header"
+            scope="col"
+          />
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+            Date set name
+          </th>
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+            Csv file used
+          </th>
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+            Designed on
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="govuk-table__body"
+      >
+        <tr>
+          <td
+            class="govuk-table__cell no-data-cell"
+            colspan="4"
+          >
+            No data set found
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      class="govuk-button-group"
+    >
+      <button
+        class="govuk-button govuk-!-margin-top-4"
+        data-testid="add-data-set"
+        id="add-data-set"
+        title="Add data set"
+        type="submit"
+      >
+        Design data set
+      </button>
+      <button
+        class="govuk-button govuk-button--secondary govuk-!-margin-right-8"
+        data-testid="edit-data-set"
+        disabled=""
+        id="edit-data-set"
+        title="Edit data set"
+        type="submit"
+      >
+        Edit data set
+      </button>
+    </div>
+    <br />
+  </div>
+</DocumentFragment>
+`;

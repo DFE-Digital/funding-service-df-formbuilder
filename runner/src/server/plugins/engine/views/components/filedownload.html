@@ -1,0 +1,72 @@
+
+{% from "hint/macro.njk" import govukHint %}
+{% from "label/macro.njk" import govukLabel %}
+
+{% macro Filedownload(component) %}
+
+{% set params = component.model %}
+{#- a record of other elements that we need to associate with the input using
+   aria-describedby – for example hints or error messages -#}
+{% set describedBy = params.describedBy if params.describedBy else "" %}
+
+<div class="govuk-form-group {%- if params.options.hideResult%} govuk-form-group-hidden{% endif %} {%- if params.errorMessage %} govuk-form-group--error{% endif %} {%- if params.formGroup.classes %} {{ params.formGroup.classes }}{% endif %}">
+{% if params.options.hideTitle %}
+{% else %}
+  {{ govukLabel({
+    html: params.label.html,
+    text: params.label.text,
+    classes: params.label.classes,
+    isPageHeading: params.label.isPageHeading,
+    attributes: params.label.attributes,
+    for: params.id
+  }) | indent(2) | trim }}
+{% endif %}
+  {% if params.hint %}
+    {% set hintId = params.id + '-hint' %}
+    {% set describedBy = describedBy + ' ' + hintId if describedBy else hintId %}
+    {{ govukHint({
+      id: hintId,
+      classes: params.hint.classes,
+      attributes: params.hint.attributes,
+      html: params.hint.html,
+      text: params.hint.text
+      }) | indent(2) | trim 
+    }}
+  {% endif %}
+  <div>
+  {% if params.attributes.accept.toLowerCase() == 'xls' or params.attributes.accept.toLowerCase() == 'xlsx' or params.attributes.accept.toLowerCase() == 'xlsm' or params.attributes.accept.toLowerCase() == 'csv' or params.attributes.accept.toLowerCase() == 'ods' %}
+    <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="50" height="50" fill="#F3F2F1"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M18 15C17.4478 15 17 15.4478 17 16V34C17 34.5522 17.4478 35 18 35H32C32.5522 35 33 34.5522 33 34V21H29C28.4478 21 28 20.5522 28 20V15H18ZM28.9387 23.0559C28.9766 23.0923 29 23.1433 29 23.2V29.8C29 29.9104 28.9104 30 28.8 30H28.3H28.2H25.3H24.7H21.8H21.7H21.2C21.0896 30 21 29.9104 21 29.8V23.2C21 23.175 21.0044 23.1514 21.0127 23.1294C21.0234 23.1013 21.04 23.0764 21.061 23.0562C21.0972 23.0212 21.146 23 21.2 23H21.7H21.8H24.7H25.3H28.2H28.3H28.8C28.8538 23 28.9026 23.0212 28.9387 23.0559ZM28 26V24H25.5V26H28ZM24.5 24V26H22V24H24.5ZM22 29V27H24.5V29H22ZM25.5 29V27H28V29H25.5Z" fill="#107C41"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M30 20H33L29 15V19C29 19.5523 29.4477 20 30 20Z" fill="#107C41"/>
+    </svg>
+  {% elif  params.attributes.accept.toLowerCase() == 'doc' or params.attributes.accept.toLowerCase() == 'docx' %}
+    <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="50" height="50" fill="#F3F2F1"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M30 20H33L29 15V19C29 19.5523 29.4477 20 30 20Z" fill="#185ABD"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M18 15C17.4478 15 17 15.4478 17 16V34C17 34.5522 17.4478 35 18 35H32C32.5522 35 33 34.5522 33 34V21H29C28.4478 21 28 20.5522 28 20V15H18ZM21 23.2C21 23.0896 21.0896 23 21.2 23H28.8C28.8208 23 28.8408 23.0032 28.8596 23.009C28.8748 23.0137 28.8889 23.0203 28.9023 23.0281C28.9258 23.0422 28.9463 23.0608 28.9624 23.083C28.9763 23.1023 28.9868 23.124 28.9932 23.1477C28.9976 23.1643 29 23.1819 29 23.2V23.8C29 23.9104 28.9104 24 28.8 24H21.2C21.0896 24 21 23.9104 21 23.8V23.2ZM21.2 25C21.0896 25 21 25.0896 21 25.2V25.8C21 25.8323 21.0076 25.8628 21.021 25.8896C21.0354 25.9182 21.0564 25.9429 21.0818 25.9614C21.115 25.9856 21.1558 26 21.2 26H28.8C28.9104 26 29 25.9104 29 25.8V25.2C29 25.1479 28.9802 25.1006 28.9478 25.0652C28.9111 25.0251 28.8584 25 28.8 25H21.2ZM21 27.2C21 27.0896 21.0896 27 21.2 27H28.8C28.9104 27 29 27.0896 29 27.2V27.8C29 27.9104 28.9104 28 28.8 28H21.2C21.0896 28 21 27.9104 21 27.8V27.2ZM21.2 29C21.0896 29 21 29.0896 21 29.2V29.8C21 29.8562 21.0232 29.9072 21.0605 29.9436C21.0967 29.9785 21.1458 30 21.2 30H28.8C28.9104 30 29 29.9104 29 29.8V29.2C29 29.114 28.9456 29.0405 28.8694 29.0125C28.8479 29.0044 28.8245 29 28.8 29H21.2Z" fill="#185ABD"/>
+    </svg>
+  {% elif  params.attributes.accept.toLowerCase() == 'pdf' %}
+    <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="50" height="50" fill="#F3F2F1"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M30 20H33L29 15V19C29 19.5523 29.4477 20 30 20Z" fill="#B71900"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M17 16C17 15.4477 17.4477 15 18 15H28V20C28 20.5523 28.4477 21 29 21H33V34C33 34.5523 32.5523 35 32 35H18C17.4477 35 17 34.5523 17 34V16ZM21.2 23C21.0895 23 21 23.0895 21 23.2V23.8C21 23.9105 21.0895 24 21.2 24H24.8C24.9105 24 25 23.9105 25 23.8V23.2C25 23.0895 24.9105 23 24.8 23H21.2ZM21 25.2C21 25.0895 21.0895 25 21.2 25H24.8C24.9105 25 25 25.0895 25 25.2V25.8C25 25.9105 24.9105 26 24.8 26H21.2C21.0895 26 21 25.9105 21 25.8V25.2ZM21.2 27C21.0895 27 21 27.0895 21 27.2V27.8C21 27.9105 21.0895 28 21.2 28H28.8C28.9105 28 29 27.9105 29 27.8V27.2C29 27.0895 28.9105 27 28.8 27H21.2ZM21 29.2C21 29.0895 21.0895 29 21.2 29H28.8C28.9105 29 29 29.0895 29 29.2V29.8C29 29.9105 28.9105 30 28.8 30H21.2C21.0895 30 21 29.9105 21 29.8V29.2ZM26.2 23C26.0895 23 26 23.0895 26 23.2V25.8C26 25.9105 26.0895 26 26.2 26H28.8C28.9105 26 29 25.9105 29 25.8V23.2C29 23.0895 28.9105 23 28.8 23H26.2Z" fill="#B71900"/>
+    </svg>
+  {% elif  params.attributes.accept.toLowerCase() == 'png' %}
+    <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="50" height="50" fill="#F3F2F1"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M18 15C17.4477 15 17 15.4477 17 16V34C17 34.5523 17.4477 35 18 35H32C32.5523 35 33 34.5523 33 34V21H29C28.4477 21 28 20.5523 28 20V15H18ZM22 23H21V24H22V25H21V26H22V27H21V28H22V29H21V30H22V29H23V30H24V29H25V30H26V29H27V30H28V29H29V28H28V27H29V26H28V25H29V24H28V23H27V24H26V23H25V24H24V23H23V24H22V23ZM23 25V24H24V25H23ZM23 26H22V25H23V26ZM24 26V25H25V26H24ZM24 27V26H23V27H22V28H23V29H24V28H25V29H26V28H27V29H28V28H27V27H28V26H27V25H28V24H27V25H26V24H25V25H26V26H25V27H24ZM26 27V28H25V27H26ZM26 27V26H27V27H26ZM24 27V28H23V27H24Z" fill="#B58840"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M30 20H33L29 15V19C29 19.5523 29.4477 20 30 20Z" fill="#B58840"/>
+    </svg>
+  {% elif  params.attributes.accept.toLowerCase() == 'jpg' or params.attributes.accept.toLowerCase() == 'jpeg' %}
+    <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="50" height="50" fill="#F3F2F1"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M18 15C17.4478 15 17 15.4478 17 16V34C17 34.5522 17.4478 35 18 35H32C32.5522 35 33 34.5522 33 34V21H29C28.4478 21 28 20.5522 28 20V15H18ZM28.8943 30H21.1504C21.0813 29.9771 21.042 29.9109 21.021 29.833C20.9951 29.7373 20.9973 29.624 21.0061 29.5537C21.551 27.4917 22.6799 23.3167 22.8337 23.1128C22.9875 22.9087 23.1543 23.0276 23.2185 23.1128C23.7476 24.6858 24.8442 27.8572 24.9983 27.9592C25.1521 28.0613 25.2869 28.0017 25.335 27.9592C25.6716 27.3215 26.3738 26.0208 26.4893 25.9187C26.5635 25.8533 26.6416 25.8542 26.7004 25.8748C26.7334 25.8862 26.7605 25.9036 26.7778 25.9187C27.4993 27.0452 28.9519 29.3496 28.9905 29.5537C29.0288 29.7576 28.9424 29.9363 28.8943 30ZM25.5 25C25.7761 25 26 24.7761 26 24.5C26 24.2239 25.7761 24 25.5 24C25.2239 24 25 24.2239 25 24.5C25 24.7761 25.2239 25 25.5 25Z" fill="#F47738"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M30 20H33L29 15V19C29 19.5523 29.4477 20 30 20Z" fill="#F47738"/>
+    </svg>
+
+  {% endif %}
+  <a class="govuk-link" href="javascript:;" data-path="{{params.value}}" data-title="{{params.label.text}}" data-name="{{params.name}}" onclick="onClickDownload(event)">{{params.attributes.title}}</a>
+</div>
+</div>
+{% endmacro %}

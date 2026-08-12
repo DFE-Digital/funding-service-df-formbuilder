@@ -1,0 +1,14 @@
+node_modules
+dist
+
+# Ignore all the following files:
+*.html
+*.config.js
+*.test.ts
+*.jest.ts
+*.test.tsx
+*.jest.tsx
+*.test.js
+*.json
+*.yml
+*.md

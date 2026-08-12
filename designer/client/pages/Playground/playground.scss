@@ -1,0 +1,11 @@
+.playground-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.component-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    border: 1px solid black;
+}

@@ -1,0 +1,21 @@
+.duplicate-legend-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.duplicate-text-container {
+    display: flex;
+    flex-direction: row;
+    .govuk-form-group {
+        flex-basis: 630px;
+    }
+    .legend-button-container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        .button-margin-bottom {
+            margin-bottom: 3px !important;
+        }
+    }
+}

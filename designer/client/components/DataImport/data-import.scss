@@ -1,0 +1,143 @@
+@import "../../styles/colors.scss";
+
+.data-import-container {
+    .column-table-bordered,
+    .column-schema-bordered {
+        border: #b1b4b6 1px solid;
+        padding: 20px;
+        border-radius: 3px;
+        margin-top: 5px;
+    }
+
+    .column-schema-bordered {
+        display: inline-block;
+        width: 96%;
+        margin: 5px;
+    }
+
+    .column-list {
+        left: 15px;
+        position: relative;
+    }
+
+    .additional-settings {
+        margin-top: 20px;
+    }
+
+    .edited-column {
+        width: 98%;
+        margin-right: 2%;
+    }
+
+    .handle-center {
+        margin-top: 73px !important;
+    }
+
+    .mt-20 {
+        margin-top: 20px;
+    }
+
+    .mt-10 {
+        margin-top: 10px;
+    }
+
+    .flex-container {
+        display: flex;
+    }
+
+    .fg-1 {
+        flex-grow: 1;
+    }
+
+    .fg-2 {
+        flex-grow: 2;
+    }
+
+    .inline {
+        display: inline;
+    }
+
+    .inline-block {
+        display: inline-block;
+    }
+
+    .separator {
+        color: #b1b4b6;
+        font-weight: 100;
+        margin: 0 5px;
+    }
+
+    .separator-big {
+        margin: 0 20px;
+    }
+
+    .delete-link {
+        color: #d4351c;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-left: 5px;
+    }
+
+    .edit-link {
+        font-weight: 700;
+        cursor: pointer;
+        color: #1d70b8;
+        margin-top: 10px;
+        margin-right: 5px;
+    }
+
+    .ellipsis {
+        width: 160px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+        top: 5px;
+    }
+
+    .small-width {
+        width: 2%;
+    }
+
+    .column-name-width {
+        width: 325px;
+    }
+
+    .column-name {
+        bottom: 6px;
+        position: relative;
+    }
+
+    .flex-container {
+        display: flex;
+    }
+
+    .date-schema-container,
+    .number-schema-container {
+        .govuk-form-group {
+            margin-bottom: 20px;
+        }
+    }
+
+    .hyperlink {
+        cursor: pointer;
+    }
+
+    .close-link {
+        font-size: 19px;
+        padding: 8px 30px;
+        color: #1d70b8;
+    }
+
+    .column-drag-handle {
+        display: inline-block;
+        cursor: pointer;
+        vertical-align: top;
+        margin-top: 103px;
+    }
+
+    .ml-40 {
+        margin-left: 50px;
+    }
+}

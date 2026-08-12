@@ -1,0 +1,28 @@
+.date-and-time-field {
+    .date-range-options {
+        .date-range-container {
+            display: flex !important;
+            align-items: flex-end !important;
+            gap: 1rem !important;
+            flex-wrap: wrap !important;
+        }
+
+        .date-group {
+            display: flex !important;
+            gap: 0.5rem !important;
+        }
+
+        .date-separator {
+            display: flex;
+            justify-content: center; /* horizontal centering */
+            align-items: center; /* vertical centering within itself */
+            align-self: center !important; /* <-- critical: overrides flex-end from parent */
+            padding: 0 10px;
+
+            .govuk-body {
+                line-height: 1; /* prevents typographic offset */
+                margin-bottom: 0;
+            }
+        }
+    }
+}

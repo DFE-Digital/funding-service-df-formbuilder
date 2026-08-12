@@ -1,0 +1,140 @@
+{% from "partials/summary-detail.html" import summaryDetail %}
+{% from "partials/summary-detail.html" import summaryDetailPrint %}
+{% from "components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "customMacros/loader/macro.njk" import DFLoader %}
+
+{% extends 'layout.html' %}
+{% block header %}
+  {%set formName = name if name else serviceName %}
+  {{ DFDialog({
+    title:'Are you sure?',
+    description: ("You’re about to  <span class='dialog-bold'>sign out</span> of the <span class='dialog-bold'>"+ formName +"</span> form? Your form details are saved for when you next sign in.") | safe,
+    redirect:'#',
+    type:'logout',
+    service: 'summary',
+    heading: ''
+  }) }}
+  {{ DfgovukHeader({
+    homepageUrl: "https://gov.uk",
+    containerClasses: "govuk-width-container",
+    serviceName: name if name else serviceName,
+    serviceUrl: serviceStartPage,
+    navigation: navigation,
+    signOutHref : isAuthenticated
+  }) }}
+  {{ DFLoader({
+    id: "",
+    value: 'Please wait, while the system is printing all the pages...'
+  }) }}
+
+{% endblock %}
+{% block content %}
+
+  <div class="govuk-main-wrapper">
+    {%set formName = name if name else serviceName %}
+    <div class="govuk-grid-row">
+      <div id="summaryprint" class="govuk-grid-column-two-thirds summary">
+        {% if declarationError %}
+          <div class="govuk-error-summary" data-module="govuk-error-summary">
+            <div role="alert">
+              <h2 class="govuk-error-summary__title">
+                There is a problem
+              </h2>
+              <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                  <li>
+                    <a href="#custom-message-error">{{declarationError}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        <h1 class="govuk-heading-xl">{{ pageTitle }}</h1>
+        <div class="govuk-warning-text">
+          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">Warning</span>
+            You must submit the form to register your response.
+          </strong>
+        </div>
+        {% for detail in details %}
+       
+          {{ summaryDetail(detail) }}
+        {% endfor %}
+        {% for page in pages %}
+        {{ summaryDetailPrint(page, formName, referenceNumber, currentTimeString, pdfPrintStatus, loop.index) }}
+        {% endfor %}
+        {% if fees and fees.details | length %}
+          <h2 class="govuk-heading-m">Fees</h2>
+          <ul class="govuk-list govuk-list--bullet">
+            {% for fee in fees.details %}
+              <li>{{ fee.description }}: £{{fee.amount / 100}}</li>
+            {% endfor %}
+          </ul>
+          <p class="govuk-body">Total cost: £{{fees.total / 100 }}</p>
+        {% endif %}
+
+        {% if not result.error %}
+          <form method="post" enctype="multipart/form-data" autocomplete="off" novalidate="novalidate" onsubmit="myButton.disabled = true; return true;">
+            <input type="hidden" name="crumb" value="{{crumb}}"/>
+
+            {%if declaration %}
+              <h2 class="govuk-heading-m" id="declaration">Declaration</h2>
+              <div class="govuk-form-group {{ 'govuk-form-group--error' if declarationError }}">
+                {% if declarationError %}
+                  <span id="custom-message-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                    {{declarationError}}
+                  </span>
+                {% endif %}
+                <div class="govuk-checkboxes">
+                  <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="declaration-1" name="declaration" type="checkbox" value="true">
+                    <label class="govuk-label govuk-checkboxes__label" for="declaration-1">
+                      {{ declaration | safe  }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+
+            {%if customSummaryMessage %}
+              <span class="govuk-caption-m">
+                  {{ customSummaryMessage | safe  }}
+              </span>
+              <div class="govuk-form-group {{ 'govuk-form-group--error' if customSummaryMessageError }}">
+                {% if customSummaryMessageError %}
+                  <span id="custom-message-error" class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span>
+                    {{customSummaryMessageError}}
+                  </span>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <div class="summary-btn-group">
+              <button name="myButton" type="submit" data-prevent-double-click="true" class="govuk-button" id="submit-form" data-module="govuk-button">
+                {% if fees and fees.details | length %}
+                  Submit and pay
+                {% else %}
+                  Submit
+                {% endif %} 
+              </button>
+              <button type="button" data-prevent-double-click="true" class="govuk-button govuk-button--secondary add-list null" id="pdf-download" data-module="govuk-button">
+                Save summary as PDF
+              </button>
+            </div>
+          </form>
+          <div type="hidden" class="reference-number">
+            <strong>{{reference}}</strong>
+          </div>
+          <dl class="govuk-summary-list-blank-print">
+             <dt></dt>
+             <dd></dd>
+          </dl>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% from "./summary-row.html" import summaryRow %}
+
+{% macro summaryDetail(data) %}
+    {%  set isRepeatableSection = (data.items[0] | isArray) %}
+    {% if not isRepeatableSection %}
+    <h2 class="govuk-heading-m subheader">{{data.title}}</h2>
+    {% endif %}
+  <dl class="govuk-summary-list print-pdf">
+    {% for item in data.items %}
+        {% if not hide %}
+        {%- if item | isArray %}
+            <h2 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-0">{{data.title}} {{ loop.index }}</h2>
+            {% for repeated in item %}
+                {{ summaryRow(repeated) }}
+            {% endfor %}
+        {% else %}
+          {{ summaryRow(item) }}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </dl>
+{% endmacro %}
+{% macro summaryDetailPrint(data, formName, referenceNumber, currentTimeString, pdfPrintStatus, index) %}
+    {%  set isRepeatableSection = (data.items[0] | isArray) %}
+    {% if not isRepeatableSection %}
+    <h2 class="govuk-heading-m subheader">{{data.title}}</h2>
+    {% endif %}
+  <div class="printed-summary-container">
+    <dl class="govuk-summary-list-print">
+      {% if index == 1 %}
+          <dl class="govuk-summary">
+            <div class="summary-header-hidden">
+              <div class="form-name-for-printing" id="pdf-print">{{formName}}</div>
+              <div class="reference-number-and-time">
+              <span class="govuk-body">Submission Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;
+                <b>{{ referenceNumber }}</b>
+              </span><span class="govuk-body">{{ currentTimeString }}</span>
+              </div>
+              <div class="govuk-body sub-status">Submission Status&nbsp;:&nbsp;&nbsp;&nbsp;<b>{{pdfPrintStatus}}</b>
+              </div>
+              <div class="msg-for-printing">
+                <span class="msg-symbol-1">
+                  <span class="msg-symbol-2">!</span>
+                </span>
+               <span class="msg-symbol-text">You must submit your online form before closing your browser window.</span> 
+              </div>
+            </div>
+          </dl>
+        {% endif %}
+      <dl class="govuk-summary-row-print">
+      {% for item in data.items %}
+          {% if not hide %}
+          {%- if item | isArray %}
+              <h2 class="govuk-heading-m govuk-!-margin-top-4 govuk-!-margin-bottom-0">{{data.title}} {{ loop.index }}</h2>
+              {% for repeated in item %}
+                  {{ summaryRow(repeated) }}
+              {% endfor %}
+          {% else %}
+            {{ summaryRow(item) }}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      </dl>
+    </dl>
+  </div>
+{% endmacro %}

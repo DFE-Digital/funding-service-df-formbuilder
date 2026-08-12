@@ -1,0 +1,86 @@
+.filter-ui-container {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    border: 1px solid #b1b4b6;
+
+    .filter-header {
+        display: flex;
+        flex-basis: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #b1b4b6;
+        padding: 20px;
+
+        a#filter-close-link {
+            color: #0b0c0c;
+            :visited {
+                color: #0b0c0c;
+            }
+        }
+    }
+
+    .selected-filter-container {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background-color: #f3f2f1;
+        .selected-filter-header {
+            display: flex;
+            justify-content: space-between;
+        }
+        .selected-filter-body {
+            display: flex;
+            flex-direction: column;
+            :last-child {
+                margin-bottom: 0 !important;
+            }
+            .selected-filter-options-container {
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+                .selected-filter-options {
+                    display: flex;
+                    background-color: #ffffff;
+                    padding: 7px 10px;
+                    gap: 10px;
+                    align-items: center;
+                    border: 1px solid #0b0c0c;
+                    .selected-filter-options-clear {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+
+    .modified-on-filter-input-container {
+        display: flex;
+        .till {
+            margin-bottom: 0 !important;
+            margin-top: 35px !important;
+            margin-right: 20px !important;
+        }
+    }
+
+    .created-by-checkboxes {
+        height: 14rem;
+        overflow-y: scroll;
+    }
+
+    .created-by-search-icon {
+        display: block;
+        position: relative;
+        top: 1.85rem;
+        left: 0.85rem;
+        stroke-width: 10;
+    }
+
+    .form-status-checkboxes {
+        max-width: calc(100% - 34px);
+    }
+}

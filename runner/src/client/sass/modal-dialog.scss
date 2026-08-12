@@ -1,0 +1,369 @@
+@import "../../../../node_modules/govuk-frontend/dist/govuk/base";
+@import "../../../../node_modules/govuk-frontend/dist/govuk/settings/all";
+@import "../../../../node_modules/govuk-frontend/dist/govuk/helpers/all";
+@import "../../../../node_modules/govuk-frontend/dist/govuk/core/typography";
+@import "../../../../node_modules/govuk-frontend/dist/govuk/components/button/button";
+
+.modal-dialog {
+    // Don't display modal if user doesn't have js. Can be overriden with .modal-dialog--no-js-persistent
+    display: none;
+
+    &--no-js-persistent {
+        display: inline-block;
+
+        .js-enabled & {
+            display: none;
+
+            &[open] {
+                display: inline-block;
+            }
+
+            .dialog-button {
+                display: inline-block;
+            }
+        }
+    }
+
+    .js-enabled &[open] {
+        display: inline-block;
+    }
+
+    &[open] {
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 90vh; //Don't make the dialog quite the viewport height
+        padding: 0;
+        margin-bottom: 0;
+        margin-top: 0;
+
+        // From https://github.com/GoogleChrome/dialog-polyfill to vertically center dialog
+        position: fixed;
+        top: 50% !important;
+        -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+
+        @include govuk-media-query($from: tablet) {
+            padding: 0;
+        }
+    }
+
+    &__inner {
+        padding: 20px;
+        @include govuk-media-query($from: tablet) {
+            padding: 30px;
+        }
+
+        .timer {
+            @extend %govuk-body-m;
+        }
+
+        &__text {
+            @extend .govuk-body-m;
+            margin-bottom: 20px;
+        }
+
+        &__button {
+            @extend .govuk-button;
+            font-size: 19px;
+        }
+
+        &__link {
+            @extend %govuk-body-m;
+            background: none;
+            border: none;
+            vertical-align: middle;
+            margin-top: 20px;
+
+            @include govuk-media-query($from: mobile) {
+                text-align: center;
+                display: block;
+                margin-top: 25px;
+            }
+
+            @include govuk-media-query($from: tablet) {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                padding: 0;
+                margin: 0 0 0 30px;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        &__block {
+            position: relative;
+        }
+    }
+
+    #dialog-title {
+        margin-top: 0;
+    }
+}
+
+// Stop background scrolling while dialog open.
+.dialog-is-open {
+    overflow: hidden;
+}
+
+// Modal dialog polyfill styles
+$dialog_backdrop_colour: rgba(0, 0, 0, 0.8);
+$dialog_border: 5px solid black;
+dialog {
+    left: 0;
+    right: 0;
+    width: -moz-fit-content;
+    width: -webkit-fit-content;
+    width: fit-content;
+    height: -moz-fit-content;
+    height: -webkit-fit-content;
+    height: fit-content;
+    margin: auto;
+    padding: 1em;
+    background: white;
+    color: black;
+    display: none;
+    border: $dialog_border;
+
+    & + .backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: $dialog_backdrop_colour;
+    }
+
+    &[open] {
+        display: block;
+        box-sizing: border-box;
+        margin: 0 auto;
+        padding: 15px;
+        width: 90%;
+        @include govuk-media-query($from: tablet) {
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 500px;
+        }
+
+        // Backdrop styles for browsers using polyfil
+        & + .backdrop {
+            background: $dialog_backdrop_colour;
+        }
+        // Backdrop styles for browsers with native support
+        // NB: keep these two backdrop styles separate - safari didn't work when combined
+        &::backdrop {
+            background: $dialog_backdrop_colour;
+        }
+    }
+}
+
+.tabular-numbers {
+    @extend .govuk-body-m;
+}
+.messagepop {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60%;
+    height: -moz-fit-content;
+    height: -webkit-fit-content;
+    height: fit-content;
+    margin: auto;
+    background: white;
+    color: black;
+    display: none;
+    z-index: 99 !important;
+    max-width: 650px;
+
+    .govuk-grid-column-full {
+        padding: 0 35px;
+    }
+}
+
+.mb-25 {
+    margin-bottom: 25px;
+}
+
+.pop_logo,
+.pop_logo_image {
+    background: transparent;
+    color: #000;
+    display: none;
+}
+
+.pop_logo_image {
+    height: 5rem;
+    padding: 0.6rem;
+}
+
+.dialog-close a {
+    color: #fff;
+}
+
+.warning-dialog-close a {
+    color: #fff;
+}
+
+.close-dialog-close a {
+    color: #fff;
+}
+
+.popup_image {
+    height: inherit;
+}
+
+.backdrop-logout {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+.backdrop-timeout-warnings {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+.backdrop-close {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+#dialog-description {
+    font-size: 1.1875em;
+    font-weight: 400;
+}
+
+#dialog-title {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.govuk-grid-column-full {
+    display: block;
+
+    .govuk-checkboxes__item {
+        margin-bottom: 40px;
+        margin-top: 25px;
+
+        .govuk-label {
+            font-size: 1.0175em;
+        }
+    }
+}
+
+.dialog-close-logout {
+    height: 22px;
+}
+
+#close-btn-dialog {
+    font-size: 1rem;
+    color: #1c1c1c;
+    
+    &:focus {
+        outline: 3px solid #fd0;
+        outline-offset: 0;
+    }
+}
+
+.hidden {
+    display: none;
+}
+.digital-forms-loader {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+}
+
+.loading--full-height {
+    align-items: center;
+    height: 100%;
+}
+
+.loading::after {
+    content: "";
+    width: 80px;
+    height: 80px;
+    border: 15px solid rgba(177, 180, 182, 0.5);
+    border-top-color: #1d70b8;
+    border-radius: 50%;
+    transform: rotate(0.16 turn);
+    animation: loading 1s linear infinite;
+}
+
+@keyframes loading {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+.loaderpopup {
+    position: absolute;
+    padding: 15px;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60%;
+    height: -moz-fit-content;
+    height: -webkit-fit-content;
+    height: fit-content;
+    margin: auto;
+    background: white;
+    color: black;
+    display: none;
+    z-index: 99 !important;
+    max-width: 602px;
+
+    .govuk-grid-column-full {
+        padding: 0 35px;
+    }
+}
+
+/* Screen reader only class - hides content visually but keeps it available for assistive technologies */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

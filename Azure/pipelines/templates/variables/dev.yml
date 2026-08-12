@@ -1,0 +1,50 @@
+﻿variables:
+  ResourcePrefix: s255d01
+  AzureSubscription: "51199e9b-8fa9-4269-825e-fa5d7cc2b857"
+  DeploymentServicePrincipal: "4e8b466b-fc87-4c57-8ce1-c393a726f348"
+  NodeEnvironmentAppSetting: development
+  fetchFromRedis: false
+  ENABLE_DEBUGGING: false
+  NODE_ENV: dev
+
+  runnerPerfTest: false
+  DesignerPROVIDER_CHUNK_SIZE: 900
+
+
+  LiveDfeSignInAuthUrl: https://test-oidc.signin.education.gov.uk/auth
+  LiveDfeSignInTokenUrl: https://test-oidc.signin.education.gov.uk/token
+  LiveDfeSignInApiUrl: https://test-api.signin.education.gov.uk
+  LiveDfeSignOutUrl: https://test-oidc.signin.education.gov.uk/session/end
+
+  PreviewDfeSignInAuthUrl: https://test-oidc.signin.education.gov.uk/auth
+  PreviewDfeSignInTokenUrl: https://test-oidc.signin.education.gov.uk/token
+  PreviewDfeSignInApiUrl: https://test-api.signin.education.gov.uk
+  PreviewDfeSignOutUrl: https://test-oidc.signin.education.gov.uk/session/end
+
+  # Runner set up - app environment for UAT - can we remove this???  it gets set to UAT for the prod preview runner.
+  LiveRunnerAppEnvironment: dev
+  PreviewRunnerAppEnvironment: dev
+
+  # Custom Domain Set-up
+  EnableCustomDomain: false
+  CertificatesToLoad: s255d01kv-df-shared-test-digital-forms-education-gov-uk,uat-dev-exp2025
+
+  DesignerCustomDomain: dev.designer.digital-forms.education.gov.uk
+  DesignerCertThumbprint: A1140EF44034D8BF444DD02C3A55836A69B6C0F2
+  LiveRunnerCustomDomain: dev.digital-forms.education.gov.uk
+  LiveRunnerCertThumbprint: A1140EF44034D8BF444DD02C3A55836A69B6C0F2
+  PreviewRunnerCustomDomain: uat.dev.digital-forms.education.gov.uk
+  PreviewRunnerCertThumbprint: F0C2F1FCDBC225A7AB416F43C917DF27DF00D42F
+
+  # Enterprise APIM set up:
+  DocCaptureApiUrl:  https://pp-api.education.gov.uk/document-capture-dev/2/
+  FileshifterApiUrl: https://pp-api.education.gov.uk/document-capture-file-shifter-dev/2/api/Dc_Fileshifter
+
+
+  # Tags
+  EnvironmentTag: Dev
+
+  # WAF
+  ## sets both designer and runner
+  isAPIM: true
+  payloadSize: 209715200

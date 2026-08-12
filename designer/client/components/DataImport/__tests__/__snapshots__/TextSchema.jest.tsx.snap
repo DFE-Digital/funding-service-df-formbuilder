@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Text Schema snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="field-schema-max"
+      >
+        Max length
+      </label>
+      <span
+        class="govuk-hint"
+      >
+        Specifies the maximum number of characters users can enter
+      </span>
+      <input
+        class="govuk-input govuk-input--width-3"
+        data-cast="number"
+        data-testid="field-schema-max"
+        id="field-schema-max"
+        name="maxLength"
+        type="number"
+        value="6"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

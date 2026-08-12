@@ -1,0 +1,77 @@
+{% set mainClasses = "govuk-main-wrapper--l" %}
+{% set skipTimeoutWarning = true %}
+{% from "panel/macro.njk" import govukPanel %}
+{% extends 'layout.html' %}
+{% from "partials/components.html" import componentList %}
+
+{% block header %}
+  {%set formName = name if name else serviceName %}
+
+  {{ DFDialog({
+    title:'Are you sure?',
+    description: ("<span>Do you want to <span class='dialog-bold'>sign out</span> of the <span class='dialog-bold'>"+ formName +"</span> form? Your form details are saved for when you next sign in.") | safe,
+    redirect:'#',
+    type:'logout',
+    heading: ''
+  }) }} 
+  {{ DfgovukHeader({
+    homepageUrl: "https://gov.uk",
+    containerClasses: "govuk-width-container",
+    serviceName: name if name else serviceName,
+    serviceUrl: serviceStartPage,
+    navigation: navigation,
+    signOutHref : isAuthenticated
+  }) }}
+
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "Beta"
+    },
+    html: 'This is a new service. Help us improve it and <a class="govuk-link" href=' + feedbackLink + ' target="_blank"  rel="noreferrer noopener">give your feedback (opens in new tab)</a>.'
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    {% set tmpl = 'Your reference number<br><strong>' + reference + '</strong>' if reference else '' %}
+    {% if not customText %}
+      {{ govukPanel({
+        titleText: "Submission complete",
+        html: tmpl
+      }) }}
+
+      <p class="govuk-body">{{confirmationMsg | safe}}</p>
+      {% if paymentSkipped %}
+        <p class="govuk-body">
+          Someone will be in touch to make a payment.
+        </p>
+      {% endif %}
+    {% else %}
+      {{ govukPanel({
+        titleText: customText.title,
+        html: tmpl
+      }) }}
+
+      <p class="govuk-body">{{confirmationMsg | safe}}</p>
+      {% if paymentSkipped and customText.paymentSkipped %}
+        <p class="govuk-body">
+          {{ customText.paymentSkipped }}
+        </p>
+      {% else %}
+        {% if customText.nextSteps %}
+          <p class="govuk-body">
+            {{ customText.nextSteps }}
+          </p>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+    {{ componentList(components) }}
+    </div>
+  </div>
+{% endblock %}

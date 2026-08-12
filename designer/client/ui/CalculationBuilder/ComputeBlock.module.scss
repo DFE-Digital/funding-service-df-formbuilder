@@ -1,0 +1,53 @@
+.computeBlockContainer {
+  background: #fff;
+  border: 2px solid #B1B4B6;
+  border-radius: 4px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.lowerComputeBlock {
+  padding: 15px;
+  background-color: #F3F2F1;
+  .secondary-text {
+    color: #505A5F;
+  }
+}
+
+.upperComputeBlock {
+    border-bottom: 1px solid #B1B4B6;
+    padding-left: 10px;
+    padding-bottom: 0;
+}
+
+.legendSection {
+  display: flex;
+  height: 29px;
+  overflow-y: hidden;
+  align-items: center;
+  gap: 10px;
+}
+
+.computeArea {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+  background-color: #F3F2F1;
+  border-radius: 8px;
+  // min-height: 400px;
+  // height: 500px;
+  padding: 15px;
+  overflow-y: auto;
+  gap: 1rem;
+  overflow: visible;
+  z-index: 1;
+  flex: 1;
+  // > div {
+  //   height: 34px;
+  // }
+}

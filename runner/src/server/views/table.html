@@ -1,0 +1,19 @@
+  {% if tableData %}
+    <table class="govuk-table custom-table">
+      <tbody class="govuk-table__body">
+        {% for items in tableData %}
+          <tr class="govuk-table__row">
+            {% for item in items %}
+              {% if item.bold %}
+                <th scope="row" class="govuk-table__header app-custom-class">{{ item.value }}</th>
+              {% else %}
+                <td class="govuk-table__cell">{{ item.value }}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% else %}
+          <li>Nothing to display</li>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}

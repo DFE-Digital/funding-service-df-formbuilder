@@ -1,0 +1,60 @@
+.govuk-table {
+    height: fit-content;
+    .govuk-table__head,
+    .govuk-table__body {
+        .govuk-table__row {
+            height: 100%;
+            .govuk-table__header {
+                .table-header-sort {
+                    display: flex !important;
+                    gap: 5px;
+                    user-select: none;
+                    cursor: pointer;
+                    .sort-container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 3px;
+                        margin-left: 10px;
+                    }
+                }
+            }
+            .govuk-table__cell {
+                .table-cell {
+                    width: 100%;
+                    height: 100%;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    margin: 0;
+                    padding-top: 0.5rem;
+                }
+                .govuk-radios__label {
+                    padding: 0;
+                }
+            }
+            .parent {
+                background-color: #f3f2f1;
+            }
+            .child {
+                background-color: #d2e2f1;
+            }
+        }
+    }
+}
+
+.calc-table {
+    table-layout: fixed;
+    .govuk-table__head,
+    .govuk-table__body {
+        .govuk-table__row {
+            .govuk-table__cell {
+                .table-cell {
+                    white-space: normal;
+                    overflow-wrap: anywhere;
+                }
+            }
+        }
+    }
+}

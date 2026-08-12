@@ -1,0 +1,167 @@
+.new-config {
+    display: flex;
+    flex-direction: column;
+    max-width: 960px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px 30px 200px;
+
+    .choice-wrapper {
+        margin-top: 70px;
+    }
+
+    .govuk-fieldset__heading {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .govuk-heading-xl__lowmargin {
+        margin-bottom: 15px;
+    }
+
+    .back-link {
+        margin-bottom: 40px;
+    }
+
+    .table__cell__noborder {
+        border-bottom: none;
+    }
+    .form-grid {
+        margin-top: 30px;
+    }
+}
+
+.govuk-formname-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 158px;
+    display: inline-block;
+}
+
+.govuk-copy-text {
+    // position: relative;
+    // top: 1px;
+    position: absolute;
+}
+
+.govuk-formname {
+    display: inline-block;
+}
+
+.button-group-gap {
+    gap: 30px;
+}
+
+.flex-vertical-center {
+    display: flex;
+    align-items: center;
+}
+
+input[type="file"] {
+    // color: transparent;
+    display: none;
+}
+
+.custom-file-input {
+    position: relative;
+    font-family: "Inter", sans-serif;
+    font-size: 1.1875rem;
+    line-height: 1.3157894737;
+
+    .file-input {
+        color: transparent !important;
+    }
+
+    .dummy-file-upload {
+        position: absolute;
+        left: 8px;
+        top: 7px;
+        border-radius: 3px;
+        font-weight: 400;
+        color: #0b0c0c;
+        margin: 0;
+        margin-left: -5px;
+        padding: 1px 6px;
+        background-color: #f0f0f0;
+        border: 1px solid black;
+        cursor: pointer;
+    }
+
+    .dummy-file-name {
+        position: absolute;
+        left: 115px;
+        top: 7px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 80%;
+        display: inline-block;
+    }
+}
+
+.change-access-type-modal {
+    width: 602px;
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .close-link {
+            cursor: pointer;
+        }
+    }
+}
+
+@media only screen and (min-height: 800px) {
+    .new-config {
+        padding-bottom: 200px;
+    }
+}
+
+.modal {
+    .modal-close {
+        a.close {
+            color: #0b0c0c;
+            text-decoration: underline;
+            position: absolute;
+            top: 54px;
+            right: 28px;
+        }
+        a.close:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.group-container {
+    
+    .form-group__container {
+        width: 75%;
+    }
+
+    .child-form-container {
+        border: #B1B4B6 solid 1px;
+        padding: 20px;
+    }
+
+    .mb-30 {
+        margin-bottom: 30px;
+    }
+
+    .mt-30 {
+        margin-top: 30px;
+    }
+
+    .govuk-heading-s{
+        margin-bottom: 5px;
+    }
+
+    .govuk-table__cell {
+        vertical-align: middle;
+    }
+}
+
+
+

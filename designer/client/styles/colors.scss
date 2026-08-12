@@ -1,0 +1,9 @@
+@import "../../../node_modules/govuk-frontend/dist/govuk/helpers/colour";
+
+.govuk-primary-text-color {
+    color: govuk-colour("black");
+}
+
+.govuk-secondary-text-color {
+    color: govuk-colour("dark-grey") !important;
+}

@@ -1,0 +1,14 @@
+.document-container {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+}
+
+.document-upload {
+    display: block;
+}
+
+.error-banner {
+    background-color: #d4351c !important;
+    border: 5px solid #d4351c !important;
+}

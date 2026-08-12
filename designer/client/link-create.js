@@ -1,0 +1,184 @@
+import React, { useState, useContext } from "react";
+import SelectConditions from "./conditions/SelectConditions";
+import { clone } from "@xgovformbuilder/model";
+import classNames from "classnames";
+
+import ErrorSummary from "./error-summary";
+import { DataContext } from "./context";
+import { i18n } from "./i18n";
+import { addLink } from "./data/page";
+import logger from "../client/plugins/logger";
+
+const LinkCreate = ({ onCreate }) => {
+    const { data, save } = useContext(DataContext);
+    const [state, setState] = useState({
+        from: "",
+        to: "",
+        selectedCondition: null,
+        errors: {},
+    });
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const { from, to, selectedCondition } = state;
+        const hasValidationErrors = validate();
+        if (hasValidationErrors) return;
+
+        const copy = { ...data };
+        const { error, ...updatedData } = addLink(
+            copy,
+            from,
+            to,
+            selectedCondition
+        );
+        error && logger.error("LinkCreate", error);
+        const savedData = await save(updatedData);
+        onCreate({ data: savedData });
+    };
+
+    const conditionSelected = (selectedCondition) => {
+        setState((prev) => ({
+            ...prev,
+            selectedCondition,
+        }));
+    };
+
+    const storeValue = (e, key) => {
+        const input = e.target;
+        setState((prev) => ({
+            ...prev,
+            [key]: input.value,
+        }));
+    };
+
+    const validate = () => {
+        const { from, to } = state;
+        let errors = {};
+        if (!from) {
+            errors.from = { href: "#link-source", children: "Enter from" };
+        }
+        if (!to) {
+            errors.to = { href: "#link-target", children: "Enter to" };
+        }
+        setState((prev) => ({
+            ...prev,
+            errors,
+        }));
+        return !from || !to;
+    };
+
+    const { pages } = data;
+    const { from, errors } = state;
+    const hasValidationErrors = Object.keys(errors).length > 0;
+
+    return (
+        <>
+            {hasValidationErrors && (
+                <ErrorSummary errorList={Object.values(errors)} />
+            )}
+            <div className="govuk-hint">{i18n("addLink.hint1")}</div>
+            <div className="govuk-hint">{i18n("addLink.hint2")}</div>
+            <form onSubmit={onSubmit} autoComplete="off">
+                <div
+                    className={classNames({
+                        "govuk-form-group": true,
+                        "govuk-form-group--error": errors?.from,
+                    })}
+                >
+                    <label
+                        className="govuk-label govuk-label--s"
+                        htmlFor="link-source"
+                    >
+                        From
+                    </label>
+                    {errors?.from && (
+                        <p className="govuk-error-message">
+                            <span className="govuk-visually-hidden">
+                                Error:
+                            </span>{" "}
+                            {errors?.from.children ?? ""}
+                        </p>
+                    )}
+                    <select
+                        className={classNames({
+                            "govuk-select": true,
+                            "govuk-input--error": errors?.from,
+                        })}
+                        id="link-source"
+                        data-testid="link-source"
+                        name="path"
+                        onChange={(e) => storeValue(e, "from")}
+                    >
+                        <option />
+                        {pages.map((page) => (
+                            <option
+                                key={page.path}
+                                value={page.path}
+                                data-testid="link-source-option"
+                            >
+                                {page.title}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div
+                    className={classNames({
+                        "govuk-form-group": true,
+                        "govuk-form-group--error": errors?.to,
+                    })}
+                >
+                    <label
+                        className="govuk-label govuk-label--s"
+                        htmlFor="link-target"
+                    >
+                        To
+                    </label>
+                    {errors?.to && (
+                        <p className="govuk-error-message">
+                            <span className="govuk-visually-hidden">
+                                Error:
+                            </span>{" "}
+                            {errors?.to.children ?? ""}
+                        </p>
+                    )}
+                    <select
+                        className={classNames({
+                            "govuk-select": true,
+                            "govuk-input--error": errors?.to,
+                        })}
+                        id="link-target"
+                        data-testid="link-target"
+                        name="page"
+                        onChange={(e) => storeValue(e, "to")}
+                    >
+                        <option />
+                        {pages.map((page) => (
+                            <option
+                                key={page.path}
+                                value={page.path}
+                                data-testid="link-target-option"
+                            >
+                                {page.title}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {from && from.trim() !== "" && (
+                    <SelectConditions
+                        path={from}
+                        conditionsChange={conditionSelected}
+                        noFieldsHintText={i18n("addLink.noFieldsAvailable")}
+                    />
+                )}
+
+                <button className="govuk-button" type="submit">
+                    Save
+                </button>
+            </form>
+        </>
+    );
+};
+
+export default LinkCreate;

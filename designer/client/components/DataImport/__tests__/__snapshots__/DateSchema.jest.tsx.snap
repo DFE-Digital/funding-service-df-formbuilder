@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Date Schema snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="mt-20 date-schema-container"
+  >
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="field-options-maxDaysInPast"
+      >
+        Max days in the past
+      </label>
+      <span
+        class="govuk-hint"
+      >
+        Determines the earliest date users can enter
+      </span>
+      <input
+        class="govuk-input govuk-input--width-3"
+        data-cast="number"
+        data-testid="field-options-max-days-in-past"
+        id="field-options-maxDaysInPast"
+        name="maxDaysInPast"
+        type="number"
+        value="2"
+      />
+    </div>
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="field-options-maxDaysInFuture"
+      >
+        Max days in the future
+      </label>
+      <span
+        class="govuk-hint"
+      >
+        Determines the latest date users can enter
+      </span>
+      <input
+        class="govuk-input govuk-input--width-3"
+        data-cast="number"
+        data-testid="field-options-max-days-in-future"
+        id="field-options-maxDaysInFuture"
+        name="maxDaysInFuture"
+        type="number"
+        value="3"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

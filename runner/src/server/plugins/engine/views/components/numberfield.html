@@ -1,0 +1,50 @@
+{% from "input/macro.njk" import govukInput %}
+{% from "hint/macro.njk" import govukHint %}
+{% from "label/macro.njk" import govukLabel %}
+
+{% macro NumberField(component) %}
+  {% set params = component.model %}
+    {% if params.options.hideTitle %}
+{% else %}
+  {{ govukLabel({
+    html: params.label.html,
+    text: params.label.text,
+    classes: params.label.classes,
+    isPageHeading: params.label.isPageHeading,
+    attributes: params.label.attributes,
+    for: params.id
+  }) | indent(2) | trim }}
+  {% endif %}
+  {% if params.hint %}
+    {% set hintId = params.id + '-hint' %}
+    {% set describedBy = describedBy + ' ' + hintId if describedBy else 
+      hintId %}
+    {{ govukHint({
+      id: hintId,
+      classes: params.hint.classes,
+      attributes: params.hint.attributes,
+      html: params.hint.html,
+      text: params.hint.text
+      }) | indent(2) | trim 
+    }}
+  {% endif %}
+<div class="govuk-form-group {%- if component.model.errorMessage %} govuk-form-group--error{% endif %}">
+  <p class="{%- if component.model.errorMessage %} govuk-error-message {% endif %}"><span class="govuk-visually-hidden">{{component.model.errorMessage.text}}</span>{{component.model.errorMessage.text}}</p>
+  <div class="govuk-input__wrapper">
+    {% if component.model.prefixValue %}
+    <div class="govuk-input__prefix" aria-hidden="true">{{component.model.prefixValue}}</div>
+    {% endif %}
+    {% if component.model.prefixType === 'select-prefix' %}
+    
+      <input class="currency-component-{{component.model.id}} govuk-input govuk-input--width-20 {%- if component.model.classes %}  {{ component.model.classes }} {% endif %}" id="{{component.model.id}}" name="{{component.model.name}}" value="{{component.model.value}}" type="text" step="{{component.model.attributes.step}}" inputmode="numeric" {% if component.model.precision >= 0 %} pattern="^-?[0-9]{0,1}([,])?[0-9]{0,3}([,])?[0-9]{0,3}([,])?[0-9]{1,3}(\.[0-9]{0,{{component.model.precision}}})?$" title="{{component.model.patternErrorMsg}}" {% endif %}>
+    {% else %}
+    
+      <input class="govuk-input govuk-input--width-20 {%- if component.model.classes %}  {{ component.model.classes }} {% endif %}" id="{{component.model.id}}" name="{{component.model.name}}" type="number"  value="{{component.model.value}}" step="{{component.model.attributes.step}}" inputmode="numeric">
+    {% endif %}
+    
+    {% if component.model.suffixValue %}
+    <div class="govuk-input__suffix" aria-hidden="true">{{component.model.suffixValue}}</div>
+    {% endif %}
+  </div>
+</div>
+{% endmacro %}

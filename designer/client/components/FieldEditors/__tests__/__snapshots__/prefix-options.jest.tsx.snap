@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Prefix options snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="govuk-radios__conditional"
+  >
+    <fieldset
+      aria-describedby="changed-name-hint"
+      class="govuk-fieldset"
+    >
+      <div
+        class="govuk-radios"
+        data-module="govuk-radios"
+      >
+        <div
+          class="govuk-radios__item"
+        >
+          <input
+            class="govuk-radios__input"
+            id="select-prefix"
+            name="select-prefix"
+            type="radio"
+            value="select-prefix"
+          />
+          <label
+            class="govuk-label govuk-label--s govuk-radios__label"
+            for="select-prefix"
+          >
+            Select a prefix as currency
+          </label>
+        </div>
+        <div
+          class="govuk-radios__item"
+        >
+          <input
+            class="govuk-radios__input"
+            id="custom-prefix"
+            name="custom-prefix"
+            type="radio"
+            value="custom-prefix"
+          />
+          <label
+            class="govuk-label govuk-label--s govuk-radios__label"
+            for="custom-prefix"
+          >
+            Enter custom prefix
+          </label>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</DocumentFragment>
+`;

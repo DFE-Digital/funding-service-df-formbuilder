@@ -1,0 +1,15 @@
+.tag-component-container {
+    display: inline-flex;
+    background-color: #ffffff;
+    padding: 7px 10px;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #0b0c0c;
+    .tag-component-clear {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+}

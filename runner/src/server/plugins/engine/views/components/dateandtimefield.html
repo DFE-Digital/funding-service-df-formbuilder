@@ -1,0 +1,122 @@
+{# components/datetime-input/macro.njk #}
+
+{% macro DateAndTimeField(component) %}
+
+  {# --- Split the date items (day/month/year/hour/minute) from the radio group --- #}
+  {% set dateItems = [] %}
+  {% set radioItem = null %}
+
+  {% for item in component.model.items %}
+    {% if item.items %}
+      {% set radioItem = item %}
+    {% else %}
+      {% set dateItems = dateItems.concat([item]) %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="govuk-form-group{% if component.model.errorMessage %} govuk-form-group--error{% endif %}">
+
+    <fieldset class="govuk-fieldset" role="group"
+              aria-describedby="{{ component.model.id }}-hint{% if component.model.errorMessage %} {{ component.model.id }}-error{% endif %}">
+
+      {# --- Legend / Label --- #}
+      {% if component.model.fieldset and component.model.fieldset.legend %}
+        <legend class="govuk-fieldset__legend {{ component.model.fieldset.legend.classes | default('') }}">
+          {{ component.model.fieldset.legend.text }}
+        </legend>
+      {% endif %}
+
+      {# --- Hint Text --- #}
+      {% if component.model.hint %}
+        <div id="{{ component.model.id }}-hint" class="govuk-hint">
+          {{ component.model.hint.html or component.model.hint.text }}
+        </div>
+      {% endif %}
+
+      {# --- Top-Level Error Message --- #}
+      {% if component.model.errorMessage %}
+        <p id="{{ component.model.id }}-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> {{ component.model.errorMessage.text }}
+        </p>
+      {% endif %}
+
+      {# --- The date input container --- #}
+      <div class="govuk-date-input" id="{{ component.model.id }}">
+
+        {# --- Render the standard date/time items --- #}
+        {% for f in dateItems %}
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+
+              <label class="govuk-label govuk-date-input__label" for="{{ f.id }}">
+                {{ f.label }}
+              </label>
+
+              <input
+                class="govuk-input govuk-date-input__input {{ f.classes | default('') }}"
+                id="{{ f.id }}"
+                name="{{ f.name }}"
+                type="{{ f.type or 'text' }}"
+                inputmode="numeric"
+                {% if f.value is defined and f.value != undefined %}
+                  value="{{ f.value }}"
+                {% endif %}
+                {% if f.attributes %}
+                  {% for k, v in f.attributes %} {{ k }}="{{ v }}"{% endfor %}
+                {% endif %}
+              >
+
+            </div>
+          </div>
+        {% endfor %}
+
+        {# --- Render the AM/PM radios as another inline 'date-input item' --- #}
+        {% if radioItem %}
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group{% if radioItem.errorMessage %} govuk-form-group--error{% endif %}">
+
+              <label class="govuk-label govuk-date-input__label" id="{{ radioItem.id }}-label">
+                {{ radioItem.label or radioItem.fieldset.legend.text }}
+              </label>
+
+              <!-- {% if radioItem.errorMessage %}
+                <p class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span>
+                  {{ radioItem.errorMessage.text }}
+                </p>
+              {% endif %} -->
+
+              <div class="govuk-radios govuk-radios--inline" role="radiogroup"
+                   aria-labelledby="{{ radioItem.id }}-label">
+
+                {% for opt in radioItem.items %}
+                  <div class="govuk-radios__item">
+
+                    <input
+                      class="govuk-radios__input"
+                      id="{{ radioItem.id }}-{{ loop.index }}"
+                      name="{{ radioItem.name }}"
+                      type="radio"
+                      value="{{ opt.value }}"
+                      {% if opt.checked %}checked{% endif %}
+                    >
+
+                    <label class="govuk-label govuk-radios__label"
+                           for="{{ radioItem.id }}-{{ loop.index }}">
+                      {{ opt.text }}
+                    </label>
+
+                  </div>
+                {% endfor %}
+              </div>
+
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+
+    </fieldset>
+  </div>
+
+{% endmacro %}

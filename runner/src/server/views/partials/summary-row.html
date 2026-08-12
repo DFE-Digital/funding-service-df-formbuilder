@@ -1,0 +1,50 @@
+{% macro summaryRow(item) %}
+ {% if item.subTitle != "" and item.subTitleNum == 0 %}
+<h2 class="govuk-subTitle">{{item.subTitle}}</h2>
+{% endif %}
+{% if item.type != 'Filedownload' %}
+<div class="govuk-summary-list__row {% if item.options.hideResult %} govuk-form-group-hidden {% endif %} {% if item.options.hideResultOnSummary %} govuk-form-group-hidden {% endif %} {% if item.type == 'Result' and (not item.value and item.value != 0) %} govuk-form-group-hidden {% endif %}">
+    <dt class="govuk-summary-list__key print-pdf">
+        {{item.label}}
+    </dt>
+    <dd class="govuk-summary-list__value pdf-print">
+        {% if item.value %}
+        
+            {% if (item.type == 'FileUploadField') or (item.type == 'DataImport') or (item.type == 'UkAddressField')  %}
+                {{item.value.split('/') | last}}
+            {% else %}
+                {% if (item.type == "Result") or (item.type == "NumberField") %}
+                    {{ item.options.prefixValue }} {{item.displayValue}} {{ item.options.suffixValue }}
+                {% else %}
+                    {{item.value}}
+                {% endif %}
+            {% endif %}
+        {% else %}
+            {% if item.type == "Result" and item.value == 0 %}
+                {{ item.options.prefixValue }} {{item.displayValue}} {{ item.options.suffixValue }}
+            {% else %}
+                Not supplied
+            {% endif %}
+        {% endif %}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+        {% if item.type != "Result" and item.type != "DSIAccess" %}
+        <a class="govuk-link" href="{{item.url}}">
+            Change<span class="govuk-visually-hidden"> {{item.label}}</span>
+        </a>
+        {% endif %}
+    </dd>
+</div>
+ {% if item.type == "DSIAccess" and item.organizationName %}
+ <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key print-pdf">
+        Provider Name
+    </dt>
+    <dd class="govuk-summary-list__value pdf-print">
+        {{ item.organizationName }}
+    </dd>
+    <dd class="govuk-summary-list__actions"></dd>
+</div>
+{% endif %}
+{% endif %}
+{% endmacro %}

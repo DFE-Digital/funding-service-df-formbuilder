@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% block header %}
+{%set formName = name if name else serviceName %}
+
+{{ DFDialog({
+title:'Are you sure?',
+description: ("<span>Do you want to <span class='dialog-bold'>sign out</span> of the <span class='dialog-bold'>"+
+    formName +"</span> form? Please complete and save any details before signing out or your work may not be saved.") |
+  safe,
+  redirect:'#',
+  type:'logout',
+  heading: ''
+  }) }}
+  {{ DfgovukHeader({
+  homepageUrl: "https://gov.uk",
+  containerClasses: "govuk-width-container",
+  serviceName: name if name else serviceName,
+  serviceUrl: serviceStartPage,
+  navigation: navigation,
+  signOutHref : isAuthenticated
+  }) }}
+
+  {% endblock %}
+  {% block content %}
+  <div class="govuk-width-container">
+    <div class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        {% if not displayProviderTable %}
+        <div class="govuk-grid-column-two-thirds">
+          <h1 class="govuk-heading-xl">{{message}}</h1>
+          <p class="govuk-body"> <a href="https://customerhelpportal.education.gov.uk/">Contact us if you need more
+              information.</a></p>
+        </div>
+        {% endif %}
+        {% if displayProviderTable %}
+        <div class="govuk-body govuk-grid-column-two-thirds">
+          <h1 class="govuk-heading-xl">{{message}}</h1>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key print-pdf">
+            Provider Name
+          </dt>
+          <dd class="govuk-summary-list__value pdf-print">
+            {{ orgName }}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key print-pdf">
+            UKPRN
+          </dt>
+          <dd class="govuk-summary-list__value pdf-print">
+            {{ orgUKPRN }}
+          </dd>
+        </div>
+          <br />
+          <div class="govuk-body">
+            If the provider's UKPRN has changed recently, try again using the previous UKPRN.<br/><br/>
+            If you still think this is wrong, <a href="https://customerhelpportal.education.gov.uk/" target="_blank"  rel="noreferrer noopener">visit the DfE
+              Customer Help Portal (opens in a new tab)</a>.
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock %}

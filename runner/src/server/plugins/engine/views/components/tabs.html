@@ -1,0 +1,101 @@
+{% from "hint/macro.njk" import govukHint %}
+{% from "label/macro.njk" import govukLabel %}
+
+{% macro Tabs(component) %}
+
+  {% set params = component.model %}
+  {% if params.options.hideTitle %}
+{% else %}
+  {{ govukLabel({
+    html: params.label.html,
+    text: params.label.text,
+    classes: params.label.classes,
+    isPageHeading: params.label.isPageHeading,
+    attributes: params.label.attributes,
+    for: params.id
+  }) | indent(2) | trim }}
+    {% endif %}
+  {% if params.hint %}
+
+    {% set hintId = params.id + '-hint' %}
+    {% set describedBy = describedBy + ' ' + hintId if describedBy else hintId %}
+    {{ govukHint({
+      id: hintId,
+      classes: params.hint.classes,
+      attributes: params.hint.attributes,
+      html: params.hint.html,
+      text: params.hint.text
+      }) | indent(2) | trim 
+    }}
+  {% endif %}
+  {% if component.model %}
+  
+  <div class="govuk-tabs" data-module="govuk-tabs">
+    <h2 class="govuk-tabs__title">
+      {{component.model.label.text}}
+    </h2>
+    
+    <ul class="govuk-tabs__list">
+      {% for items in component.model.tabData %}
+      <li
+        {% if items.designedDataSet %}
+          data-file-id="{{ items.designedDataSet.csvUsed }}"
+          data-table-id="{{ items.designedDataSet.id }}"
+        {% endif %}
+        class="govuk-tabs__list-item{% if loop.first %} govuk-tabs__list-item--selected{% endif %}">
+        <a class="govuk-tabs__tab" href="#{{ items.href }}">
+          {{ items.tabLabel }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% for items in component.model.tabData %}
+  <div class="govuk-tabs__panel" id="{{ items.href }}">
+    <h2 class="govuk-heading-l">{{ items.tabHeader }}</h2>
+    {% if items.type === "paragraph_text" %}
+      <p class="govuk-body">{{ items.value | safe }}</p>
+    {% elif items.designedDataSet %}
+      {# If this is the first tab and initialTable has been prepared, show that (cached/constructed) table #}
+      {% if loop.first and component.model.initialTable %}
+        <table class="govuk-table custom-table">
+          <tbody class="govuk-table__body">
+          {% for rows in component.model.initialTable %}
+            <tr class="govuk-table__row">
+              {% for item in rows %}
+                {% if item.bold %}
+                  <th scope="row" class="govuk-table__header app-custom-class">{{ item.value }}</th>
+                {% else %}
+                  <td class="govuk-table__cell">{{ item.value }}</td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        {# Render designedDataSet.data if available #}
+        {% if items.designedDataSet.data %}
+          <table class="govuk-table custom-table">
+            <tbody class="govuk-table__body">
+            {% for rows in items.designedDataSet.data %}
+              <tr class="govuk-table__row">
+                {% for item in rows %}
+                  {% if item.bold %}
+                    <th scope="row" class="govuk-table__header app-custom-class">{{ item.value }}</th>
+                  {% else %}
+                    <td class="govuk-table__cell">{{ item.value }}</td>
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endmacro %}

@@ -1,0 +1,26 @@
+﻿parameters:
+- name: AzureSubscription
+  type: string
+  default: 's255d.azdo.deployment'
+- name: TargetResourceGroup
+  type: string
+  default: s255d01rg-uks-tpltest01
+- name: ArmTemplateRootDirectory
+  type: string
+  default: '$(System.DefaultWorkingDirectory)\ARMTemplates'
+
+steps:
+- task: AzurePowerShell@5
+  displayName: 'Test ARM templates'
+  inputs:
+    azureSubscription: '${{ parameters.AzureSubscription }}'
+    scriptType: filePath
+    scriptPath: '$(System.DefaultWorkingDirectory)/Azure/scripts/Test-ArmTemplate.ps1'
+    scriptArguments: -ResourceGroup '${{ parameters.TargetResourceGroup }}' -BaseDirectory '${{ parameters.ArmTemplateRootDirectory }}' -Verbose
+    azurePowerShellVersion: LatestVersion
+
+- task: PublishPipelineArtifact@1
+  displayName: Publish Pipeline Artifact
+  inputs:
+    artifactName: 'DigitalForms.ArmTemplates.AppServices'
+    targetPath: '$(System.DefaultWorkingDirectory)/Azure/templates/'

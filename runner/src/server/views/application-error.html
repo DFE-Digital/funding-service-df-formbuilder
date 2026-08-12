@@ -1,0 +1,42 @@
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends 'layout.html' %}
+{% block header %}
+  {%set formName = name if name else serviceName %}
+
+  {{ DFDialog({
+    title:'Are you sure?',
+    description: ("<span>Do you want to <span class='dialog-bold'>sign out</span> of the <span class='dialog-bold'>"+ formName +"</span> form? Please complete and save any details before signing out or your work may not be saved.") | safe,
+    redirect:'#',
+    type:'logout',
+    heading: ''
+  }) }} 
+  {{ DfgovukHeader({
+    homepageUrl: "https://gov.uk",
+    containerClasses: "govuk-width-container",
+    serviceName: name if name else serviceName,
+    serviceUrl: serviceStartPage,
+    navigation: navigation,
+    signOutHref : isAuthenticated
+  }) }}
+
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    {% set tmpl = 'There was a problem with your application' %}
+
+      {{ govukErrorSummary({
+        titleText: tmpl,
+        errorList: [
+          {
+            text: "There was an error processing your application"
+          }
+        ]
+      }) }}
+
+      <p class="govuk-body"> <a href="https://customerhelpportal.education.gov.uk/">Contact us if you need more information.</a></p>
+
+    </div>
+  </div>
+{% endblock %}

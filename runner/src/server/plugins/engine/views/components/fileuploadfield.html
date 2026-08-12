@@ -1,0 +1,109 @@
+{% from "file-upload/macro.njk" import govukFileUpload %}
+{% from "customMacros/loader/macro.njk" import DFLoader %}
+{% macro FileUploadField(component) %}
+{% from "hint/macro.njk" import govukHint %}
+{% from "label/macro.njk" import govukLabel %}
+
+{% set params = component.model %}
+{#- a record of other elements that we need to associate with the input using
+aria-describedby – for example hints or error messages -#}
+{% set describedBy = params.describedBy if params.describedBy else "" %}
+<div
+  class="govuk-form-group {%- if params.options.hideResult%} govuk-form-group-hidden{% endif %} {%- if params.errorMessage %} govuk-form-group--error{% endif %} {%- if params.formGroup.classes %} {{ params.formGroup.classes }}{% endif %}">
+  {{ govukLabel({
+  html: params.label.html,
+  text: params.label.text,
+  classes: params.label.classes,
+  isPageHeading: params.label.isPageHeading,
+  attributes: params.label.attributes,
+  for: params.id
+  }) | indent(2) | trim }}
+  {% if params.hint %}
+  {% set hintId = params.id + '-hint' %}
+  {% set describedBy = describedBy + ' ' + hintId if describedBy else hintId %}
+  {{ govukHint({
+  id: hintId,
+  classes: params.hint.classes,
+  attributes: params.hint.attributes,
+  html: params.hint.html,
+  text: params.hint.text
+  }) | indent(2) | trim
+  }}
+  {% endif %}
+  {{ govukFileUpload(
+  {
+  id:params.id+'_file',
+  attributes:params.attributes,
+  errorMessage: params.errorMessage
+  }) }}
+
+</div>
+<input type="hidden" value="{{params.value}}" name="{{params.name}}" id="{{params.id}}">
+{% if params.timeout %}
+<input type="hidden" value="{{params.timeout}}" id="timeout">
+{% endif %}
+{{ DFLoader({
+id: params.id
+}) }}
+<input type="hidden" id="filextensionerror" name="filextensionerror" value="default value" />
+<input type="hidden" id="filesizeerror_{{params.id}}" name="filesizeerror_{{params.id}}" value="default" />
+<input type="hidden" id="filenameerror_{{params.id}}" name="filenameerror_{{params.id}}" value="default" />
+<input type="hidden" id="filebandwidtherror_{{params.id}}" name="filebandwidtherror_{{params.id}}" value="default" />
+{% if params.value %}
+<div class="govuk-notification-banner summary-file-exists" role="region"
+  aria-labelledby="govuk-notification-banner-title" id="{{params.id}}" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+      Important
+    </h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">
+      You have already provided this file.
+    </p>
+    <p class="govuk-heading-s">{{params.value.split('/') | last}}</p>
+    <p class="govuk-body">If you want to upload a new file to this, it will overwrite the existing one.</p>
+  </div>
+</div>
+
+{% endif %}
+<div class="govuk-notification-banner govuk-notification-banner--success upload-dialog" id="{{params.id}}" role="region"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Success</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your file was successfully selected and scanned</p>
+  </div>
+</div>
+<div class="govuk-notification-banner show-error" role="region" id="{{params.id}}"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Error</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your selected file contains a virus.</p>
+    <p>Contact us using the
+      <a target="_blank" rel="noreferrer noopener"
+        href="https://customerhelpportal.education.gov.uk/">
+        Department for Education (DfE) enquiry form</a>
+      if you think there is a problem.
+    </p>
+  </div>
+</div>
+<div class="govuk-notification-banner service-down" role="region" id="{{params.id}}"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+      Important
+    </h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">
+      Network timed out.
+    </p>
+    <p>The network timed out before your upload could be completed. Please try again.
+    </p>
+  </div>
+</div>
+{% endmacro %}

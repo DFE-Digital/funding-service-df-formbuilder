@@ -1,0 +1,178 @@
+.wrapper {
+    position: relative;
+
+  &.withHandle {
+    .block {
+      /* make room for the drag handle on the left */
+      padding-left: 16px;
+    }
+  }
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+     &.active {
+    .block {
+      background-image: none !important;
+      background-color: rgba(230, 230, 230);
+    }
+  }
+
+  &.clone {
+    .block {
+      transform: translate3d(10px, 10px, 0) scale(1.025);
+      animation: pop 150ms cubic-bezier(0.18, 0.67, 0.6, 1.22);
+      box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
+        0 1px 6px 0 rgba(34, 33, 81, 0.3);
+      cursor: grabbing;
+    }
+  }
+
+  &:not(.active, .clone) {
+    &.insertBefore,
+    &.insertAfter {
+      .block:after {
+        content: '';
+        position: absolute;
+        background-color: #4c9ffe;
+      }
+    }
+  }
+    &.insertBefore,
+    &.insertAfter {
+        .block:after {
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        }
+    }
+    &.insertBefore {
+        &.clone {
+        margin-left: -75px;
+        }
+        .block:after {
+        left: -9px;
+        }
+    }
+    &.insertAfter {
+        &.clone {
+        margin-left: 75px;
+        }
+        .block:after {
+        right: -9px;
+        }
+    }
+}
+
+.block {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(250, 255, 255);
+  background-size: cover;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(63, 63, 68, 0.05),
+    0 1px 3px 0 rgba(34, 33, 81, 0.15);
+  outline: none;
+  appearance: none;
+  border: none;
+  touch-action: none;
+  cursor: grab;
+  z-index: 1; /* ensure handle can sit above */
+  pointer-events: auto;
+
+  &:focus-visible:not(.active &) {
+    box-shadow: 0 0 0 2px #4c9ffe;
+  }
+}
+
+.component {
+  display: block;
+  width: fit-content;
+  height: 100%;
+}
+
+.operator {
+  display: block;
+  height: 100% !important;
+  width: 30px !important;
+  /* target the operator block */
+  cursor: default !important; /* show arrow on hover */
+  &:focus,
+  &:focus-visible {
+    cursor: text !important; /* show caret when input is focused (e.g. after double-click) */
+  }
+}
+
+.calculation {
+    display: block;
+    width: fit-content;
+    height: 100%;
+}
+
+.number {
+    display: block;
+    width: fit-content !important;
+    height: 100% !important;
+    /* target the operator block */
+    cursor: default !important; /* show arrow on hover */
+    &:focus,
+    &:focus-visible {
+        cursor: text !important; /* show caret when input is focused (e.g. after double-click) */
+    }
+}
+
+@keyframes pop {
+  0% {
+    transform: translate3d(0px, 0px, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(10px, 10px, 0) scale(1.025);
+  }
+}
+
+/* ensure inputs do not override grabbing cursor while pointer is down */
+.wrapper:active input,
+.wrapper.active input,
+.wrapper.clone input {
+  cursor: grabbing !important;
+}
+.margin10 {
+  margin: 10px 0;
+}
+.tooltip {
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  text-align: left;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 19px;
+  position: absolute;
+  z-index: 10;
+  bottom: 120%;      // above the item
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  z-index: 999;
+  // height: 150px;
+  width: 630px;
+}
+.tooltipRow {
+  display: grid;
+  grid-template-columns: 75px 10px 1fr;
+  align-items: start;
+}
+.tooltipRow span:nth-child(3) {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}

@@ -1,0 +1,234 @@
+{% extends "template.njk" %}
+
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "skip-link/macro.njk" import govukSkipLink -%}
+{% from "customMacros/header/macro.njk" import DfgovukHeader%}
+{% from "customMacros/footer/macro.njk" import DFgovukFooter %}
+{% from "customMacros/modal-dialog/macro.njk" import DFDialog %}
+{% from "customMacros/loader/macro.njk" import DFLoader %}
+{% set htmlClasses = htmlClasses + ' govuk-template--rebranded' %}
+{% block head %}
+  <!--[if !IE 8]><!-->
+  <link href="{{ assetPath }}/stylesheets/application.css" rel="stylesheet"/>
+  <link rel="govuk-crown icon" sizes="16x16 32x32 48x48" href="{{ assetPath }}/favicon.ico" type="image/x-icon">
+
+  <!--<![endif]-->
+
+  {# For Internet Explorer 8, you need to compile specific stylesheet #}
+  {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
+  <!--[if IE 8]> <link href="/govuk-frontend/all-ie8.css" rel="stylesheet" /> <![endif]-->
+
+  {# For older browsers to allow them to recognise HTML5 elements such as `<header>` #}
+  <!--[if lt IE 9]> <script src="/html5-shiv/html5shiv.js"></script> <![endif]-->
+
+  {% if gtmId1 %}
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer'
+            ? '&l=' + l
+            : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f
+          .parentNode
+          .insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', '{{ gtmId1 }}');
+    </script>
+    <!-- End Google Tag Manager -->
+  {% endif %}
+
+  {% if gtmId2 %}
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer'
+            ? '&l=' + l
+            : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f
+          .parentNode
+          .insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', '{{ gtmId2 }}');
+    </script>
+    <!-- End Google Tag Manager -->
+  {% endif %}
+
+  <!-- Matomo -->
+  {% if matomoUrl and matomoId %}
+    <script type="text/javascript">
+      var _paq = window._paq || [];
+      _paq.push(['disableCookies']);
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function () {
+        var u = "{{ matomoUrl }}/piwik/";
+        _paq.push([
+          'setTrackerUrl', u + 'piwik.php'
+        ]);
+        _paq.push(['setSiteId', '{{ matomoId }}']);
+        var d = document,
+          g = d.createElement('script'),
+          s = d.getElementsByTagName('script')[0];
+        g.type = 'text/javascript';
+        g.async = true;
+        g.defer = true;
+        g.src = u + 'piwik.js';
+        s
+          .parentNode
+          .insertBefore(g, s);
+      })();
+    </script>
+    <noscript>
+      <p><img src="{{ matomoUrl }}/piwik/piwik.php?idsite={{ matomoId }}&amp;rec=1" style="border:0;" alt=""/></p>
+    </noscript>
+  {% endif %}
+  <!-- End Matomo Code -->
+
+  <script src="{{ assetPath }}/accessible-autocomplete.min.js"></script>
+{% endblock %}
+
+{% block pageTitle %}
+  {{ pageTitle }}
+{% endblock %}
+
+{% block skipLink %}
+  {{ govukSkipLink({
+    href: '#main-content',
+    text: 'Skip to main content'
+  }) }}
+{% endblock %}
+
+{% block header %}
+  {%set formName = name if name else serviceName %}
+
+  {{ DFDialog({
+    title:'Are you sure?',
+    description: ("<span>Do you want to <span class='dialog-bold'>sign out</span> of the <span class='dialog-bold'>"+ formName +"</span> form? Please complete and save any details before signing out or your work may not be saved.") | safe,
+    redirect:'#',
+    type:'logout',
+    heading: ''
+  }) }}
+    {{ DfgovukHeader({
+    homepageUrl: "https://gov.uk",
+    containerClasses: "govuk-width-container",
+    serviceName: name if name else serviceName,
+    serviceUrl: serviceStartPage,
+    navigation: navigation,
+    useTudorCrown: true,
+    signOutHref : isAuthenticated,
+    loadTesting: loadTesting
+  }) }}
+
+{% endblock %}
+
+{% block bodyStart %}
+
+  {% if gtmId1 %}
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id={{ gtmId1 }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+  {% endif %}
+
+  {% if gtmId2 %}
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id={{ gtmId2 }}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+  {% endif %}
+{% endblock %}
+
+{% block beforeContent %}
+  {% if phaseTag %}
+    {% if feedbackLink %}
+      {{ govukPhaseBanner({
+                tag: {
+                    text: phaseTag
+                },
+                html: 'This is a new service. Help us improve it and <a class="govuk-link" href=' + feedbackLink + ' target="_blank"  rel="noreferrer noopener">give your feedback (opens in new tab)</a>.'
+            }) }}
+    {% else %}
+      {{ govukPhaseBanner({
+                tag: {
+                    text: phaseTag
+                }
+            }) }}
+    {% endif %}
+  {% endif %}
+  {% if backLink %}
+    {{ govukBackLink({
+            href: backLink,
+            text: "Back"
+        }) }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-xl">Default page template</h1>
+{% endblock %}
+
+{% block bodyEnd %}
+  {% include "partials/modal-dialog.html" %}
+  <script src="{{ assetPath }}/jquery-3.7.1.min.js"></script>
+  <script src="{{ assetPath }}/axios.min.js"></script>
+  <script src="{{ assetPath }}/object-from-entries-polyfill.js"></script>
+  <script src="{{ assetPath }}/math.min.js"></script>
+  <script src="{{ assetPath }}/govuk-template.js"></script>
+  <script src="{{ assetPath }}/dialog-polyfill.0.4.3.js"></script>
+  <script src="{{ assetPath }}/modal-dialog.js"></script>
+  <script src="{{ assetPath }}/result-render.js"></script>
+  <script src="{{ assetPath }}/file-upload.js"></script>
+  {% if runnerTimeoutSeconds is defined and runnerTimeoutSeconds != "" %}
+    <input type="hidden" id="runner-timeout-seconds" value="{{ runnerTimeoutSeconds }}" />
+  {% endif %}
+  <script src="{{ assetPath }}/file-upload.js"></script>
+  <script src="{{ assetPath }}/dialog-logout.js"></script>
+  <script src="{{ assetPath }}/es6-promise.auto.min.js"></script>
+  <script src="{{ assetPath }}/jspdf.umd.min.js"></script>
+  <script src="{{ assetPath }}/html2canvas.min.js"></script>
+  <script src="{{ assetPath }}/html2pdf.min.js"></script>
+  <script src="{{ assetPath }}/pdf-creator.js"></script>
+  <script src="{{ assetPath }}/filedownload.js"></script>
+  <script src="{{ assetPath }}/select-field-on-change.js"></script>
+  <script src="{{ assetPath }}/add-table-on-tab.js"></script>
+  <script src="{{ assetPath }}/currency-format.js"></script>
+  <script type="module" src="{{ assetPath }}/govuk-frontend.min.js"></script>
+
+  <script type="module">
+    import * as GOVUKFrontend from '{{ assetPath }}/govuk-frontend.min.js'
+
+    $(document).ready(function () {
+      GOVUKFrontend.initAll(){% if not skipTimeoutWarning %}
+        GOVUKFrontend.modalDialog.containerSelector = '#main-content'
+        GOVUKFrontend.modalDialog.idleMinutesBeforeTimeOut = Number('{{ (sessionTimeout / 60000) - 1 }}') - GOVUKFrontend
+          .modalDialog
+          .minutesTimeOutModalVisible
+          GOVUKFrontend
+          .modalDialog
+          .init()
+        {% endif %}
+      });
+  </script>
+
+  {% if BROWSER_REFRESH_URL %}
+    <script src="{{ BROWSER_REFRESH_URL }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block footer %}
+<div type="hidden" id="email-socket-event" name="email-socket-event">{{email}}</div>
+<div type="hidden" id="email-type" name="email-type">{{outputType[0].type}}</div>
+<div type="hidden" id="check-link-to-file" name="check-link-to-file">{{linkToFile}}</div>
+
+{{ DFgovukFooter({ item1: accessibilityLink, item2: cookiesLink, item3: privacyLink }) }}
+
+{% endblock %}

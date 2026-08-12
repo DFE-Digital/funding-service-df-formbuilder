@@ -1,0 +1,51 @@
+﻿variables:
+  ResourcePrefix: s255p01
+  AzureSubscription: "5c6c1684-e39d-4947-8b76-72aaa5e082ab"
+  DeploymentServicePrincipal: "45fdcc7e-f354-45b7-bfc5-6490e41d1772"
+  NodeEnvironmentAppSetting: production
+  fetchFromRedis: true
+  ENABLE_DEBUGGING: false
+  NODE_ENV: production
+
+  runnerPerfTest: false
+  DesignerPROVIDER_CHUNK_SIZE: 900
+
+  LiveDfeSignInAuthUrl: https://oidc.signin.education.gov.uk/auth
+  LiveDfeSignInTokenUrl: https://oidc.signin.education.gov.uk/token
+  LiveDfeSignInApiUrl: https://api.signin.education.gov.uk
+  LiveDfeSignOutUrl: https://oidc.signin.education.gov.uk/session/end
+
+  PreviewDfeSignInAuthUrl: https://pp-oidc.signin.education.gov.uk/auth
+  PreviewDfeSignInTokenUrl: https://pp-oidc.signin.education.gov.uk/token
+  PreviewDfeSignInApiUrl: https://pp-api.signin.education.gov.uk
+  PreviewDfeSignOutUrl: https://pp-oidc.signin.education.gov.uk/session/end
+
+  # Runner set up
+  LiveRunnerAppEnvironment: production
+  PreviewRunnerAppEnvironment: uat
+
+  # Custom Domain Set-up
+  EnableCustomDomain: false
+  CertificatesToLoad: s255p01kv-df-shared-digital-forms-education-gov-uk
+
+  DesignerCustomDomain: designer.digital-forms.education.gov.uk
+  DesignerCertThumbprint: ffab25c7f14a522bb1fb03c0c7b04f7e8da57e06
+  LiveRunnerCustomDomain: digital-forms.education.gov.uk
+  LiveRunnerCertThumbprint: ffab25c7f14a522bb1fb03c0c7b04f7e8da57e06
+  PreviewRunnerCustomDomain: uat.digital-forms.education.gov.uk
+  PreviewRunnerCertThumbprint: ffab25c7f14a522bb1fb03c0c7b04f7e8da57e06
+
+  # Enterprise APIM set up:
+  DocCaptureApiUrl: https://api.education.gov.uk/document-capture/2/
+  FileshifterApiUrl:  https://api.education.gov.uk/document-capture-file-shifter/2/api/Dc_Fileshifter
+
+  # Tags
+  EnvironmentTag: Prod
+
+  # Overrides:
+  PreviewRunnerAppServiceName: s255p02as-df-runner
+
+  # WAF
+  ## sets both designer and runner
+  isAPIM: true
+  payloadSize: 209715200

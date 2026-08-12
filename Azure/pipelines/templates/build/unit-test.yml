@@ -1,0 +1,57 @@
+﻿parameters:
+- name: AppsUnderTest
+  type: object
+  default:
+  - designer
+  - runner
+  - model
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+
+- task: Bash@3
+  displayName: Install dependencies
+  inputs:
+    targetType: inline
+    script: yarn install
+
+- task: Bash@3
+  displayName: Check existing forms
+  inputs:
+    targetType: inline
+    script: yarn runner check-forms
+
+- task: Bash@3
+  displayName: Build dependencies
+  inputs:
+    targetType: inline
+    script: yarn build:dependencies
+
+
+- ${{ each app in parameters.AppsUnderTest }}:
+  - task: Bash@3
+    displayName: Lint ${{ app }}
+    inputs:
+      targetType: inline
+      script: yarn ${{ app }} lint
+  
+
+  - task: Bash@3
+    displayName: Test ${{ app }}
+    inputs:
+      targetType: inline
+      script: yarn ${{ app }} test-cov
+
+  - task: PublishPipelineArtifact@1
+    condition: succeededOrFailed()
+    inputs:
+      targetPath: ${{ app}}/test-coverage
+      artifactName: ${{ app }}.Test.Coverage
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: '**/test-results/junit/unit-test.xml'

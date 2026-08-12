@@ -1,0 +1,243 @@
+{% from "file-upload/macro.njk" import govukFileUpload %}
+{% from "button/macro.njk" import govukButton %}
+{% from "customMacros/loader/macro.njk" import DFLoader %}
+{% from "hint/macro.njk" import govukHint %}
+{% from "label/macro.njk" import govukLabel %}
+{% from "warning-text/macro.njk" import govukWarningText %}
+
+{% macro DataImport(component) %}
+  {% set params = component.model %}
+  {{ govukLabel({
+    html: params.label.html,
+    text: params.label.text,
+    classes: params.label.classes,
+    isPageHeading: params.label.isPageHeading,
+    attributes: params.label.attributes,
+    for: params.id
+  }) | indent(2) | trim }}
+  {% if params.hint %}
+    {% set hintId = params.id + '-hint' %}
+    {% set describedBy = describedBy + ' ' + hintId if describedBy else 
+      hintId %}
+    {{ govukHint({
+      id: hintId,
+      classes: params.hint.classes,
+      attributes: params.hint.attributes,
+      html: params.hint.html,
+      text: params.hint.text
+      }) | indent(2) | trim 
+    }}
+  {% endif %}
+{{ govukFileUpload(
+{
+id:component.model.id+'_dataImport',
+attributes:component.model.attributes,
+errorMessage: component.model.errorMessage
+}) }}
+<input type="hidden" value="{{component.model.value}}" name="{{component.model.name}}" id="{{component.model.id}}">
+<input type="hidden" id="filextensionerror" name="filextensionerror" value="default value" />
+<input type="hidden" id="filesizeerror_{{component.model.id}}" name="filesizeerror_{{component.model.id}}" value="default" />
+<input type="hidden" id="filenameerror_{{component.model.id}}" name="filenameerror_{{component.model.id}}" value="default" />
+{{ govukButton({
+  text: "Validate Your File",
+  attributes: { id: component.model.id + '_btn' },
+  element: 'button',
+  type: 'button',
+  name: component.model.id + '_btn',
+  classes: "govuk-button--secondary govuk-button--secondarydisableclick ",
+  disabled: true
+}) }}
+<br />
+{{ DFLoader({
+id: component.model.id,
+attributes: { id:component.model.id},
+value: 'Please wait, while the system is scanning for virus...'
+}) }}
+
+{% if component.model.value and component.model.status === "validated" %}
+<div class="govuk-notification-banner summary-file-exists" role="region"
+  aria-labelledby="govuk-notification-banner-title" id="{{component.model.id}}" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+      Important
+    </h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">
+      You have already provided this file.
+    </p>
+    <p class="govuk-heading-s">{{component.model.value.split('/') | last}}</p>
+    <p class="govuk-body">If you want to upload a new file to this, it will overwrite the existing one.</p>
+  </div>
+</div>
+
+{% endif %}
+
+{% if component.model.errorMessage and component.model.status === "uploaded" %}
+{{ govukWarningText({
+  text: "If you do not validate your file using the button above, the file you selected will not be saved. You will need to select the file again from your local device and perform a virus scan.",
+  iconFallbackText: "Warning"
+}) }}
+{% endif %}
+<div class="govuk-notification-banner govuk-notification-banner--success upload-dialog" id="{{component.model.id}}"
+  role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Success</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your file was successfully selected and scanned</p>
+    <p>Please click on the above validate your file button to perform further action and successfully upload your data.
+    </p>
+    <p>Note: If data check fails, your file won't get uploaded.</p>
+  </div>
+</div>
+<div class="govuk-notification-banner show-error" role="region" id="{{component.model.id}}"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Error</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your file has some errors.</p>
+    <p>
+      <b>Please check below for the reported errors.</b>
+    </p>
+    <p>Scanning or validation happens in sequence, if at any stage the sequence breaks, further process remains
+      incomplete. please resolve the error in sequence and reupload your data.</p>
+    <p>Contact us using the
+      <a target="_blank" rel="noreferrer noopener"
+        href="https://customerhelpportal.education.gov.uk/">
+        Department for Education (DfE) enquiry form</a>
+      if you think there is a problem.
+    </p>
+    <ul type="none" class="govuk-list govuk-list--bullet">
+      <li id="{{component.model.id}}_virus" class="lisuccessitem">No virus found</li>
+      <li id="{{component.model.id}}_colmiss" class="lierroritem">Check column availability (incomplete)
+      </li>
+      <li id="{{component.model.id}}_datamiss" class="lierroritem">Check data availability (incomplete)</li>
+      <li id="{{component.model.id}}_datavalid" class="lierroritem">Data validation (incomplete)</li>
+    </ul>
+  </div>
+</div>
+<div class="govuk-notification-banner service-down" role="region" id="{{component.model.id}}"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+      Important
+    </h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">
+     Network timed out.
+    </p>
+    <p>Contact us using the
+      <a target="_blank"
+        href="https://customerhelpportal.education.gov.uk/">
+        Department for Education (DfE) enquiry form</a>
+      if you think there is a problem.
+    </p>
+    <p>The network timed out before your upload could be completed. Please try again.
+    </p>
+  </div>
+</div>
+<div class="govuk-notification-banner govuk-notification-banner--success Validation-dialog" id="{{component.model.id}}"
+  role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Success</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your file was successfully selected and all checks are done</p>
+    <ul type="none" class="govuk-list govuk-list--bullet">
+      <li>No virus found</li>
+      <li>All the columns are available</li>
+      <li>No missing data found</li>
+      <li>Data validation completed</li>
+    </ul>
+  </div>
+</div>
+<div class="govuk-notification-banner Validation-colmissdialog" id="{{component.model.id}}" role="region"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Error</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your file has some errors.</p>
+    <p>
+      <b>Please check below for the reported errors.</b>
+    </p>
+    <p>Scanning or validation happens in sequence, if at any stage the sequence breaks, further process remains
+      incomplete. please resolve the error in sequence and reupload your data.</p>
+    <p>Contact us using the
+      <a target="_blank" rel="noreferrer noopener"
+        href="https://customerhelpportal.education.gov.uk/">
+        Department for Education (DfE) enquiry form</a>
+      if you think there is a problem.
+    </p>
+    <ul type="none" class="govuk-list govuk-list--bullet">
+      <li id="{{component.model.id}}_virus" class="lisuccessitem">No virus found</li>
+      <li id="{{component.model.id}}_colmiss" class="lierroritem">Some column is missing
+        <ul id="{{component.model.id}}_colmisssl" class="lisubbanner"></ul>
+      </li>
+      <li id="{{component.model.id}}_datamiss" class="lierroritem">Check data availability (incomplete)</li>
+      <li id="{{component.model.id}}_datavalid" class="lierroritem">Data validation (incomplete)</li>
+    </ul>
+  </div>
+</div>
+<div class="govuk-notification-banner Validation-datamissdialog" id="{{component.model.id}}" role="region"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Error</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your file has some errors.</p>
+    <p>
+      <b>Please check below for the reported errors.</b>
+    </p>
+    <p>Scanning or validation happens in sequence, if at any stage the sequence breaks, further process remains
+      incomplete. please resolve the error in sequence and reupload your data.</p>
+    <p>Contact us using the
+      <a target="_blank" rel="noreferrer noopener"
+        href="https://customerhelpportal.education.gov.uk/">
+        Department for Education (DfE) enquiry form</a>
+      if you think there is a problem.
+    </p>
+    <ul type="none" class="govuk-list govuk-list--bullet">
+      <li id="{{component.model.id}}_virus" class="lisuccessitem">No virus found</li>
+      <li id="{{component.model.id}}_colmiss" class="lisuccessitem">All the columns are available</li>
+      <li id="{{component.model.id}}_datamiss" class="lierroritem">Some data is missing
+        <ul id="{{component.model.id}}_datamisssl" class="lisubbanner"></ul>
+      </li>
+      <li id="{{component.model.id}}_datavalid" class="lierroritem">Data validation (incomplete)</li>
+    </ul>
+  </div>
+</div>
+<div class="govuk-notification-banner Validation-datavaliddialog" id="{{component.model.id}}" role="region"
+  aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+  <div class="govuk-notification-banner__header">
+    <h2 class="govuk-notification-banner__title govuk-heading-s" id="govuk-notification-banner-title">Error</h2>
+  </div>
+  <div class="govuk-notification-banner__content">
+    <p class="govuk-notification-banner__heading">Your file has some errors.</p>
+    <p>
+      <b>Please check below for the reported errors.</b>
+    </p>
+    <p>Scanning or validation happens in sequence, if at any stage the sequence breaks, further process remains
+      incomplete. please resolve the error in sequence and reupload your data.</p>
+    <p>Contact us using the
+      <a target="_blank"
+        href="https://customerhelpportal.education.gov.uk/">
+        Department for Education (DfE) enquiry form</a>
+      if you think there is a problem.
+    </p>
+    <ul type="none" class="govuk-list govuk-list--bullet">
+      <li id="{{component.model.id}}_virus" class="lisuccessitem">No virus found</li>
+      <li id="{{component.model.id}}_colmiss" class="lisuccessitem">All the columns are available
+      </li>
+      <li id="{{component.model.id}}_datamiss" class="lisuccessitem">No missing data found
+      </li>
+      <li id="{{component.model.id}}_datavalid" class="lierroritem">Data validation
+        <ul id="{{component.model.id}}_datavalidsl" class="lisubbanner"></ul>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endmacro %}

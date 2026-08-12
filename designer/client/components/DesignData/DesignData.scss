@@ -1,0 +1,68 @@
+.dynamic-table {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    .table-container,
+    .tabs-container {
+        width: auto;
+        margin-right: 50px;
+    }
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    .dynamic-table-row {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+}
+.tabs-container {
+    display: flex;
+    gap: 5px;
+    .dynamic-table-row {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+}
+
+.cell {
+    display: flex;
+    width: 54px;
+    height: 40px;
+    border: 2px solid #0b0c0c;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cell-active {
+    box-shadow: 0 0 0 2px #ffdd00;
+}
+
+.cell-complete {
+    border: 2px solid #005a30;
+}
+
+.cell-filled {
+    border: 2px solid #1d70b8;
+}
+.govuk-button.govuk-button--secondary.tabs {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.dataset-group {
+    .dataset-dropdown {
+        min-width: auto;
+    }
+}

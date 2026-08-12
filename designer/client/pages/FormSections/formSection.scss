@@ -1,0 +1,26 @@
+.form-section-table {
+    table-layout: fixed;
+    width: 960px;
+
+    tr {
+        th,td {
+            overflow: hidden;
+        }
+        th:nth-child(1) {
+            width: 50px !important;
+        }
+        th:nth-child(2) {
+            width: 360px !important;
+        }
+        th:nth-child(3) {
+            width: 550px !important;
+        }
+    }
+    .govuk-table__cell {
+        padding: 10px 10px 10px 0
+    }
+}
+
+.delete-section-modal {
+    width: 730px;
+}

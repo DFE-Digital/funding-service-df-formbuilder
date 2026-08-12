@@ -1,0 +1,76 @@
+﻿parameters:
+- name: AppsUnderTest
+  type: object
+  default:
+  - designer
+  - runner
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+
+- task: Bash@3
+  displayName: Install root dependencies
+  inputs:
+    targetType: inline
+    script: |
+      corepack enable
+      yarn install --frozen-lockfile
+
+- task: AzureCli@2
+  displayName: Docker compose pull
+  inputs:
+      azureSubscription: 's255d.azdo.deployment'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az acr login --name s255d01acrdfshared
+        docker  compose pull --ignore-pull-failures
+
+- ${{ each app in parameters.AppsUnderTest }}:
+  - task: Bash@3
+    displayName: Create .env for ${{ app }} workspace
+    inputs:
+      targetType: inline
+      script: |
+        touch ./${{ app }}/.env
+        echo LAST_TAG_GH=2.0.$(Build.BuildNumber)-rc >> ./${{ app }}/.env
+        echo LAST_COMMIT_GH=$(Build.SourceVersion) >> ./${{ app }}/.env
+        cat ./${{ app }}/.env
+
+  - task: Bash@3
+    displayName: Docker compose build ${{ app }}
+    inputs:
+      targetType: inline
+      script: |
+        LAST_TAG='2.0.$(Build.BuildNumber)-rc'
+        LAST_COMMIT='$(Build.SourceVersion) }}'
+        docker compose build ${{ app }}
+
+  - task: Bash@3
+    displayName: Docker tag ${{ app }}
+    inputs:
+      targetType: inline
+      script: |
+        docker tag digital-form-builder-${{ app }} s255d01acrdfshared.azurecr.io/digital-form-builder/digital-form-builder-${{ app }}:latest
+        docker tag digital-form-builder-${{ app }} s255d01acrdfshared.azurecr.io/digital-form-builder/digital-form-builder-${{ app }}:$(Build.BuildNumber)
+
+- task: Bash@3
+  displayName: Check images
+  inputs:
+    targetType: inline
+    script: docker image ls
+
+- task: AzureCli@2
+  displayName: Push docker images into Container Registry
+  inputs:
+      azureSubscription: 's255d.azdo.deployment'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az acr login --name s255d01acrdfshared
+        docker push s255d01acrdfshared.azurecr.io/digital-form-builder/digital-form-builder-runner:latest
+        docker push s255d01acrdfshared.azurecr.io/digital-form-builder/digital-form-builder-runner:$(Build.BuildNumber)
+        docker push s255d01acrdfshared.azurecr.io/digital-form-builder/digital-form-builder-designer:latest
+        docker push s255d01acrdfshared.azurecr.io/digital-form-builder/digital-form-builder-designer:$(Build.BuildNumber)

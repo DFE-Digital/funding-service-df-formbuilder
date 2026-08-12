@@ -1,0 +1,31 @@
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="govuk-grid-row">
+    
+    <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">Applications have now closed</h1>
+    
+    {# {% set tmpl = 'There was a problem with your application' %}
+
+      {{ govukErrorSummary({
+        titleText: tmpl,
+        errorList: [
+          {
+            text: "temp page"
+          }
+        ]
+      }) }} #}
+      <p class="govuk-body">
+      Funding applications on the <b> {{displayName}} </b>
+      ended <b>{{lastModified}} </b><br/><br>
+
+      <a href="https://customerhelpportal.education.gov.uk/">Contact us if you need more information.</a><br><br/>
+
+      <a href="https://www.gov.uk/government/collections/dfe-update">Sign up to the DfE newsletter for further updates.</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
+

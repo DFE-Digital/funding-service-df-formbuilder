@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Calculation Builder should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="calculations"
+  >
+    <div>
+      <div
+        class="govuk-body"
+      >
+        Define calculation logic for related components across different pages of a form
+      </div>
+    </div>
+    <div>
+      <table
+        class="govuk-table"
+      >
+        <thead
+          class="govuk-table__head"
+        >
+          <tr
+            class="govuk-table__row"
+          >
+            <th
+              class="govuk-table__header"
+              scope="col"
+            />
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Calculation name
+            </th>
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Calculation variable
+            </th>
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Page location
+            </th>
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Component variables
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          class="govuk-table__body"
+        />
+      </table>
+      <div
+        class="calculations__center govuk-body"
+      >
+        You have no calculations
+      </div>
+      <p />
+      <div
+        class="govuk-button-group"
+      >
+        <button
+          class="govuk-button govuk-button--secondary calculations__mt"
+          data-testid="edit-calculation"
+          disabled=""
+          id="edit-calculation"
+          title="Edit calculation"
+          type="submit"
+        >
+          Edit calculation
+        </button>
+        <button
+          class="govuk-button govuk-button--secondary govuk-!-margin-left-6 calculations__mt"
+          data-testid="delete-calculation"
+          disabled=""
+          id="delete-calculation"
+          title="Delete calculation"
+          type="submit"
+        >
+          Delete calculation
+        </button>
+      </div>
+      <button
+        class="govuk-button calculations__mt"
+        data-testid="add-calculation"
+        id="add-calculation"
+        title="Add new calculation"
+        type="submit"
+      >
+        Add new calculation
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

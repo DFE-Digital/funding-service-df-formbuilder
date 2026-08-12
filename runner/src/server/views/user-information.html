@@ -1,0 +1,49 @@
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends 'layout.html' %}
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form id="user-infomation" action={{returnUrl}}>
+      <h1 class="govuk-heading-l">{{name}}</h1><br />
+      <div class="govuk-body">
+        <div>Your details</div><br />
+        {% if orgURN or orgUKPRN %}
+        <div class="govuk-!-padding-bottom-2"><b>{{orgName}}</b></div>
+        <table>
+          <tr>
+            <td>URN</td>
+            <td>&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;{{orgURN}}</td>
+          </tr>
+          <tr>
+            <td>UKPRN</td>
+            <td>&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;{{orgUKPRN}}</td>
+          </tr>
+        </table>
+        <br />
+        {% else %}
+        <div class="govuk-!-padding-bottom-2"><b>{{orgName}}</b></div>
+        <table>
+          <tr>
+            <td>District administrative code</td>
+            <td>&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;{{orgAdministrativeCode}}</td>
+          </tr>
+        </table>
+        <br />
+        {% endif %}
+        <table>
+          <tr>
+            <td><b>Full name </b></td>
+            <td>&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;{{userName }} {{ userSurname}}</td>
+          </tr>
+          <tr>
+            <td><b>Email address </b></td>
+            <td>&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;{{email}}</td>
+          </tr>
+        </table>
+      </div><br />
+      <button class="govuk-button govuk-!-margin-top-1">Continue</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+<div class="backdrop-{{params.type}}">
+  <div class="messagepop pop" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-description" id="logout-dialog">
+    <div class="pop_logo govuk-grid-column-full">
+      <div class="pop_logo_image govuk-grid-column-one-half">
+        {{params.heading}}
+      </div>
+      <div class="govuk-!-text-align-right govuk-grid-column-one-half dialog-close-{{params.type}} govuk-!-padding-top-6">
+        <h1 id="dialog-title" class="govuk-heading-m">{{params.title}}</h1>
+        <a href={{params.redirect}} id="close-btn-dialog" class="dialog-close-{{params.type}} nav-list__link_secondary govuk-body" aria-label="Close dialog">Close</a>
+      </div>
+
+    </div>
+    <div class="govuk-grid-column-full">
+
+      <p id="dialog-description" class="govuk-body">{{params.description}}</p>
+      {% if (params.service) %}
+        <div class="govuk-warning-text">
+          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">Warning</span>
+            This form has not been submitted. Use the submit button on the page to proceed to final submission.
+          </strong>
+        </div>
+        {% endif %}
+      <!-- Live region to announce checkbox state changes to screen readers -->
+      <div class="hidden" id="checkbox-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+      
+      <div class="govuk-checkboxes__item">
+        <input class="govuk-checkboxes__input" id="confirmcheckbox" name="confirm" type="checkbox" value="confirm-logout" aria-describedby="checkbox-status">
+        <label class="govuk-label govuk-checkboxes__label" for="confirmcheckbox">
+          Yes, I want to sign out
+        </label>
+      </div>
+      <div class="govuk-button-group">
+        <button id="redirect-button-{{params.type}}" disabled aria-label="Sign out." class="button dialog-button govuk-button mb-25">Sign out</button>
+      </div>
+    </div>
+  </div>
+</div>

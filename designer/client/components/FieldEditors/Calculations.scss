@@ -1,0 +1,211 @@
+@import "../../styles/colors.scss";
+
+.calculations {
+    &__center {
+        text-align: center;
+    }
+
+    &__ml {
+        margin-left: 25px;
+    }
+
+    &__mt {
+        &.govuk-button {
+            margin-top: 20px;
+        }
+    }
+
+    &__mt-40 {
+        &.govuk-button {
+            margin-top: 40px;
+        }
+    }
+
+    .govuk-radios__item {
+        &.custom-radios__item {
+            padding-left: 20px;
+        }
+    }
+
+    .vertical-align {
+        position: relative;
+        top: 7px;
+    }
+}
+
+.add-calculations {
+    .bold {
+        font-weight: bold;
+    }
+
+    .custom-checkbox {
+        width: 40px;
+        min-height: 25px;
+
+        .govuk-checkboxes__label {
+            &.components-list {
+                &::before {
+                    width: 26px;
+                    height: 26px;
+                    background-color: white;
+                }
+
+                &::after {
+                    top: 7px;
+                    left: 6px;
+                    width: 15px;
+                    height: 9px;
+                    border-width: 0 0 4px 4px;
+                }
+            }
+        }
+    }
+
+    .custom-checkbox::before {
+        background-color: white;
+    }
+
+    .component-checkbox {
+        position: relative;
+        top: 2px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .left {
+        text-align: left;
+    }
+    .mb-10 {
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+    .mb-20 {
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .mb-15 {
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+
+    .mt-20 {
+        display: inline-block;
+        margin-top: 20px;
+    }
+
+    .mr-5 {
+        margin-right: 5px;
+    }
+
+    .border-bottom {
+        padding: 10px 20px 10px 0;
+        border-bottom: 1px solid #b1b4b6;
+    }
+
+    .hidden-visibility {
+        visibility: hidden;
+    }
+
+    .govuk-tick {
+        display: inline-block;
+        transform: rotate(45deg);
+        height: 18px;
+        width: 11px;
+        border-bottom: 5px solid #000000;
+        border-right: 5px solid #000000;
+    }
+
+    .govuk-right-arrow {
+        padding: 0 10px;
+        &:after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 15px;
+            width: 10px;
+            height: 10px;
+            margin: auto 0;
+            transform: rotate(45deg);
+            border: solid;
+            border-width: 2px 2px 0 0;
+            border-color: #ffffff;
+        }
+    }
+
+    .govuk-right-arrow-1 {
+        @extend .govuk-right-arrow;
+        &:after {
+            left: 26px;
+        }
+    }
+
+    .govuk-form-group {
+        .govuk-label {
+            &.bold {
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+        }
+    }
+
+    &__pageselection {
+        border-radius: 5px;
+        width: 260px;
+    }
+
+    &__main-container {
+        margin: 16px 0;
+        background-color: #f3f2f1;
+        padding: 24px 26px 48px 16px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    &__left-wrapper {
+        flex-grow: 30;
+    }
+
+    &__right-wrapper {
+        flex-grow: 0;
+        textarea {
+            outline: none;
+            resize: none;
+            border-radius: 7px;
+            border: 1px solid #bfc1c3;
+        }
+    }
+
+    &__footer-container {
+        display: flex;
+        .left-wrapper,
+        .right-wrapper {
+            flex: 1;
+            display: flex;
+        }
+
+        .right-wrapper-none {
+            flex: 0.25;
+        }
+        .right-wrapper-main {
+            margin-right: 12px;
+            flex: 4;
+        }
+
+        .border-1 {
+            border: 1px solid #0b0c0c;
+        }
+    }
+}
+
+.delete-calculation {
+    .custom-width {
+        width: 500px;
+    }
+
+    .mb-negative {
+        margin-top: -4px;
+    }
+}

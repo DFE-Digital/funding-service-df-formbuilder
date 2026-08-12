@@ -1,0 +1,13 @@
+{
+  "presets": ["@babel/preset-env", "@babel/typescript"],
+  "exclude": ["node_modules/**"],
+  "plugins": [
+    "@babel/plugin-proposal-export-default-from",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-private-property-in-object",
+    "@babel/plugin-proposal-private-methods",
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-syntax-jsx",
+    "@babel/plugin-proposal-logical-assignment-operators"
+  ]
+}

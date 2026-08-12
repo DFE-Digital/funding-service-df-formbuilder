@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Calculation Builder should match snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      class="govuk-body"
+    >
+      Define calculation logic for related components across different pages of a form
+    </div>
+  </div>
+</DocumentFragment>
+`;

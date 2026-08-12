@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+{% from "back-link/macro.njk" import govukBackLink %}
+
+
+{% block header %}
+  {%set formName = name if name else serviceName %}
+
+  {{ DFDialog({
+    title:'Are you sure?',
+    description: ("<span>Do you want to <span class='dialog-bold'>sign out</span> of the <span class='dialog-bold'>"+ formName +"</span> form? Your form details are saved for when you next sign in.") | safe,
+    redirect:'#',
+    type:'logout',
+    heading: ''
+  }) }} 
+  {{ DfgovukHeader({
+    homepageUrl: "https://gov.uk",
+    containerClasses: "govuk-width-container",
+    serviceName: name if name else serviceName,
+    serviceUrl: serviceStartPage,
+    navigation: navigation,
+    signOutHref : isAuthenticated
+  }) }}
+
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "Beta"
+    },
+    html: 'This is a new service. Help us improve it and <a class="govuk-link" href=' + feedbackLink + ' target="_blank"  rel="noreferrer noopener">give your feedback (opens in new tab)</a>.'
+  }) }}
+  {% if backLink %}
+    {{ govukBackLink({
+            href: backLink,
+            text: "Back"
+        }) }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+
+  <div>
+    {%if dfeSignedInForm %}
+    <h1 class="govuk-heading-xl">{{ formName }}</h1>
+    {%if renderParentChild %}
+    <div class="govuk-body">{{description}}</div>
+     <table class="govuk-table parent-child-table govuk-!-margin-top-8">
+      <thead class="govuk-table__head pc-header">
+        <tr class="govuk-table__row pc-row">
+          <th class="govuk-table__header pc-th pl cell1" scope="col"> {{childHeading}} </th>
+          <th class="govuk-table__header pc-th cell2" scope="col">  </th> 
+        </tr>
+      </thead>
+      {% if childConfigs %}
+      <tbody class="govuk-table__body">
+        
+        {% for childs in childConfigs %}
+        {% if childs.render %}
+          <tr class="govuk-table__row pc-row">
+                <td class="govuk-table__cell pl cell1">
+                  {%if childs.isAnchor %}
+                  <div class="govuk-heading-s"><a href="/{{childs.childId}}" class="govuk-link">{{ childs.childFormTitle }}</a></div>
+                  {% else %}
+                  <div class="govuk-heading-s">{{ childs.childFormTitle }}</div>
+                  {% endif %}
+                  <div class="gray">{{childs.helpText}}</div>
+                </td>
+                <td class="govuk-table__cell cell2">
+                  <strong class="govuk-tag {{childs.tag}}">
+                    {{childs.formStatus}}
+                  </strong>
+                </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+  {% endif %}
+    </table> 
+    {% else %}
+    <div class="govuk-body-l">No child forms found. If its not a parent child form, please change the page type to summary.</div>
+    {% endif %}
+    {% else %}
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+          The access type for parent and child forms group should be to marked as DfE Sign-in.
+      </strong>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

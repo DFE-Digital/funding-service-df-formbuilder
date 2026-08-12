@@ -1,0 +1,48 @@
+variables:
+  ResourcePrefix: s255t02
+  AzureSubscription: "c4542a65-affe-40bb-a9c0-33fc31feb3c9"
+  DeploymentServicePrincipal: "e35197b9-684d-4b77-9b90-2d792b6d5e42"
+  NodeEnvironmentAppSetting: preproduction
+  fetchFromRedis: true
+  ENABLE_DEBUGGING: false
+  NODE_ENV: production
+
+  runnerPerfTest: true
+  DesignerPROVIDER_CHUNK_SIZE: 900
+
+  LiveDfeSignInAuthUrl: https://pp-oidc.signin.education.gov.uk/auth
+  LiveDfeSignInTokenUrl: https://pp-oidc.signin.education.gov.uk/token
+  LiveDfeSignInApiUrl: https://pp-api.signin.education.gov.uk
+  LiveDfeSignOutUrl: https://pp-oidc.signin.education.gov.uk/session/end
+
+  PreviewDfeSignInAuthUrl: https://test-oidc.signin.education.gov.uk/auth
+  PreviewDfeSignInTokenUrl: https://test-oidc.signin.education.gov.uk/token
+  PreviewDfeSignInApiUrl: https://test-api.signin.education.gov.uk
+  PreviewDfeSignOutUrl: https://test-oidc.signin.education.gov.uk/session/end
+
+  # Runner set up - app environment for UAT - can we remove this???  it gets set to UAT for the prod preview runner.
+  LiveRunnerAppEnvironment: preproduction
+  PreviewRunnerAppEnvironment: preproduction
+
+  # Custom Domain Set-up
+  EnableCustomDomain: false
+  CertificatesToLoad: preprod-designer-digital-forms-education-gov-uk-2025,preprod-digital-forms-education-gov-uk-2025,uat-preprod-digital-forms-education-gov-uk-2025
+
+  DesignerCustomDomain: preprod.designer.digital-forms.education.gov.uk
+  DesignerCertThumbprint: 4133A6B092A0879C9F51C2039D11FB9BA7837CB8
+  LiveRunnerCustomDomain: preprod.digital-forms.education.gov.uk
+  LiveRunnerCertThumbprint: A7F21E8929222BFF91E3C59E612E5B8DE727CD80
+  PreviewRunnerCustomDomain: uat.preprod.digital-forms.education.gov.uk
+  PreviewRunnerCertThumbprint: 45300A1B31E96ACC557B58D6C722557ABC094CFD
+
+  # Enterprise APIM set up:
+  DocCaptureApiUrl:  https://pp-api.education.gov.uk/document-capture/2/
+  FileshifterApiUrl: https://pp-api.education.gov.uk/document-capture-file-shifter/2/api/Dc_Fileshifter
+
+  # Tags
+  EnvironmentTag: Preprod
+
+  # WAF
+  ## sets both designer and runner
+  isAPIM: true
+  payloadSize: 209715200

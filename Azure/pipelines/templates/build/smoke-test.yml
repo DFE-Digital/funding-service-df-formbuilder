@@ -1,0 +1,107 @@
+﻿parameters:
+- name: AppsUnderTest
+  type: object
+  default:
+  - designer
+  - runner
+  - model
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+
+- task: Bash@3
+  displayName: Install root dependencies
+  inputs:
+    targetType: inline
+    script: |
+      corepack enable
+      yarn install --frozen-lockfile
+
+- task: AzureCli@2
+  displayName: Docker compose pull
+  inputs:
+      azureSubscription: 's255d.azdo.deployment'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az acr login --name s255d01acrdfshared
+        docker  compose pull --ignore-pull-failures
+
+- ${{ each app in parameters.AppsUnderTest }}:
+  - task: Bash@3
+    displayName: Create .env for ${{ app }} workspace
+    inputs:
+      targetType: inline
+      script: |
+        touch ./${{ app }}/.env
+        echo LAST_TAG_GH=2.0.$(Build.BuildNumber)-rc >> ./${{ app }}/.env
+        echo LAST_COMMIT_GH=$(Build.SourceVersion) >> ./${{ app }}/.env
+        cat ./${{ app }}/.env
+
+- task: Bash@3
+  displayName: Docker compose build
+  inputs:
+    targetType: inline
+    script: docker compose build --parallel
+
+- task: Bash@3
+  displayName: Docker compose up
+  inputs:
+    targetType: inline
+    script: docker compose up -d
+
+- task: Bash@3
+  displayName: Install smoke tests dependencies
+  inputs:
+    targetType: inline
+    script: yarn workspaces focus @xgovformbuilder/test
+
+- task: Bash@3
+  displayName: Ensure designer container is running
+  inputs:
+    targetType: inline
+    script: |
+      docker ps
+      docker run --network container:designer appropriate/curl -4 --retry 10 --retry-connrefused --retry-delay 10 http://localhost:3000/
+
+- task: Bash@3
+  displayName: Ensure runner container is running
+  inputs:
+    targetType: inline
+    script: |
+      docker ps
+      docker run --network container:runner appropriate/curl -4 --retry 10 --retry-connrefused --retry-delay 10 http://localhost:3009/
+
+- ${{ each app in parameters.AppsUnderTest }}:
+  - task: Bash@3
+    displayName: Create .env for ${{ app }} workspace
+    inputs:
+      targetType: inline
+      script: |
+        touch ./${{ app }}/.env
+        echo LAST_TAG_GH=2.0.$(Build.BuildNumber)-rc >> ./${{ app }}/.env
+        echo LAST_COMMIT_GH=$(Build.SourceVersion) >> ./${{ app }}/.env
+        cat ./${{ app }}/.env
+
+- task: Bash@3
+  displayName: Smoke Test
+  inputs:
+    targetType: inline
+    # Currently commented out due to ChromeDriver mismatch
+    #failOnStderr: true
+    script: |
+      yarn smoke-tests/designer smoke-test-headless
+      ls -lah smoke-tests/designer/reports/
+
+- task: Bash@3
+  displayName:  Tar files
+  inputs:
+    targetType: inline
+    script: tar -cvf smoke-tests.tar smoke-tests/designer/reports
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: smoke-tests.tar
+    artifactName: SmokeTestResults

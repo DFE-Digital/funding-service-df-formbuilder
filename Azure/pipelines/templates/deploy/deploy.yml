@@ -1,0 +1,49 @@
+﻿parameters:
+  - name: AzureServiceConnection
+    type: string
+  - name: Environment
+    type: string
+
+jobs:
+  - deployment: DeployTo${{ parameters.Environment }}
+    displayName: "Deploy To ${{ parameters.Environment }}"
+    environment: Digital Forms - ${{ parameters.Environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - task: AzureResourceManagerTemplateDeployment@3
+              displayName: "Deploy resources"
+              inputs:
+                azureResourceManagerConnection: "${{ parameters.AzureServiceConnection }}"
+                subscriptionId: "$(AzureSubscription)"
+                resourceGroupName: "$(AppServiceResourceGroupName)"
+                location: "UK South"
+                csmFile: "$(Pipeline.Workspace)/DigitalForms.ArmTemplates.AppServices/app-services/template.json"
+                deploymentName: "df-app-services"
+                overrideParameters: '-environmentTag "$(EnvironmentTag)" -parentBusinessTag "$(ParentBusinessTag)" -portfolioTag "$(PortfolioTag)" -productTag "$(ProductTag)" -serviceLineTag "$(ServiceLineTag)" -serviceTag "$(ServiceTag)" -serviceOfferingTag "$(ServiceOfferingTag)" -sharedResourceGroupName "$(SharedResourceGroupName)" -sharedKeyVaultName "$(SharedKeyVaultName)" -sharedVirtualNetworkName "$(SharedVirtualNetworkName)" -sharedSubnetName "$(SharedSubnetName)" -runnerSubnetName "$(RunnerSubnetName)" -sharedRedisInstanceName "$(SharedRedisInstanceName)" -sharedAppServicePlanName "$(SharedAppServicePlanName)" -runnerAppServicePlanName "$(RunnerAppServicePlanName)" -liveRunnerAppServiceName "$(LiveRunnerAppServiceName)" -previewRunnerAppServiceName "$(PreviewRunnerAppServiceName)" -designerAppServiceName "$(DesignerAppServiceName)" -sharedContainerRegistryName "$(SharedContainerRegistryName)" -sharedContainerRegistryPassword "$(SharedContainerRegistryPassword)" -sharedAppInsightsName "$(SharedAppInsightsName)"  -sharedLogAnalyticsName "$(SharedLogAnalyticsName)" -nodeEnvironment "$(NodeEnvironmentAppSetting)" -LiveDfESignInAuthClientId "$(LiveDfeSignInClientId)" -LiveDfESignInAuthClientSecret "$(LiveDfeSignInAuthClientSecret)" -LiveDfESignInApiClientSecret "$(LiveDfeSignInApiClientSecret)" -LiveDfeSignInAuthUrl "$(LiveDfeSignInAuthUrl)" -LiveDfeSignInTokenUrl "$(LiveDfeSignInTokenUrl)" -LiveDfeSignOutUrl "$(LiveDfeSignOutUrl)" -LiveDfeSignInApiUrl "$(LiveDfeSignInApiUrl)" -PreviewDfESignInAuthClientId "$(PreviewDfeSignInClientId)" -PreviewDfESignInAuthClientSecret "$(PreviewDfeSignInAuthClientSecret)" -PreviewDfESignInApiClientSecret "$(PreviewDfeSignInApiClientSecret)" -PreviewDfeSignInAuthUrl "$(PreviewDfeSignInAuthUrl)" -PreviewDfeSignInTokenUrl "$(PreviewDfeSignInTokenUrl)" -PreviewDfeSignOutUrl "$(PreviewDfeSignOutUrl)" -PreviewDfeSignInApiUrl "$(PreviewDfeSignInApiUrl)" -enableCustomDomain "$(EnableCustomDomain)" -liveRunnerCustomDomain "$(LiveRunnerCustomDomain)" -previewRunnerCustomDomain "$(PreviewRunnerCustomDomain)" -designerCustomDomain "$(DesignerCustomDomain)" -certificatesToLoad "$(CertificatesToLoad)"  -LiveRunnerCertThumbprint "$(LiveRunnerCertThumbprint)" -PreviewRunnerCertThumbprint "$(PreviewRunnerCertThumbprint)" -DesignerCertThumbprint "$(DesignerCertThumbprint)" -liveRunnerAppEnvironment "$(LiveRunnerAppEnvironment)" -previewRunnerAppEnvironment "$(PreviewRunnerAppEnvironment)" -sharedActionGroupName "$(SharedActionGroup)" -docCaptureApiUrl "$(DocCaptureApiUrl)" -fileShifterApiUrl "$(FileshifterApiUrl)" -fetchFromRedis "$(fetchFromRedis)" -NODE_ENV "$(NODE_ENV)" -ENABLE_DEBUGGING "$(ENABLE_DEBUGGING)" -isAPIM "$(isAPIM)" -payloadSize "$(payloadSize)" -runnerPerfTest "$(runnerPerfTest)" -DesignerPROVIDER_CHUNK_SIZE "$(DesignerPROVIDER_CHUNK_SIZE)"'
+            - task: AzureCli@2
+              displayName: Set docker image version for runner
+              inputs:
+                azureSubscription: "${{ parameters.AzureServiceConnection }}"
+                scriptType: pscore
+                scriptLocation: inlineScript
+                failOnStandardError: false
+                inlineScript: |
+                  az webapp config container set --name $(LiveRunnerAppServiceName) --resource-group $(AppServiceResourceGroupName) --docker-custom-image-name $(SharedContainerRegistryName).azurecr.io/digital-form-builder/digital-form-builder-runner:$(Build.BuildNumber)
+                  az webapp config container set --name $(PreviewRunnerAppServiceName) --resource-group $(AppServiceResourceGroupName) --docker-custom-image-name $(SharedContainerRegistryName).azurecr.io/digital-form-builder/digital-form-builder-runner:$(Build.BuildNumber)
+                  az webapp config container set --name $(DesignerAppServiceName) --resource-group $(AppServiceResourceGroupName) --docker-custom-image-name $(SharedContainerRegistryName).azurecr.io/digital-form-builder/digital-form-builder-designer:$(Build.BuildNumber)
+            - task: PowerShell@2
+              condition: and(succeeded(), not(canceled()), eq(variables['Environment.Name'], 'Digital Forms - Production'))
+              name: RetainOnSuccess
+              displayName: Retain Build on release to production
+              inputs:
+                failOnStderr: true
+                targetType: 'inline'
+                script: |
+                  $contentType = "application/json";
+                  $headers = @{ Authorization = 'Bearer $(System.AccessToken)' };
+                  $rawRequest = @{ daysValid = 365 * 2; definitionId = $(System.DefinitionId); ownerId = 'User:$(Build.RequestedForId)'; protectPipeline = $false; runId = $(Build.BuildId) };
+                  $request = ConvertTo-Json @($rawRequest);
+                  $uri = "$(System.CollectionUri)$(System.TeamProject)/_apis/build/retention/leases?api-version=6.0-preview.1";
+                  Invoke-RestMethod -uri $uri -method POST -Headers $headers -ContentType $contentType -Body $request;

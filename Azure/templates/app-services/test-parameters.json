@@ -1,0 +1,159 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentTag": {
+      "value": "Dev"
+    },
+    "parentBusinessTag": {
+      "value": "Funding and Allocations"
+    },
+    "portfolioTag": {
+      "value": "Education and Skills Funding Agency"
+    },
+    "productTag": {
+      "value": "Funding And Allocations (ESFA)"
+    },
+    "serviceTag": {
+      "value": "Funding and Allocations (ESFA)"
+    },
+    "serviceLineTag": {
+      "value": "Funding"
+    },
+    "serviceOfferingTag": {
+      "value": "Plan Your Grant"
+    },
+    "sharedResourceGroupName": {
+      "value": "s255d01rg-uks-df-shared"
+    },
+    "sharedKeyVaultName": {
+      "value": "aKeyVaultInstance"
+    },
+    "sharedVirtualNetworkName": {
+      "value": "AVirtualNetwork"
+    },
+    "sharedSubnetName": {
+      "value": "ASubnet"
+    },
+    "runnerSubnetName":{
+      "value": "ArunnerSubnet"
+    },
+    "sharedRedisInstanceName": {
+      "value": "ASharedRedisInstance"
+    },
+    "sharedAppServicePlanName": {
+      "value": "ASharedAppServicePlan"
+    },
+    "runnerAppServicePlanName": {
+      "value": "ARunnerAppServicePlan"
+    },
+    "liveRunnerAppServiceName": {
+      "value": "LiveRunnerAppServiceName"
+    },
+    "previewRunnerAppServiceName": {
+      "value": "PreviewRunnerAppServiceName"
+    },
+    "designerAppServiceName": {
+      "value": "DesignerAppServiceName"
+    },
+    "sharedContainerRegistryName": {
+      "value": "s255d01acrdfshared"
+    },
+    "sharedContainerRegistryPassword": {
+      "value": "AnAccessToken"
+    },
+    "sharedAppInsightsName": {
+      "value": "ASharedAppInsightsAccount"
+    },
+    "sharedLogAnalyticsName": {
+      "value": "ASharedLogAnalyticsAccount"
+    },
+    "nodeEnvironment": {
+      "value": "development"
+    },
+    "LiveDfESignInAuthClientId": {
+      "value": "SomeClientId"
+    },
+    "LiveDfESignInAuthClientSecret": {
+      "value": "AnAuthClientSecret"
+    },
+    "LiveDfESignInApiClientSecret": {
+      "value": "AnApiClientSecret"
+    },
+    "LiveDfeSignInAuthUrl": {
+      "value": "https://dsi-access.site/auth"
+    },
+    "LiveDfeSignInTokenUrl": {
+      "value": "https://dsi-access.site/token"
+    },
+    "LiveDfeSignOutUrl": {
+      "value": "https://dsi-access.site/session/end"
+    },
+    "LiveDfeSignInApiUrl": {
+      "value": "https://api.dsi-access.site"
+    },
+    "PreviewDfESignInAuthClientId": {
+      "value": "SomeClientId"
+    },
+    "PreviewDfESignInAuthClientSecret": {
+      "value": "AnAuthClientSecret"
+    },
+    "PreviewDfESignInApiClientSecret": {
+      "value": "AnApiClientSecret"
+    },
+    "PreviewDfeSignInAuthUrl": {
+      "value": "https://dsi-access.site/auth"
+    },
+    "PreviewDfeSignInTokenUrl": {
+      "value": "https://dsi-access.site/token"
+    },
+    "PreviewDfeSignOutUrl": {
+      "value": "https://dsi-access.site/session/end"
+    },
+    "PreviewDfeSignInApiUrl": {
+      "value": "https://api.dsi-access.site"
+    },
+    "enableCustomDomain": {
+      "value": false
+    },
+    "liveRunnerAppEnvironment": {
+      "value": "dev"
+    },
+    "previewRunnerAppEnvironment": {
+      "value": "dev"
+    },
+    "certificatesToLoad": {
+      "value": ""
+    },
+    "sharedActionGroupName": {
+      "value": "SomeActionGroup"
+    },
+    "docCaptureApiUrl": {
+      "value": "https://some/api"
+    },
+    "fileShifterApiUrl": {
+      "value": "https://another/api"
+    },
+    "fetchFromRedis": {
+      "value": false
+    },
+    "ENABLE_DEBUGGING": {
+      "value": false
+    },
+    "NODE_ENV": {
+      "value": "production"
+    },
+    "isAPIM": {
+      "value": true
+    },
+    "payloadSize": {
+      "value": 1
+    },
+    "runnerPerfTest": {
+      "value": false
+    },
+    "DesignerPROVIDER_CHUNK_SIZE": {
+      "value": 900
+    }
+  }
+}

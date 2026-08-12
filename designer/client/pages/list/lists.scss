@@ -1,0 +1,98 @@
+.list-page-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.list-page-main-container {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #b1b4b6;
+}
+
+.list-table-cell {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    padding: 15px 0px;
+}
+
+.list-table > table {
+    height: 100%;
+    td[data-width="55px"] {
+        width: 55px !important;
+        overflow: hidden;
+        vertical-align: middle;
+    }
+    td[data-width="350px"] {
+        width: 350px !important;
+        overflow: hidden;
+        vertical-align: middle;
+    }
+    td[data-width="150px"] {
+        width: 150px !important;
+        overflow: hidden;
+        vertical-align: middle;
+    }
+}
+
+.sortable-container {
+    .sortable-item {
+        .sortable-box {
+            .list-item {
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+                .separator {
+                    color: #b1b4b6;
+                    font-weight: 100;
+                }
+                .list-item-content {
+                    display: flex;
+                    gap: 12px;
+                }
+                .list-item-actions {
+                    display: flex;
+                    gap: 10px;
+                    .list-item-action-element:nth-child(1) {
+                        color: #1d70b8;
+                    }
+                    .list-item-action-element:nth-child(3) {
+                        color: #d4351c;
+                    }
+                    .list-item-action-element:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.list-form {
+    .sample-list-csv {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        a {
+            color: #1d70b8;
+        }
+        a:hover {
+            cursor: pointer;
+        }
+    }
+    .list-import-dataset {
+        color: #1d70b8;
+    }
+    .list-import-dataset:hover {
+        cursor: pointer;
+    }
+    .empty-list-items {
+        display: flex;
+        height: 100px;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid #b1b4b6;
+        border-bottom: 1px solid #b1b4b6;
+    }
+}

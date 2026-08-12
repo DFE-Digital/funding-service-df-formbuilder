@@ -1,0 +1,265 @@
+.warning-delete-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 49px 50px;
+    gap: 10px;
+
+    position: absolute;
+    width: 730px;
+    height: 390px;
+    left: 255px;
+    top: 425px;
+
+    /* Background */
+    background: #ffffff;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.separator {
+    color: #b1b4b6 !important;
+    font-weight: 100;
+    margin: 0 5px;
+}
+
+.govuk-details__text_highlight {
+    border-left: 10px solid #b1b4b6;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 20px;
+}
+.warning-delete-text-container {
+    width: 630px;
+    height: 292px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 50px;
+
+    position: absolute;
+    width: 630px;
+    height: 292px;
+    left: 50px;
+    top: 49px;
+}
+
+.warning-delete-text {
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    width: 630px;
+    height: 202px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.digital-forms-loader {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1001;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    display: block;
+    opacity: 1;
+
+    .loaderpopup {
+        position: absolute;
+        padding: 30px;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 60%;
+        height: -moz-fit-content;
+        height: -webkit-fit-content;
+        height: fit-content;
+        margin: auto;
+        background: white;
+        color: black;
+        display: block;
+        z-index: 99 !important;
+        max-width: 602px;
+        font-family: "Inter", sans-serif;
+
+        .govuk-grid-column-full {
+            padding: 0 35px;
+        }
+
+        .pop_logo {
+            background: transparent;
+            color: #000;
+            display: block;
+
+            .loading--full-height {
+                align-items: center;
+                height: 100%;
+            }
+
+            .loadertext {
+                margin-top: 30px;
+                text-align: center;
+                color: #505a5f;
+            }
+
+            .loadersubtext {
+                margin-top: 40px;
+                text-align: center;
+                color: #505a5f;
+            }
+
+            .loading {
+                display: flex;
+                justify-content: center;
+            }
+
+            .loading::after {
+                content: "";
+                width: 80px;
+                height: 80px;
+                border: 15px solid rgba(177, 180, 182, 0.5);
+                border-top-color: #1d70b8;
+                border-radius: 50%;
+                transform: rotate(0.16 turn);
+                animation: loading 1s linear infinite;
+            }
+
+            @keyframes loading {
+                from {
+                    transform: rotate(0turn);
+                }
+                to {
+                    transform: rotate(1turn);
+                }
+            }
+        }
+    }
+}
+
+.modal {
+    .back-warning-container {
+        .back-warning-text {
+            display: flex;
+            flex-direction: column;
+            .back-warning-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-top: 15px;
+                margin-bottom: 15px;
+                .modal-close-button:hover {
+                    cursor: pointer;
+                    outline: 3px solid transparent;
+                    color: #0b0c0c;
+                    background-color: #ffdd00;
+                    box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
+                    text-decoration: none;
+                }
+                .modal-close-button:focus {
+                    cursor: pointer;
+                    outline: 3px solid transparent;
+                    color: #0b0c0c;
+                    background-color: #ffdd00;
+                    box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
+                    text-decoration: none;
+                }
+            }
+            .back-warning-text-container {
+                display: flex;
+            }
+        }
+    }
+
+    .modal-close-link {
+        a.close {
+            color: #0b0c0c;
+            text-decoration: underline;
+            position: absolute;
+            top: 54px;
+            right: 28px;
+        }
+        a.close:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.flex-row-container {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Heading bar pulled from UL attribute */
+.autocomplete__menu.menu--with-heading::before {
+    content: attr(data-heading);
+    display: block;
+    padding: 5px;
+    color: #ffffff;
+    box-sizing: border-box;
+    background: #505a5f;
+    border: 1px solid #0b0c0c;
+    border-radius: 0px;
+}
+
+/* Hide heading entirely when there's no heading text */
+.menu--with-heading[data-heading=""]::before {
+    content: none;
+    display: none;
+}
+
+/* Hide heading when the “no results” row is present. */
+.autocomplete__menu.menu--with-heading:has(.autocomplete__option--no-results)::before,
+.autocomplete__menu.menu--with-heading:has(li[aria-disabled="true"])::before {
+    display: none;
+}
+
+.autocomplete__menu.menu--custom {
+    max-height: 412px;
+}
+
+/* Style the “no results” message (multi-line with \n) */
+.menu--custom > li.autocomplete__option--no-results,
+.menu--custom > li[aria-disabled="true"] {
+    white-space: pre-line;
+    color: #ffffff;
+    background: #505a5f;
+    padding: 5px;
+    border: 1px solid #0b0c0c;
+    border-radius: 0px;
+}
+
+.autocomplete__input,
+.accessible-autocomplete__input,
+.autocomplete__wrapper input,
+.govuk-form-group input {
+    cursor: text !important;
+}
+
+/* custom checkbox conditional container similar to govuk-radios__conditional */
+.govuk-checkboxes__conditional {
+    margin-bottom: 15px;
+    margin-left: 18px;
+    padding-left: 33px;
+    border-left: 4px solid #b1b4b6;
+}
+
+@media (min-width: 40.0625em) {
+    .govuk-checkboxes__conditional {
+        margin-bottom: 20px;
+    }
+}

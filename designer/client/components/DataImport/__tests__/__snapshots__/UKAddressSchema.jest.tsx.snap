@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UK Address Schema snapshot test with dataImport Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="govuk-checkboxes__item"
+  >
+    <input
+      checked=""
+      class="govuk-checkboxes__input"
+      id="field-options-address"
+      name="addressRequired"
+      type="checkbox"
+    />
+    <label
+      class="govuk-label govuk-checkboxes__label"
+      for="field-options-hideTitle"
+    >
+      Make UK address column optional
+    </label>
+    <span
+      class="govuk-hint govuk-checkboxes__hint"
+    >
+      Tick this box if users do not need to complete this column to progress through the file upload process and validation checks
+    </span>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`UK Address Schema snapshot test without dataImport Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="govuk-checkboxes__item"
+  >
+    <input
+      class="govuk-checkboxes__input"
+      id="field-options-address"
+      name="addressRequired"
+      type="checkbox"
+    />
+    <label
+      class="govuk-label govuk-checkboxes__label"
+      for="field-options-hideTitle"
+    >
+      Make UK address column optional
+    </label>
+    <span
+      class="govuk-hint govuk-checkboxes__hint"
+    >
+      Tick this box if users do not need to complete this column to progress through the file upload process and validation checks
+    </span>
+  </div>
+</DocumentFragment>
+`;

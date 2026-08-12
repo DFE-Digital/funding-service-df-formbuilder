@@ -1,0 +1,44 @@
+.tab-dynamic-table {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    .table-container {
+        width: auto;
+        margin-right: 50px;
+    }
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    .dynamic-table-row {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cell {
+    display: flex;
+    width: 54px;
+    height: 40px;
+    border: 2px solid #0b0c0c;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cell-active {
+    box-shadow: 0 0 0 2px #ffdd00;
+}
+
+.cell-complete {
+    border: 2px solid #005a30;
+}

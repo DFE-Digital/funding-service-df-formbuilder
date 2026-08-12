@@ -1,0 +1,93 @@
+﻿trigger:
+  branches:
+    include:
+      - main
+      - feature/*
+      - release/*
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: BuildTestAndPublish
+    jobs:
+      - job: TestArmTemplates
+        steps:
+          - template: templates/build/test-arm-templates.yml
+            parameters:
+              ArmTemplateRootDirectory: $(System.DefaultWorkingDirectory)/Azure/templates
+
+      - job: RunUnitTests
+        condition: and(succeededOrFailed(), or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
+        displayName: "Run unit tests"
+        dependsOn:
+          - TestArmTemplates
+        steps:
+          - template: templates/build/unit-test.yml
+
+      - job: RunSmokeTests
+        condition: and(succeededOrFailed(), or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
+        displayName: "Run smoke tests"
+        dependsOn:
+          - RunUnitTests
+        steps:
+          - template: templates/build/smoke-test.yml
+
+      - job: RunBuildAndPublish
+        displayName: "Build and publish"
+        variables:
+          - group: "Digital Forms - Shared Container Registry"
+        steps:
+          - template: templates/build/build-publish.yml
+
+  - stage: DeployToDev
+    variables:
+      - template: templates\variables\shared.yml
+      - template: templates\variables\dev.yml
+      - group: "Digital Forms - Shared Container Registry"
+      - group: "Digital Forms - DSI Integration - Dev"
+    jobs:
+      - template: templates/deploy/deploy.yml
+        parameters:
+          AzureServiceConnection: "s255d.azdo.deployment"
+          Environment: Dev
+
+  - stage: DeployToTest
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    variables:
+      - template: templates\variables\shared.yml
+      - template: templates\variables\test.yml
+      - group: "Digital Forms - Shared Container Registry"
+      - group: "Digital Forms - DSI Integration - Test"
+    jobs:
+      - template: templates/deploy/deploy.yml
+        parameters:
+          AzureServiceConnection: "s255t.azdo.deployment"
+          Environment: Test
+
+
+  - stage: DeployToPreProd
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    variables:
+      - template: templates\variables\shared.yml
+      - template: templates\variables\preprod.yml
+      - group: "Digital Forms - Shared Container Registry"
+      - group: "Digital Forms - DSI Integration - Test"
+    jobs:
+      - template: templates/deploy/deploy.yml
+        parameters:
+          AzureServiceConnection: "s255t.azdo.deployment"
+          Environment: PreProduction
+
+  - stage: DeployToProduction
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')))
+    variables:
+      - template: templates\variables\shared.yml
+      - template: templates\variables\prod.yml
+      - group: "Digital Forms - Shared Container Registry"
+      - group: "Digital Forms - DSI integration - Production"
+    jobs:
+      - template: templates/deploy/deploy.yml
+        parameters:
+          AzureServiceConnection: "s255p.azdo.deployment"
+          Environment: Production

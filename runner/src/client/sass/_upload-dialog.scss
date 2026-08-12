@@ -1,0 +1,65 @@
+@import "../../../../node_modules/govuk-frontend/dist/govuk/base";
+@import "../../../../node_modules/govuk-frontend/dist/govuk/helpers/colour";
+
+form .show-error {
+    display: none;
+}
+
+.govuk-notification-banner {
+    max-width: 620px;
+    &.show-error {
+        border: 5px solid govuk-colour("blue");
+        background-color: govuk-colour("blue");
+    }
+
+    &.service-down {
+        display: none;
+    }
+
+    &.upload-dialog {
+        display: none;
+    }
+
+    &.Validation-dialog {
+        display: none;
+    }
+
+    &.Validation-colmissdialog {
+        display: none;
+        border: 5px solid govuk-colour("blue");
+        background-color: govuk-colour("blue");
+    }
+
+    &.Validation-datamissdialog {
+        display: none;
+        border: 5px solid govuk-colour("blue");
+        background-color: govuk-colour("blue");
+    }
+
+    &.Validation-datavaliddialog {
+        display: none;
+        border: 5px solid govuk-colour("blue");
+        background-color: govuk-colour("blue");
+    }
+}
+
+.govuk-border-green {
+    border-color: govuk-colour("green");
+}
+
+form .lierroritem {
+    font-weight: bold;
+}
+
+form .lisuccessitem {
+    font-weight: normal;
+}
+
+form .lisubbanner {
+    list-style-type: circle !important;
+    padding-left: revert !important;
+}
+
+form .govuk-button--secondarydisableclick {
+    pointer-events: none;
+}

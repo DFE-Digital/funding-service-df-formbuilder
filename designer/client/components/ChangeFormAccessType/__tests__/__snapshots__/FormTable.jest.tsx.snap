@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormTable snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="govuk-grid-row"
+  >
+    <a
+      class="govuk-back-link"
+      href="#0"
+    >
+      Back
+    </a>
+    <div
+      class="govuk-grid-column-full"
+    >
+      <table
+        class="govuk-table"
+      >
+        <caption
+          class="govuk-table__caption govuk-table__caption--l govuk-!-margin-bottom-5"
+          data-testid="table-caption"
+        >
+          Change access type for i2NB4ABWZN
+        </caption>
+        <thead
+          class="govuk-table__head"
+        >
+          <tr
+            class="govuk-table__row"
+          >
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Form name
+            </th>
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Form status
+            </th>
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Last modified
+            </th>
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Access type
+            </th>
+            <th
+              class="govuk-table__header"
+              scope="col"
+            >
+              Created by
+            </th>
+          </tr>
+        </thead>
+        <tbody
+          class="govuk-table__body"
+        >
+          <tr
+            class="govuk-table__row"
+          >
+            <td
+              class="govuk-table__cell"
+            >
+              <span
+                class=""
+                data-testid="displayName-table-cell"
+                title="i2NB4ABWZN"
+              >
+                i2NB4ABWZN
+              </span>
+            </td>
+            <td
+              class="govuk-table__cell"
+            >
+              In development
+            </td>
+            <td
+              class="govuk-table__cell"
+            >
+              2022/05/27 00:53
+            </td>
+            <td
+              class="govuk-table__cell"
+            />
+            <td
+              class="govuk-table__cell"
+            >
+              sathya
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p
+        class="govuk-body"
+      >
+        Please select the required access type from the options below
+      </p>
+      <div
+        class="govuk-radios"
+        data-module="govuk-radios"
+      >
+        <div
+          class="govuk-radios__item govuk-!-margin-bottom-2"
+        >
+          <input
+            checked=""
+            class="govuk-radios__input"
+            data-testid="radio-input-option"
+            id="Public"
+            name="change-status"
+            type="radio"
+            value="Public"
+          />
+          <label
+            class="govuk-label govuk-radios__label"
+            for="change-status"
+          >
+            Public
+          </label>
+        </div>
+      </div>
+      <div
+        class="govuk-radios"
+        data-module="govuk-radios"
+      >
+        <div
+          class="govuk-radios__item govuk-!-margin-bottom-2"
+        >
+          <input
+            class="govuk-radios__input"
+            data-testid="radio-input-option"
+            id="DFESignIn"
+            name="change-status"
+            type="radio"
+            value="DFE SignIn"
+          />
+          <label
+            class="govuk-label govuk-radios__label"
+            for="change-status"
+          >
+            DFE SignIn
+          </label>
+        </div>
+      </div>
+      <div>
+        <button
+          class="govuk-button govuk-!-margin-top-5"
+          data-testid="change-access-type-button"
+          type="submit"
+        >
+          Switch access
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

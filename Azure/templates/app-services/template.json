@@ -1,0 +1,1750 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentTag": {
+      "type": "string"
+    },
+    "parentBusinessTag": {
+      "type": "string"
+    },
+    "portfolioTag": {
+      "type": "string"
+    },
+    "productTag": {
+      "type": "string"
+    },
+    "serviceTag": {
+      "type": "string"
+    },
+    "serviceLineTag": {
+      "type": "string"
+    },
+    "serviceOfferingTag": {
+      "type": "string"
+    },
+    "sharedResourceGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "the name of the shared resource group"
+      }
+    },
+    "sharedKeyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource name for the key vault used by the designer and 'live' runner"
+      }
+    },
+    "sharedVirtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name for the deployed virtual network"
+      }
+    },
+    "sharedSubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the shared designer subnet"
+      }
+    },
+    "runnerSubnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the runner designer subnet"
+      }
+    },
+    "sharedRedisInstanceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the shared redis instance"
+      }
+    },
+    "sharedAppServicePlanName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the shared app service plan"
+      }
+    },
+    "runnerAppServicePlanName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the runner app service plan"
+      }
+    },
+    "liveRunnerAppServiceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the runner app service for accessing live forms"
+      }
+    },
+    "previewRunnerAppServiceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the runner app service for previewing forms"
+      }
+    },
+    "designerAppServiceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the designer app service"
+      }
+    },
+    "sharedContainerRegistryName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the shared container registry"
+      }
+    },
+    "sharedContainerRegistryPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "access token to access the shared container registry"
+      }
+    },
+    "sharedAppInsightsName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the shared app insights account"
+      }
+    },
+    "sharedLogAnalyticsName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the shared log analytics account"
+      }
+    },
+    "nodeEnvironment": {
+      "type": "string",
+      "allowedValues": [ "development", "test", "preproduction", "production" ],
+      "metadata": {
+        "description": "The name of the node environment for the DEPLOYMENT_ENVIRONMENT app setting"
+      }
+    },
+    "LiveDfESignInAuthClientId": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The client id used for accessing DfE Sign In used by the live runner"
+      }
+    },
+    "LiveDfESignInAuthClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The client secret used for accessing DfE Sign In Auth used by the live runner"
+      }
+    },
+    "LiveDfESignInApiClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The client secret used for accessing DfE Sign In API used by the live runner"
+      }
+    },
+    "LiveDfeSignInAuthUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignIn Auth url used by the live runner"
+      }
+    },
+    "LiveDfeSignInTokenUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignIn Token url used by the live runner"
+      }
+    },
+    "LiveDfeSignOutUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignOut url used by the live runner"
+      }
+    },
+    "LiveDfeSignInApiUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignIn API url used by the live runner"
+      }
+    },
+    "PreviewDfESignInAuthClientId": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The client id used for accessing DfE Sign In used by the preview runner"
+      }
+    },
+    "PreviewDfESignInAuthClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The client secret used for accessing DfE Sign In Auth used by the preview runner"
+      }
+    },
+    "PreviewDfESignInApiClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The client secret used for accessing DfE Sign In API used by the preview runner"
+      }
+    },
+    "PreviewDfeSignInAuthUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignIn Auth url used by the preview runner"
+      }
+    },
+    "PreviewDfeSignInTokenUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignIn Token url used by the preview runner"
+      }
+    },
+    "PreviewDfeSignOutUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignOut url used by the preview runner"
+      }
+    },
+    "PreviewDfeSignInApiUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Dfe SignIn API url used by the preview runner"
+      }
+    },
+    "enableCustomDomain": {
+      "type": "bool",
+      "metadata": {
+        "description": "Enable custom domains on the designer/runner"
+      }
+    },
+    "liveRunnerCustomDomain": {
+      "type": "string",
+      "defaultValue": "not set",
+      "metadata": {
+        "description": "Custom DNS for the live runner"
+      }
+    },
+    "previewRunnerCustomDomain": {
+      "type": "string",
+      "defaultValue": "not set",
+      "metadata": {
+        "description": "Custom DNS for the preview runner"
+      }
+    },
+    "designerCustomDomain": {
+      "type": "string",
+      "defaultValue": "not set",
+      "metadata": {
+        "description": "Custom DNS for the runner"
+      }
+    },
+    "liveRunnerAppEnvironment": {
+      "type": "string",
+      "allowedValues": [ "dev", "test", "preproduction", "uat", "production" ],
+      "metadata": {
+        "description": "The name of the current environment"
+      }
+    },
+    "previewRunnerAppEnvironment": {
+      "type": "string",
+      "allowedValues": [ "dev", "test", "preproduction", "uat", "production" ],
+      "metadata": {
+        "description": "The name of the current environment"
+      }
+    },
+    "certificatesToLoad": {
+      "type": "string",
+      "metadata": {
+        "description": "a comma-delimited list of secret names stored in the key vault to load. Pass an empty string to skip loading certs."
+      }
+    },
+    "LiveRunnerCertThumbprint": {
+      "type": "string",
+      "defaultValue": "n/a",
+      "metadata": {
+        "description": "The thumbprint of the SSL cert for the live runner's custom domain."
+      }
+    },
+    "PreviewRunnerCertThumbprint": {
+      "type": "string",
+      "defaultValue": "n/a",
+      "metadata": {
+        "description": "The thumbprint of the SSL cert for the preview runner's custom domain."
+      }
+    },
+    "DesignerCertThumbprint": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The thumbprint of the SSL cert for the desingers custom domain."
+      }
+    },
+    "sharedActionGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the shared action group to use for alerts (exists iin the shared resource group)"
+      }
+    },
+    "docCaptureApiUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The url to the document capture api"
+      }
+    },
+    "fileShifterApiUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The url to the file shifter api"
+      }
+    },
+    "fetchFromRedis": {
+      "type": "bool",
+      "metadata": {
+        "description": "True or False fetch from Redis"
+      }
+    },
+    "ENABLE_DEBUGGING": {
+      "type": "bool",
+      "metadata": {
+        "description": "Set enable debugging"
+      }
+    },
+    "NODE_ENV": {
+      "type": "string",
+      "metadata": {
+        "description": "Set enable debugging"
+      }
+    },
+    "isAPIM": {
+      "type": "bool",
+      "metadata": {
+        "description": "True or False to use the EAPIM"
+      }
+    },
+    "payloadSize": {
+      "type": "int",
+      "metadata": {
+        "description": "payload packet size"
+      }
+    },
+    "GLOBAL_TIMEOUT": {
+      "type": "int",
+      "defaultValue": 300000,
+      "metadata": {
+        "description": "Global timeout in milliseconds"
+      }
+    },
+    "runnerPerfTest": {
+      "type": "bool",
+      "metadata": {
+        "description": "Enable runner performance testing settings"
+      }
+      },
+      "DesignerPROVIDER_CHUNK_SIZE": {
+        "type": "int",
+        "metadata": {
+          "description": "Chunk size for provider calls in the designer"
+        }
+      }
+  },
+  "variables": {
+    "fundingBuildingBlocksUrl": "https://raw.githubusercontent.com/SkillsFundingAgency/funding-platform-building-blocks/digitalForms/templates/",
+    "certificatesToLoad": "[split(parameters('certificatesToLoad'), ',')]",
+    "alertRules": [
+      {
+        "MetricName": "Http5xx",
+        "Operator": "GreaterThan",
+        "Threshold": "5",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('previewRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "Http401",
+        "Operator": "GreaterThan",
+        "Threshold": "0",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('previewRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "HttpResponseTime",
+        "Operator": "GreaterThan",
+        "Threshold": "2",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('previewRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "HealthCheckStatus",
+        "Operator": "LessThan",
+        "Threshold": "100",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('previewRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "Http5xx",
+        "Operator": "GreaterThan",
+        "Threshold": "5",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('liveRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "Http401",
+        "Operator": "GreaterThan",
+        "Threshold": "0",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('liveRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "HttpResponseTime",
+        "Operator": "GreaterThan",
+        "Threshold": "2",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('liveRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "HealthCheckStatus",
+        "Operator": "LessThan",
+        "Threshold": "100",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('liveRunnerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "Http5xx",
+        "Operator": "GreaterThan",
+        "Threshold": "5",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('designerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "Http401",
+        "Operator": "GreaterThan",
+        "Threshold": "0",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('designerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "HttpResponseTime",
+        "Operator": "GreaterThan",
+        "Threshold": "2",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('designerAppServiceName')]",
+        "WindowSize": "PT5M"
+      },
+      {
+        "MetricName": "HealthCheckStatus",
+        "Operator": "LessThan",
+        "Threshold": "100",
+        "Aggregation": "Average",
+        "ResourceType": "Microsoft.Web/sites",
+        "ResourceName": "[parameters('designerAppServiceName')]",
+        "WindowSize": "PT5M"
+      }
+    ]
+  },
+  "resources": [
+    {
+      "apiVersion": "2019-05-01",
+      "name": "liveDfeSignInAuthClientIdSecret",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-secret.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "secretName": {
+            "value": "LiveDSIAuthClientId"
+          },
+          "secretValue": {
+            "value": "[parameters('LiveDfESignInAuthClientId')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-05-01",
+      "name": "liveDfeSignInAuthClientSecretSecret",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-secret.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "secretName": {
+            "value": "LiveDSIAuthClientSecret"
+          },
+          "secretValue": {
+            "value": "[parameters('LiveDfESignInAuthClientSecret')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-05-01",
+      "name": "liveDfeSignInApiClientSecretSecret",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-secret.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "secretName": {
+            "value": "LiveDSIApiClientSecret"
+          },
+          "secretValue": {
+            "value": "[parameters('LiveDfESignInApiClientSecret')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-05-01",
+      "name": "previewDfeSignInAuthClientIdSecret",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-secret.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "secretName": {
+            "value": "PreviewDSIAuthClientId"
+          },
+          "secretValue": {
+            "value": "[parameters('PreviewDfESignInAuthClientId')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-05-01",
+      "name": "previewDfeSignInAuthClientSecretSecret",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-secret.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "secretName": {
+            "value": "PreviewDSIAuthClientSecret"
+          },
+          "secretValue": {
+            "value": "[parameters('PreviewDfESignInAuthClientSecret')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-05-01",
+      "name": "previewDfeSignInApiClientSecretSecret",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-secret.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "secretName": {
+            "value": "PreviewDSIApiClientSecret"
+          },
+          "secretValue": {
+            "value": "[parameters('PreviewDfESignInApiClientSecret')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "liveRunnerAppService",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "liveDfeSignInAuthClientIdSecret",
+        "liveDfeSignInAuthClientSecretSecret",
+        "liveDfeSignInApiClientSecretSecret"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'app-service.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "environmentTag": {
+            "value": "[parameters('environmentTag')]"
+          },
+          "parentBusinessTag": {
+            "value": "[parameters('parentBusinessTag')]"
+          },
+          "portfolioTag": {
+            "value": "[parameters('portfolioTag')]"
+          },
+          "productTag": {
+            "value": "[parameters('productTag')]"
+          },
+          "serviceTag": {
+            "value": "[parameters('serviceTag')]"
+          },
+          "serviceLineTag": {
+            "value": "[parameters('serviceLineTag')]"
+          },
+          "serviceOfferingTag": {
+            "value": "[parameters('serviceOfferingTag')]"
+          },
+          "appServiceName": {
+            "value": "[parameters('liveRunnerAppServiceName')]"
+          },
+          "appServicePlanName": {
+            "value": "[parameters('runnerAppServicePlanName')]"
+          },
+          "appServicePlanResourceGroup": {
+            "value": "[parameters('sharedResourceGroupName')]"
+          },
+          "appKind": {
+            "value": "app,linux,container"
+          },
+          "deployStagingSlot": {
+            "value": false
+          },
+          "http20Enabled": {
+            "value": true
+          },
+          "healthCheckPath": {
+            "value": "/help/cookies"
+          },
+          "appServiceAppSettings": {
+            "value": [
+              {
+                "name": "DOCKER_REGISTRY_SERVER_URL",
+                "value": "[concat('https://', parameters('sharedContainerRegistryName'), '.azurecr.io')]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                "value": "[parameters('sharedContainerRegistryName')]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                "value": "[parameters('sharedContainerRegistryPassword')]"
+              },
+              {
+                "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                "value": "false"
+              },
+              {
+                "name": "WEBSITES_PORT",
+                "value": "3009"
+              },
+              {
+                "name": "TZ",
+                "value": "Europe/London"
+              },
+              {
+                "name": "NODE_ENV",
+                "value": "[parameters('NODE_ENV')]"
+              },
+              {
+                "name": "DEPLOYMENT_ENVIRONMENT",
+                "value": "[parameters('nodeEnvironment')]"
+              },
+              {
+                "name": "REDIS_HOST",
+                "value": "[concat(parameters('sharedRedisInstanceName'), '.redis.cache.windows.net')]"
+              },
+              {
+                "name": "REDIS_PORT",
+                "value": "6380"
+              },
+              {
+                "name": "REDIS_KEY_EXPIRY",
+                "value": "23:59"
+              },
+              {
+                "name": "REDIS_PASSWORD",
+                "value": "[listKeys(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Cache/Redis', parameters('sharedRedisInstanceName')), '2018-03-01').primaryKey]"
+              },
+              {
+                "name": "REDIS_TLS",
+                "value": "true"
+              },
+              {
+                "name": "sandbox",
+                "value": "true"
+              },
+              {
+                "name": "PREVIEW_MODE",
+                "value": "false"
+              },
+              {
+                "name": "SharedDatabaseConnectionString",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=SharedDatabaseConnectionString)')]"
+              },
+              {
+                "name": "AUTH_ENABLED",
+                "value": "true"
+              },
+              {
+                "name": "AUTH_CLIENT_ID",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=LiveDSIAuthClientId)')]"
+              },
+              {
+                "name": "AUTH_CLIENT_SECRET",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=LiveDSIAuthClientSecret)')]"
+              },
+              {
+                "name": "AUTH_CLIENT_AUTH_URL",
+                "value": "[parameters('LiveDfeSignInAuthUrl')]"
+              },
+              {
+                "name": "AUTH_CLIENT_TOKEN_URL",
+                "value": "[parameters('LiveDfeSignInTokenUrl')]"
+              },
+              {
+                "name": "API_URL",
+                "value": "[parameters('LiveDfeSignInApiUrl')]"
+              },
+              {
+                "name": "AUTH_LOGOUT_URL",
+                "value": "[parameters('LiveDfeSignOutUrl')]"
+              },
+              {
+                "name": "AUTH_REDIRECT_URL",
+                "value": "[concat('https://', parameters('liveRunnerCustomDomain'), '/auth/callback')]"
+              },
+              {
+                "name": "AUTH_API_SECRET",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=LiveDSIApiClientSecret)')]"
+              },
+              {
+                "name": "SCOPE",
+                "value": "openid profile email organisationid"
+              },
+              {
+                "name": "APP_ENV",
+                "value": "[parameters('liveRunnerAppEnvironment')]"
+              },
+              {
+                "name": "RESPONSE_COLLECTION_NAME",
+                "value": "responses"
+              },
+              {
+                "name": "APPINSIGHTS_CONNECTION_STRING",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Insights/components', parameters('sharedAppInsightsName')), '2020-02-02').ConnectionString]"
+              },
+              {
+                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Insights/components', parameters('sharedAppInsightsName')), '2020-02-02').InstrumentationKey]"
+              },
+              {
+                "name": "API_DOC_CAPTURE_UPLOAD",
+                "value": "[parameters('docCaptureApiUrl')]"
+              },
+              {
+                "name": "API_PDF_URL",
+                "value":"[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=pdfApiUrl)')]"
+              },
+              {
+                "name": "API_PDF_KEY",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=pdfApiKey)')]"
+              },
+              {
+                "name": "FILE_SHIFTER_API",
+                "value": "[parameters('fileShifterApiUrl')]"
+              },
+              {
+                "name": "DocCaptureSubscriptionKey",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DocCaptureSubscriptionKey)')]"
+              },
+              {
+                "name": "BLOB_STORAGE_CONTAINER_NAME",
+                "value": "df-datasets"
+              },
+              {
+                "name": "AZURE_STORAGE_CONNECTION_STRING",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=AzureStorageConnectionString)')]"
+              },
+              {
+                "name": "AZURE_DC_STORAGE_CONNECTION_STRING",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=AzureDocCaptureStorageConnectionString)')]"
+              },
+              {
+                "name": "DC_BLOB_STORAGE_CONTAINER_NAME",
+                "value": "digital-forms-upload"
+              },
+              {
+                "name": "DF_SQL_API_URL",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DFSQLAPIURL)')]"
+              },
+              {
+                "name": "DF_SQL_API_KEY",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DFSQLAPIKEY)')]"
+              },
+              {
+                "name": "FETCH_FROM_REDIS",
+                "value": "[parameters('fetchFromRedis')]"
+              },
+              {
+                "name": "SB_CONNECTION_STRING",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=ServiceBusConnectionString)')]"
+              },
+              {
+                "name": "PDF_PRINT_QUEUE_NAME",
+                "value": "dfsubmissions-pdfprintq"
+              },
+              {
+                "name": "isAPIM",
+                "value": "[parameters('isAPIM')]"
+              },
+              {
+                "name": "ENABLE_DEBUGGING",
+                "value": "[parameters('ENABLE_DEBUGGING')]"
+              },
+              {
+                "name": "payloadSize",
+                "value": "[parameters('payloadSize')]"
+              },
+              {
+                "name": "GLOBAL_TIMEOUT",
+                "value": "[parameters('GLOBAL_TIMEOUT')]"
+              },
+              {
+                "name": "FileShifterSubscriptionKey",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=FileShifterSubscriptionKey)')]"
+
+              },
+              {
+                "name": "SESSION_COOKIE_PASSWORD",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=SESSION-COOKIE-PASSWORD)')]"
+
+              },
+              {
+                "name": "PT_TESTING",
+                "value": "[parameters('runnerPerfTest')]"
+
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "previewRunnerAppService",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "previewDfeSignInAuthClientIdSecret",
+        "previewDfeSignInAuthClientSecretSecret",
+        "previewDfeSignInApiClientSecretSecret"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'app-service.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "environmentTag": {
+            "value": "[parameters('environmentTag')]"
+          },
+          "parentBusinessTag": {
+            "value": "[parameters('parentBusinessTag')]"
+          },
+          "portfolioTag": {
+            "value": "[parameters('portfolioTag')]"
+          },
+          "productTag": {
+            "value": "[parameters('productTag')]"
+          },
+          "serviceTag": {
+            "value": "[parameters('serviceTag')]"
+          },
+          "serviceLineTag": {
+            "value": "[parameters('serviceLineTag')]"
+          },
+          "serviceOfferingTag": {
+            "value": "[parameters('serviceOfferingTag')]"
+          },
+          "appServiceName": {
+            "value": "[parameters('previewRunnerAppServiceName')]"
+          },
+          "appServicePlanName": {
+            "value": "[parameters('sharedAppServicePlanName')]"
+          },
+          "appServicePlanResourceGroup": {
+            "value": "[parameters('sharedResourceGroupName')]"
+          },
+          "appKind": {
+            "value": "app,linux,container"
+          },
+          "deployStagingSlot": {
+            "value": false
+          },
+          "http20Enabled": {
+            "value": true
+          },
+          "healthCheckPath": {
+            "value": "/help/cookies"
+          },
+          "appServiceAppSettings": {
+            "value": [
+              {
+                "name": "DOCKER_REGISTRY_SERVER_URL",
+                "value": "[concat('https://', parameters('sharedContainerRegistryName'), '.azurecr.io')]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                "value": "[parameters('sharedContainerRegistryName')]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                "value": "[parameters('sharedContainerRegistryPassword')]"
+              },
+              {
+                "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                "value": "false"
+              },
+              {
+                "name": "WEBSITES_PORT",
+                "value": "3009"
+              },
+              {
+                "name": "TZ",
+                "value": "Europe/London"
+              },
+              {
+                "name": "NODE_ENV",
+                "value": "[parameters('NODE_ENV')]"
+              },
+              {
+                "name": "DEPLOYMENT_ENVIRONMENT",
+                "value": "[parameters('nodeEnvironment')]"
+              },
+              {
+                "name": "REDIS_HOST",
+                "value": "[concat(parameters('sharedRedisInstanceName'), '.redis.cache.windows.net')]"
+              },
+              {
+                "name": "REDIS_PORT",
+                "value": "6380"
+              },
+              {
+                "name": "REDIS_PASSWORD",
+                "value": "[listKeys(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Cache/Redis', parameters('sharedRedisInstanceName')), '2018-03-01').primaryKey]"
+              },
+              {
+                "name": "REDIS_KEY_EXPIRY",
+                "value": "23:59"
+              },
+              {
+                "name": "FETCH_FROM_REDIS",
+                "value": "false"
+              },
+              {
+                "name": "REDIS_TLS",
+                "value": "true"
+              },
+              {
+                "name": "sandbox",
+                "value": "true"
+              },
+              {
+                "name": "PREVIEW_MODE",
+                "value": "true"
+              },
+              {
+                "name": "SharedDatabaseConnectionString",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=SharedDatabaseConnectionString)')]"
+              },
+              {
+                "name": "AUTH_ENABLED",
+                "value": "true"
+              },
+              {
+                "name": "AUTH_CLIENT_ID",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=PreviewDSIAuthClientId)')]"
+              },
+              {
+                "name": "AUTH_CLIENT_SECRET",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=PreviewDSIAuthClientSecret)')]"
+              },
+              {
+                "name": "AUTH_CLIENT_AUTH_URL",
+                "value": "[parameters('PreviewDfeSignInAuthUrl')]"
+              },
+              {
+                "name": "AUTH_CLIENT_TOKEN_URL",
+                "value": "[parameters('PreviewDfeSignInTokenUrl')]"
+              },
+              {
+                "name": "API_URL",
+                "value": "[parameters('PreviewDfeSignInApiUrl')]"
+              },
+              {
+                "name": "AUTH_LOGOUT_URL",
+                "value": "[parameters('PreviewDfeSignOutUrl')]"
+              },
+              {
+                "name": "AUTH_REDIRECT_URL",
+                "value": "[concat('https://', parameters('previewRunnerCustomDomain'), '/auth/callback')]"
+              },
+              {
+                "name": "AUTH_API_SECRET",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=PreviewDSIApiClientSecret)')]"
+              },
+              {
+                "name": "SCOPE",
+                "value": "openid profile email organisationid"
+              },
+              {
+                "name": "APP_ENV",
+                "value": "[parameters('previewRunnerAppEnvironment')]"
+              },
+              {
+                "name": "RESPONSE_COLLECTION_NAME",
+                "value": "responses_uat"
+              },
+              {
+                "name": "APPINSIGHTS_CONNECTION_STRING",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Insights/components', parameters('sharedAppInsightsName')), '2020-02-02').ConnectionString]"
+              },
+              {
+                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Insights/components', parameters('sharedAppInsightsName')), '2020-02-02').InstrumentationKey]"
+              },
+              {
+                "name": "API_DOC_CAPTURE_UPLOAD",
+                "value": "[parameters('docCaptureApiUrl')]"
+              },
+              {
+                "name": "API_PDF_URL",
+                "value":"[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=pdfApiUrl)')]"
+              },
+              {
+                "name": "API_PDF_KEY",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=pdfApiKey)')]"
+              },
+              {
+                "name": "FILE_SHIFTER_API",
+                "value": "[parameters('fileShifterApiUrl')]"
+              },
+              {
+                "name": "DocCaptureSubscriptionKey",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DocCaptureSubscriptionKey)')]"
+              },
+              {
+                "name": "BLOB_STORAGE_CONTAINER_NAME",
+                "value": "df-datasets"
+              },
+              {
+                "name": "AZURE_STORAGE_CONNECTION_STRING",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=AzureStorageConnectionString)')]"
+              },
+              {
+                "name": "AZURE_DC_STORAGE_CONNECTION_STRING",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=AzureDocCaptureStorageConnectionString)')]"
+              },
+              {
+                "name": "DC_BLOB_STORAGE_CONTAINER_NAME",
+                "value": "digital-forms-upload"
+              },
+              {
+                "name": "DF_SQL_API_URL",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DFSQLAPIURL)')]"
+              },
+              {
+                "name": "DF_SQL_API_KEY",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DFSQLAPIKEY)')]"
+              },
+              {
+                "name": "SB_CONNECTION_STRING",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=ServiceBusConnectionString)')]"
+              },
+              {
+                "name": "PDF_PRINT_QUEUE_NAME",
+                "value": "dfsubmissions-pdfprintq"
+              },
+              {
+                "name": "ENABLE_DEBUGGING",
+                "value": "[parameters('ENABLE_DEBUGGING')]"
+              },
+              {
+                "name": "FileShifterSubscriptionKey",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=FileShifterSubscriptionKey)')]"
+              },
+              { 
+                "name": "SESSION_COOKIE_PASSWORD_PREVIEW",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=SESSION-COOKIE-PASSWORD-PREVIEW)')]"
+              },
+              {
+                "name": "PROVIDER_CHUNK_SIZE",
+                "value": "[parameters('DesignerPROVIDER_CHUNK_SIZE')]"
+              },
+              {
+                "name": "GLOBAL_TIMEOUT",
+                "value": "[parameters('GLOBAL_TIMEOUT')]"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "condition": "[parameters('enableCustomDomain')]",
+      "name": "[concat('certificate-', copyIndex())]",
+      "dependsOn": [ "azureWebsitesProviderKvAccessPolicy" ],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'app-service-certificate.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "environmentTag": {
+            "value": "[parameters('environmentTag')]"
+          },
+          "parentBusinessTag": {
+            "value": "[parameters('parentBusinessTag')]"
+          },
+          "portfolioTag": {
+            "value": "[parameters('portfolioTag')]"
+          },
+          "productTag": {
+            "value": "[parameters('productTag')]"
+          },
+          "serviceTag": {
+            "value": "[parameters('serviceTag')]"
+          },
+          "serviceLineTag": {
+            "value": "[parameters('serviceLineTag')]"
+          },
+          "serviceOfferingTag": {
+            "value": "[parameters('serviceOfferingTag')]"
+          },
+          "keyVaultCertificateName": {
+            "value": "[variables('certificatesToLoad')[copyIndex()]]"
+          },
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "keyVaultResourceGroup": {
+            "value": "[parameters('sharedResourceGroupName')]"
+          }
+        }
+      },
+      "copy": {
+        "name": "CertsToLoadCopy",
+        "count": "[length(variables('certificatesToLoad'))]"
+      }
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "condition": "[and(parameters('enableCustomDomain'), not(empty(parameters('LiveRunnerCertThumbprint'))))]",
+      "name": "liveRunnerHostnameBinding",
+      "dependsOn": [ "CertsToLoadCopy", "liveRunnerAppService" ],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'app-service-hostname-bindings.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "appServiceName": {
+            "value": "[parameters('liveRunnerAppServiceName')]"
+          },
+          "customHostName": {
+            "value": "[if(parameters('enableCustomDomain'), parameters('liveRunnerCustomDomain'), '')]"
+          },
+          "certificateThumbprint": {
+            "value": "[parameters('liveRunnerCertThumbprint')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "condition": "[and(parameters('enableCustomDomain'), not(empty(parameters('PreviewRunnerCertThumbprint'))))]",
+      "name": "previewRunnerHostnameBinding",
+      "dependsOn": [ "CertsToLoadCopy", "previewRunnerAppService" ],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'app-service-hostname-bindings.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "appServiceName": {
+            "value": "[parameters('previewRunnerAppServiceName')]"
+          },
+          "customHostName": {
+            "value": "[if(parameters('enableCustomDomain'), parameters('previewRunnerCustomDomain'), '')]"
+          },
+          "certificateThumbprint": {
+            "value": "[parameters('PreviewRunnerCertThumbprint')]"
+          }
+        }
+      }
+    },
+
+    {
+      "apiVersion": "2019-07-01",
+      "condition": "[and(parameters('enableCustomDomain'), not(empty(parameters('DesignerCertThumbprint'))))]",
+      "name": "designerHostnameBinding",
+      "dependsOn": [ "CertsToLoadCopy", "designerAppService" ],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'app-service-hostname-bindings.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "appServiceName": {
+            "value": "[parameters('designerAppServiceName')]"
+          },
+          "customHostName": {
+            "value": "[parameters('designerCustomDomain')]"
+          },
+          "certificateThumbprint": {
+            "value": "[if(parameters('enableCustomDomain'), parameters('DesignerCertThumbprint'), '')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "designerAppService",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'app-service.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "environmentTag": {
+            "value": "[parameters('environmentTag')]"
+          },
+          "parentBusinessTag": {
+            "value": "[parameters('parentBusinessTag')]"
+          },
+          "portfolioTag": {
+            "value": "[parameters('portfolioTag')]"
+          },
+          "productTag": {
+            "value": "[parameters('productTag')]"
+          },
+          "serviceTag": {
+            "value": "[parameters('serviceTag')]"
+          },
+          "serviceLineTag": {
+            "value": "[parameters('serviceLineTag')]"
+          },
+          "serviceOfferingTag": {
+            "value": "[parameters('serviceOfferingTag')]"
+          },
+          "appServiceName": {
+            "value": "[parameters('designerAppServiceName')]"
+          },
+          "appServicePlanName": {
+            "value": "[parameters('sharedAppServicePlanName')]"
+          },
+          "appServicePlanResourceGroup": {
+            "value": "[parameters('sharedResourceGroupName')]"
+          },
+          "appKind": {
+            "value": "app,linux,container"
+          },
+          "deployStagingSlot": {
+            "value": false
+          },
+          "http20Enabled": {
+            "value": true
+          },
+          "healthCheckPath": {
+            "value": "/app"
+          },
+          "appServiceAppSettings": {
+            "value": [
+              {
+                "name": "DOCKER_REGISTRY_SERVER_URL",
+                "value": "[concat('https://', parameters('sharedContainerRegistryName'), '.azurecr.io')]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                "value": "[parameters('sharedContainerRegistryName')]"
+              },
+              {
+                "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                "value": "[parameters('sharedContainerRegistryPassword')]"
+              },
+              {
+                "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                "value": "false"
+              },
+              {
+                "name": "WEBSITES_PORT",
+                "value": "3000"
+              },
+              {
+                "name": "NODE_ENV",
+                "value": "[parameters('NODE_ENV')]"
+              },
+              {
+                "name": "DEPLOYMENT_ENVIRONMENT",
+                "value": "[parameters('nodeEnvironment')]"
+              },
+              {
+                "name": "TZ",
+                "value": "Europe/London"
+              },
+              {
+                "name": "CHOKIDAR_USEPOLLING",
+                "value": "true"
+              },
+              {
+                "name": "REDIS_HOST",
+                "value": "[concat(parameters('sharedRedisInstanceName'), '.redis.cache.windows.net')]"
+              },
+              {
+                "name": "REDIS_PORT",
+                "value": "6380"
+              },
+              {
+                "name": "REDIS_PASSWORD",
+                "value": "[listKeys(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Cache/Redis', parameters('sharedRedisInstanceName')), '2018-03-01').primaryKey]"
+              },
+              {
+                "name": "REDIS_TLS",
+                "value": "true"
+              },
+              {
+                "name": "sandbox",
+                "value": "true"
+              },
+              {
+                "name": "PREVIEW_URL",
+                "value": "[concat('https://', parameters('liveRunnerCustomDomain'), '/')]"
+              },
+              {
+                "name": "PUBLISH_URL",
+                "value": "[concat('https://', parameters('liveRunnerCustomDomain'), '/')]"
+              },
+              {
+                "name": "PERSISTENT_BACKEND",
+                "value": "cosmos"
+              },
+              {
+                "name": "SharedDatabaseConnectionString",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=SharedDatabaseConnectionString)')]"
+              },
+              {
+                "name": "PREPROD_PREVIEW_URL",
+                "value": "[concat('https://', parameters('previewRunnerCustomDomain'))]"
+              },
+              {
+                "name": "APPINSIGHTS_CONNECTION_STRING",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Insights/components', parameters('sharedAppInsightsName')), '2020-02-02').ConnectionString]"
+              },
+              {
+                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Insights/components', parameters('sharedAppInsightsName')), '2020-02-02').InstrumentationKey]"
+              },
+              {
+                "name": "AZURE_STORAGE_CONNECTION_STRING",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=AzureStorageConnectionString)')]"
+              },
+              {
+                "name": "BLOB_STORAGE_CONTAINER_NAME",
+                "value": "df-datasets"
+              },
+              {
+                "name": "API_DOC_CAPTURE_UPLOAD",
+                "value": "[parameters('docCaptureApiUrl')]"
+              },
+              {
+                "name": "DocCaptureSubscriptionKey",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DocCaptureSubscriptionKey)')]"
+              },
+              {
+                "name": "DF_SQL_API_URL",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DFSQLAPIURL)')]"
+              },
+              {
+                "name": "DF_SQL_API_KEY",
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=DFSQLAPIKEY)')]"
+              },
+              {
+                "name": "isAPIM",
+                "value": "[parameters('isAPIM')]"
+              },
+              {
+                "name": "payloadSize",
+                "value": "[parameters('payloadSize')]"
+              },
+              {
+                "name": "PROVIDER_CHUNK_SIZE",
+                "value": "[parameters('DesignerPROVIDER_CHUNK_SIZE')]"
+              }, 
+              {
+                "name": "GLOBAL_TIMEOUT",
+                "value": "[parameters('GLOBAL_TIMEOUT')]"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "name": "azureWebsitesProviderKvAccessPolicy",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-accesspolicies.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "accessPolicies": {
+            "value": [
+              {
+                "tenantId": "[subscription().tenantId]",
+                "objectId": "7c4deb1d-b373-4bfa-a6b3-b1c06ea9ce46",
+                "permissions": {
+                  "secrets": [ "get" ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2019-07-01",
+      "name": "appServicesKvAccessPolicy",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [ "liveRunnerAppService", "previewRunnerAppService", "designerAppService"],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'keyvault-accesspolicies.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('sharedKeyVaultName')]"
+          },
+          "accessPolicies": {
+            "value": [
+              {
+                "tenantId": "[subscription().tenantId]",
+                "objectId": "[reference('liveRunnerAppService', '2019-07-01').outputs.managedServiceIdentityId.value]",
+                "permissions": {
+                  "secrets": [ "list", "get" ]
+                }
+              },
+              {
+                "tenantId": "[subscription().tenantId]",
+                "objectId": "[reference('previewRunnerAppService', '2019-07-01').outputs.managedServiceIdentityId.value]",
+                "permissions": {
+                  "secrets": [ "list", "get" ]
+                }
+              },
+              {
+                "tenantId": "[subscription().tenantId]",
+                "objectId": "[reference('designerAppService', '2019-07-01').outputs.managedServiceIdentityId.value]",
+                "permissions": {
+                  "secrets": [ "list", "get" ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/networkConfig",
+      "name": "[concat(parameters('designerAppServiceName'), '/VirtualNetwork')]",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "subnetResourceid": "[resourceId(parameters('sharedResourceGroupName') , 'Microsoft.Network/virtualNetworks/subnets', parameters('sharedVirtualNetworkName'), parameters('sharedSubnetName'))]",
+        "swiftSupported": true
+      },
+      "dependsOn": [ "designerAppService" ]
+    },
+    {
+      "type": "Microsoft.Web/sites/networkConfig",
+      "name": "[concat(parameters('liveRunnerAppServiceName'), '/VirtualNetwork')]",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "subnetResourceid": "[resourceId(parameters('sharedResourceGroupName') , 'Microsoft.Network/virtualNetworks/subnets', parameters('sharedVirtualNetworkName'), parameters('runnerSubnetName'))]",
+        "swiftSupported": true
+      },
+      "dependsOn": [ "liveRunnerAppService" ]
+    },
+    {
+      "type": "Microsoft.Web/sites/networkConfig",
+      "name": "[concat(parameters('previewRunnerAppServiceName'), '/VirtualNetwork')]",
+      "apiVersion": "2018-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "subnetResourceid": "[resourceId(parameters('sharedResourceGroupName') , 'Microsoft.Network/virtualNetworks/subnets', parameters('sharedVirtualNetworkName'), parameters('sharedSubnetName'))]",
+        "swiftSupported": true
+      },
+      "dependsOn": [ "previewRunnerAppService" ]
+    },
+    {
+      "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+      "name": "[concat(parameters('designerAppServiceName'), '/Microsoft.Insights/DesignerAppServiceDiagnostics')]",
+      "apiVersion": "2017-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "workspaceId": "[resourceId(parameters('sharedResourceGroupName'), 'Microsoft.OperationalInsights/workspaces', parameters('sharedLogAnalyticsName'))]",
+        "logs": [
+          {
+            "category": "AppServiceHTTPLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceConsoleLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceAppLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceAuditLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceIPSecAuditLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServicePlatformLogs",
+            "enabled": true
+          }
+        ],
+        "metrics": [
+          {
+            "category": "AllMetrics",
+            "enabled": true
+          }
+        ]
+      },
+      "dependsOn": [ "designerAppService" ]
+    },
+    {
+      "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+      "name": "[concat(parameters('liveRunnerAppServiceName'), '/Microsoft.Insights/RunnerAppServiceDiagnostics')]",
+      "apiVersion": "2017-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "workspaceId": "[resourceId(parameters('sharedResourceGroupName'), 'Microsoft.OperationalInsights/workspaces', parameters('sharedLogAnalyticsName'))]",
+        "logs": [
+          {
+            "category": "AppServiceHTTPLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceConsoleLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceAppLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceAuditLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceIPSecAuditLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServicePlatformLogs",
+            "enabled": true
+          }
+        ],
+        "metrics": [
+          {
+            "category": "AllMetrics",
+            "enabled": true
+          }
+        ]
+      },
+      "dependsOn": [ "liveRunnerAppService" ]
+    },
+    {
+      "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+      "name": "[concat(parameters('previewRunnerAppServiceName'), '/Microsoft.Insights/RunnerAppServiceDiagnostics')]",
+      "apiVersion": "2017-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "workspaceId": "[resourceId(parameters('sharedResourceGroupName'), 'Microsoft.OperationalInsights/workspaces', parameters('sharedLogAnalyticsName'))]",
+        "logs": [
+          {
+            "category": "AppServiceHTTPLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceConsoleLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceAppLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceAuditLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServiceIPSecAuditLogs",
+            "enabled": true
+          },
+          {
+            "category": "AppServicePlatformLogs",
+            "enabled": true
+          }
+        ],
+        "metrics": [
+          {
+            "category": "AllMetrics",
+            "enabled": true
+          }
+        ]
+      },
+      "dependsOn": [ "previewRunnerAppService" ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2017-05-10",
+      "name": "[concat(variables('alertRules')[copyIndex()].ResourceName, '-', replace(variables('alertRules')[copyIndex()].MetricName, '/', '-'))]",
+      "dependsOn": [
+        "designerAppService",
+        "previewRunnerAppService",
+        "liveRunnerAppService"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('fundingBuildingBlocksUrl'),'alert-rules.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "environmentTag": {
+            "value": "[parameters('environmentTag')]"
+          },
+          "parentBusinessTag": {
+            "value": "[parameters('parentBusinessTag')]"
+          },
+          "portfolioTag": {
+            "value": "[parameters('portfolioTag')]"
+          },
+          "productTag": {
+            "value": "[parameters('productTag')]"
+          },
+          "serviceTag": {
+            "value": "[parameters('serviceTag')]"
+          },
+          "serviceOfferingTag": {
+            "value": "[parameters('serviceOfferingTag')]"
+          },
+          "serviceLineTag": {
+            "value": "[parameters('serviceLineTag')]"
+          },
+          "alertName": {
+            "value": "[concat(variables('alertRules')[copyIndex()].ResourceName, '-metric-', replace(variables('alertRules')[copyIndex()].MetricName, '/', '-'))]"
+          },
+          "metricName": {
+            "value": "[variables('alertRules')[copyIndex()].MetricName]"
+          },
+          "operator": {
+            "value": "[variables('alertRules')[copyIndex()].Operator]"
+          },
+          "threshold": {
+            "value": "[variables('alertRules')[copyIndex()].Threshold]"
+          },
+          "aggregation": {
+            "value": "[variables('alertRules')[copyIndex()].Aggregation]"
+          },
+          "actionGroupResourceGroup": {
+            "value": "[parameters('sharedResourceGroupName')]"
+          },
+          "actionGroupName": {
+            "value": "[parameters('sharedActionGroupName')]"
+          },
+          "windowSize": {
+            "value": "[variables('alertRules')[copyIndex()].WindowSize]"
+          },
+          "resourceId": {
+            "value": "[resourceId(variables('alertRules')[copyIndex()].ResourceType, variables('alertRules')[copyIndex()].ResourceName)]"
+          }
+        }
+      },
+      "copy": {
+        "name": "AlertRulesCopy",
+        "count": "[length(variables('alertRules'))]"
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+﻿variables:
+  ResourcePrefix: s255t01
+  AzureSubscription: "c4542a65-affe-40bb-a9c0-33fc31feb3c9"
+  DeploymentServicePrincipal: "e35197b9-684d-4b77-9b90-2d792b6d5e42"
+  NodeEnvironmentAppSetting: test
+  fetchFromRedis: false
+  ENABLE_DEBUGGING: false
+  NODE_ENV: production
+
+  runnerPerfTest: false
+  DesignerPROVIDER_CHUNK_SIZE: 900
+
+  LiveDfeSignInAuthUrl: https://pp-oidc.signin.education.gov.uk/auth
+  LiveDfeSignInTokenUrl: https://pp-oidc.signin.education.gov.uk/token
+  LiveDfeSignInApiUrl: https://pp-api.signin.education.gov.uk
+  LiveDfeSignOutUrl: https://pp-oidc.signin.education.gov.uk/session/end
+
+  PreviewDfeSignInAuthUrl: https://test-oidc.signin.education.gov.uk/auth
+  PreviewDfeSignInTokenUrl: https://test-oidc.signin.education.gov.uk/token
+  PreviewDfeSignInApiUrl: https://test-api.signin.education.gov.uk
+  PreviewDfeSignOutUrl: https://test-oidc.signin.education.gov.uk/session/end
+
+  # Runner set up - app environment for UAT - can we remove this???  it gets set to UAT for the prod preview runner.
+  LiveRunnerAppEnvironment: test
+  PreviewRunnerAppEnvironment: test
+
+  # Custom Domain Set-up
+  EnableCustomDomain: false
+  CertificatesToLoad: test-digital-forms-education-gov-uk,uat-dev-exp2025
+
+  DesignerCustomDomain: test.designer.digital-forms.education.gov.uk
+  DesignerCertThumbprint: A1140EF44034D8BF444DD02C3A55836A69B6C0F2
+  LiveRunnerCustomDomain: test.digital-forms.education.gov.uk
+  LiveRunnerCertThumbprint: A1140EF44034D8BF444DD02C3A55836A69B6C0F2
+  PreviewRunnerCustomDomain: uat.test.digital-forms.education.gov.uk
+  PreviewRunnerCertThumbprint: F0C2F1FCDBC225A7AB416F43C917DF27DF00D42F
+
+  # Enterprise APIM set up:
+  DocCaptureApiUrl:  https://pp-api.education.gov.uk/document-capture-test/2/
+  FileshifterApiUrl: https://pp-api.education.gov.uk/document-capture-file-shifter-test/2/api/Dc_Fileshifter
+
+  # Tags
+  EnvironmentTag: Test
+
+  # WAF
+  ## sets both designer and runner
+  isAPIM: true
+  payloadSize: 209715200

@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Import Data snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <a
+      class="govuk-back-link"
+      href="#0"
+    >
+      Back
+    </a>
+    <h4
+      class="govuk-heading-m govuk-!-margin-top-6 govuk-!-margin-bottom-8"
+    >
+      Import data set
+    </h4>
+    <div
+      class="import-data-container govuk-!-margin-right-8 govuk-!-margin-top-8"
+    >
+      <div
+        class="govuk-form-group"
+      >
+        <h4
+          class="govuk-label-wrapper"
+        >
+          <label
+            class="govuk-label govuk-label--s"
+            for="file-title"
+          >
+            Title
+          </label>
+        </h4>
+        <div
+          class="govuk-hint"
+          id="file-title-hint"
+        >
+          Enter the name to show on the table or list of data set
+        </div>
+        <div
+          class="govuk-form-group false govuk-!-margin-bottom-8"
+        >
+          <input
+            aria-describedby="file-title-hint"
+            class="govuk-input"
+            data-testid="data-set-title-input"
+            id="file-title"
+            name="file-title"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="govuk-form-group govuk-!-margin-top-8 govuk-!-margin-bottom-9"
+      >
+        <h4
+          class="govuk-label-wrapper"
+        >
+          <label
+            class="govuk-label govuk-label--s"
+            for="file-upload-1"
+          >
+            Upload file
+          </label>
+        </h4>
+        <div
+          class="custom-file-input"
+        >
+          <input
+            accept=".csv"
+            data-testid="file-upload-1"
+            id="file-upload-1"
+            name="file-upload-1"
+            type="file"
+          />
+          <div
+            class="govuk-hint"
+            id="file-title-hint govuk-!-margin-top-4"
+          >
+            Select a file from your local machine which you would like to be uploaded as data set
+          </div>
+          <div
+            class="label-container"
+          >
+            <label
+              class="dummy-file-upload"
+              for="file-upload-1"
+            >
+              Choose file
+            </label>
+            <label
+              class="dummy-file-name"
+              for="file-upload-1"
+            >
+              No file chosen
+            </label>
+          </div>
+        </div>
+      </div>
+      <button
+        class="govuk-button govuk-!-margin-top-8 undefined"
+        disabled=""
+        type="submit"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

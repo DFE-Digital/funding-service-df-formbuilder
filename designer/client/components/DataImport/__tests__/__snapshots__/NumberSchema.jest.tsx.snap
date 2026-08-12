@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Number Schema snapshot test Should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="mt-20 number-schema-container"
+  >
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="field-schema-min"
+      >
+        Min
+      </label>
+      <span
+        class="govuk-hint"
+      >
+        Specifies the lowest number users can enter
+      </span>
+      <input
+        class="govuk-input govuk-input--width-3"
+        data-cast="number"
+        data-testid="field-schema-min"
+        id="field-schema-min"
+        name="minNumber"
+        type="number"
+        value="4"
+      />
+    </div>
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="field-schema-max"
+      >
+        Max
+      </label>
+      <span
+        class="govuk-hint"
+      >
+        Specifies the highest number users can enter
+      </span>
+      <input
+        class="govuk-input govuk-input--width-3"
+        data-cast="number"
+        data-testid="field-schema-max"
+        id="field-schema-max"
+        name="maxNumber"
+        type="number"
+        value="8"
+      />
+    </div>
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="field-schema-precision"
+      >
+        Set precision (optional)
+      </label>
+      <span
+        class="govuk-hint"
+      >
+        Specifies the number of decimal places on the calculated result component
+      </span>
+      <input
+        class="govuk-input govuk-input--width-3"
+        data-cast="number"
+        data-testid="field-schema-precision"
+        id="field-schema-precision"
+        name="precisionNumber"
+        type="number"
+        value="2"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
