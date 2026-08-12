@@ -79,7 +79,7 @@
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.31",
     "nanoid": "^3.1.12",
-    "node-polyfill-webpack-plugin": "^2.0.1",
+    "node-polyfill-webpack-plugin": "^4.1.0",
     "pre-commit": "^1.2.2",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.8.0",
