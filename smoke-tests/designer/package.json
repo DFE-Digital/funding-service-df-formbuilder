@@ -23,7 +23,7 @@
     "multiple-cucumber-html-reporter": "^1.18.0"
   },
   "dependencies": {
-    "arkit": "^1.6.4",
+    "arkit": "^2.1.0",
     "chai": "^4.2.0",
     "chai-webdriverio": "^1.0.0",
     "cucumber-html-reporter": "^5.2.0",
