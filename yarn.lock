@@ -8063,7 +8063,7 @@ __metadata:
     ts-node-dev: "npm:^1.1.1"
     typescript: "npm:^4.1.3"
     uglifyjs-webpack-plugin: "npm:^2.2.0"
-    vision: "npm:5.4.3"
+    vision: "npm:5.4.4"
     webpack: "npm:^5.85.1"
     webpack-bundle-analyzer: "npm:^4.9.0"
     webpack-cli: "npm:^5.1.3"
@@ -29601,18 +29601,6 @@ __metadata:
     remove-trailing-separator: "npm:^1.0.1"
     replace-ext: "npm:^1.0.0"
   checksum: 63048b5d1765f133fb6b99a7fd897d250fd3cec252598dd045275dae74da0ac539811499e5ba3bb3544e3a6444570115856329e074babe7689719424c5416028
-  languageName: node
-  linkType: hard
-
-"vision@npm:5.4.3":
-  version: 5.4.3
-  resolution: "vision@npm:5.4.3"
-  dependencies:
-    boom: "npm:7.x.x"
-    hoek: "npm:6.x.x"
-    items: "npm:2.x.x"
-    joi: "npm:14.x.x"
-  checksum: 82f42eef2972f60e4af6440918f2e35ac2f6ff2f3f226dbdb821828b48fee3638709477f7589319042937830abc0605e04bb5af6116fab0ef05abf43bd6ab90c
   languageName: node
   linkType: hard
 
