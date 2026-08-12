@@ -8048,7 +8048,7 @@ __metadata:
     react-icons: "npm:^4.8.0"
     react-redux: "npm:^8.0.5"
     react-router-dom: "npm:^5.2.0"
-    react-simple-code-editor: "npm:0.11.0"
+    react-simple-code-editor: "npm:0.14.1"
     react-sortable-hoc: "npm:1.11.0"
     readable-stream: "npm:^4.4.2"
     resolve: "npm:^1.19.0"
@@ -24827,13 +24827,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-simple-code-editor@npm:0.11.0":
-  version: 0.11.0
-  resolution: "react-simple-code-editor@npm:0.11.0"
+"react-simple-code-editor@npm:0.14.1":
+  version: 0.14.1
+  resolution: "react-simple-code-editor@npm:0.14.1"
   peerDependencies:
-    react: ^16.0.0
-    react-dom: ^16.0.0
-  checksum: c54f094666b8a50fdaafd0d7d8b16c5d139052f7cdccdcfb24cddaf50dc6fb9d4427cdf3e3fb9c2515356b373fb1849ee742c0dd2aac43ac576da71e284f0f3a
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 59ea28443a0dbce248ef0ea82e13525fc5ec4da53437ccbb5f92310bd67aa30ec466f6de02ce3ae38ac0914deef3643837251c03dca55917c9201536b34dfed6
   languageName: node
   linkType: hard
 
