@@ -8251,7 +8251,7 @@ __metadata:
     tmp: "npm:0.1.0"
     typescript: "npm:^4.0.3"
     url-parse: "npm:^1.5.3"
-    uuid: "npm:7.0.3"
+    uuid: "npm:14.0.1"
     vision: "npm:5.4.4"
     winston: "npm:^3.8.1"
     wreck: "npm:^14.2.0"
@@ -29407,6 +29407,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"uuid@npm:14.0.1":
+  version: 14.0.1
+  resolution: "uuid@npm:14.0.1"
+  bin:
+    uuid: dist-node/bin/uuid
+  checksum: 88b2d42b9c225bb099c92e3291938746746b57d83ff8d5f33237a08d1719ab341d22b49df7fe23dbefaeee4a361641abfef2c36607d1d51e20c3c590c87e9261
+  languageName: node
+  linkType: hard
+
 "uuid@npm:3.3.2":
   version: 3.3.2
   resolution: "uuid@npm:3.3.2"
@@ -29422,15 +29431,6 @@ __metadata:
   bin:
     uuid: ./bin/uuid
   checksum: c84dbfcb94389fea5a09020802df2a1227d183ceabaa5256658194dfad045c83fe72366b64b165b6445a480fac8a75d0e982033f3cb393713674b3cd938063fa
-  languageName: node
-  linkType: hard
-
-"uuid@npm:7.0.3, uuid@npm:^7.0.2":
-  version: 7.0.3
-  resolution: "uuid@npm:7.0.3"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 73dd31fbb8614ebe489ad7d82475d7f53d14d69eef7a8e2f94ef821202707b8e559f7f44e4505f06b0c3f99d4e1dee36eac665e911026e94b3bf368fafbc60e5
   languageName: node
   linkType: hard
 
@@ -29467,6 +29467,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 1e8544639b27fbae6a51b4b64d1b2c707c91abb70e3c478819e9dbe3982cbf246bbc749196ce1440d1d0fcc10811d27a2c3127f64b570d168dc7a2e664bf36b9
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^7.0.2":
+  version: 7.0.3
+  resolution: "uuid@npm:7.0.3"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 73dd31fbb8614ebe489ad7d82475d7f53d14d69eef7a8e2f94ef821202707b8e559f7f44e4505f06b0c3f99d4e1dee36eac665e911026e94b3bf368fafbc60e5
   languageName: node
   linkType: hard
 
