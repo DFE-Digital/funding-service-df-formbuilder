@@ -2660,25 +2660,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.10.3":
-  version: 7.10.3
-  resolution: "@babel/runtime@npm:7.10.3"
-  dependencies:
-    regenerator-runtime: "npm:^0.13.4"
-  checksum: 1b12b177bca45b339d30c8c114d0bbcb1a86bd21a4cd8de4545ea6ac64dbc88d8375e1492bd20b29781adf19c19f43b46e6345e002822be60c86a1307f5a6ac1
+"@babel/runtime@npm:8.0.0, @babel/runtime@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@babel/runtime@npm:8.0.0"
+  checksum: a804e2cc31098a20e0a8482dbc140c3c75eac06a0383abb361c00309ed3e58085c7693fa11bd2e8bead62ab4afe48882276c77ddfc874f7a7092d99cd1866781
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.10.4":
-  version: 7.10.4
-  resolution: "@babel/runtime@npm:7.10.4"
-  dependencies:
-    regenerator-runtime: "npm:^0.13.4"
-  checksum: badf1b78a924006f46a824ea745b06820766a87ebe7c7fc648bbedb0acdf93060a7f308ecbfab0f5bf987fe51d5d823d3b1c47b9b4c062e844836cfbf6d253bd
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.18.6, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.18.6, @babel/runtime@npm:^7.2.0, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.9.2":
   version: 7.28.4
   resolution: "@babel/runtime@npm:7.28.4"
   checksum: 971a84629a5cb11a7f019116e804b4f748c6d7510d70481ff65e72438bc7dd83f962a507716bb3ba1332c37e426d0d7eea2b88e2431c0a958e7437a86bcf4f22
@@ -7946,7 +7935,7 @@ __metadata:
     "@babel/preset-react": "npm:7.10.1"
     "@babel/preset-typescript": "npm:^7.12.7"
     "@babel/register": "npm:7.10.3"
-    "@babel/runtime": "npm:7.10.3"
+    "@babel/runtime": "npm:8.0.0"
     "@dnd-kit/core": "npm:^6.0.8"
     "@dnd-kit/sortable": "npm:^7.0.2"
     "@dnd-kit/utilities": "npm:^3.2.2"
@@ -8110,7 +8099,7 @@ __metadata:
     "@babel/plugin-transform-runtime": "npm:^7.10.1"
     "@babel/preset-env": "npm:^7.10.2"
     "@babel/preset-typescript": "npm:^7.10.4"
-    "@babel/runtime": "npm:^7.11.2"
+    "@babel/runtime": "npm:^8.0.0"
     "@types/crypto-js": "npm:^4.1.1"
     "@types/jest": "npm:^26.0.20"
     "@xgovformbuilder/lab-babel": "npm:2.1.2"
@@ -8161,7 +8150,7 @@ __metadata:
     "@babel/preset-env": "npm:7.10.3"
     "@babel/preset-typescript": "npm:^7.10.4"
     "@babel/register": "npm:7.10.3"
-    "@babel/runtime": "npm:7.10.4"
+    "@babel/runtime": "npm:8.0.0"
     "@hapi/bell": "npm:^12.3.0"
     "@hapi/boom": "npm:9.1.0"
     "@hapi/catbox": "npm:11.1.0"
@@ -13057,7 +13046,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.11.0"
     "@babel/preset-typescript": "npm:^7.12.7"
     "@babel/register": "npm:^7.10.5"
-    "@babel/runtime": "npm:^7.11.2"
+    "@babel/runtime": "npm:^8.0.0"
     "@hapi/code": "npm:^8.0.1"
     "@hapi/lab": "npm:24.7.1"
     "@typescript-eslint/eslint-plugin": "npm:^4.10.0"
@@ -25135,13 +25124,6 @@ __metadata:
   version: 1.4.2
   resolution: "regenerate@npm:1.4.2"
   checksum: f2d97117f52ef5bef7757693c3157395c8c542ef4b856addac6e78c76ed7053f2154435912a18a6d1c3ff09702ad525babeffe30a179ef809cacff200cd4d193
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.13.4":
-  version: 0.13.11
-  resolution: "regenerator-runtime@npm:0.13.11"
-  checksum: 0485db63ce47760e28329590cb9f8b208365d076dbf2edaa32e551a7c0451fc6f7557b225268422c960ffa4fbc6ff86d63d6a747aacbf6b10ed6a747b432e3c8
   languageName: node
   linkType: hard
 
