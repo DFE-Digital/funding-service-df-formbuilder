@@ -3111,10 +3111,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@discoveryjs/json-ext@npm:0.5.7, @discoveryjs/json-ext@npm:^0.5.0":
+"@discoveryjs/json-ext@npm:^0.5.0":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
   checksum: b6e8ff9be2e0b505f3e06379743f55d04028adbb0170dc191ff020f6e43f86f712e6cceb8a95db7e2c13a7dc6d7419f6b65af353ce662bf520e065b69e232ef7
+  languageName: node
+  linkType: hard
+
+"@discoveryjs/json-ext@npm:^0.6.3":
+  version: 0.6.3
+  resolution: "@discoveryjs/json-ext@npm:0.6.3"
+  checksum: d77143376f746fc5ad886f941ffdedf61ef1300735d8063ebb5fb95c27e1c5183f506b22915d5bf635672d55e6474bf412ff34a0475a6aed86b63d16f7702631
   languageName: node
   linkType: hard
 
@@ -8065,7 +8072,7 @@ __metadata:
     uglifyjs-webpack-plugin: "npm:^2.2.0"
     vision: "npm:5.4.3"
     webpack: "npm:^5.85.1"
-    webpack-bundle-analyzer: "npm:^4.9.0"
+    webpack-bundle-analyzer: "npm:^5.3.1"
     webpack-cli: "npm:^5.1.3"
     webpack-dev-server: "npm:^4.15.0"
     webpack-node-externals: "npm:^3.0.0"
@@ -11524,7 +11531,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:7.2.0, commander@npm:^7.0.0, commander@npm:^7.2.0, commander@npm:~7.2.0":
+"commander@npm:7.2.0, commander@npm:^7.0.0, commander@npm:~7.2.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 1270a98c752348d62803dd6214bba584a13e5c80e0d32d590740f26c534209882a93daf471697326ad80b3f4f0417df31aca7b127e01efee58fe883b47c1a492
@@ -11556,6 +11563,13 @@ __metadata:
   version: 12.1.0
   resolution: "commander@npm:12.1.0"
   checksum: c63003ea4870e822d2abb46fc528fa34457d9dd3117cc178759bb9e611832873a69cc0d54b47056bba9a19c3fc45dd7a8cc4ff3a1d4eb360d03a08aa047773a6
+  languageName: node
+  linkType: hard
+
+"commander@npm:^14.0.2":
+  version: 14.0.3
+  resolution: "commander@npm:14.0.3"
+  checksum: 0e38e694db08f45a396e70b8175a482d0d2a9aff41b3030ba33ae82951294d4185ac2d08defab234137a0ca1f12ee08b184086cc14a11378421484948ca5ea63
   languageName: node
   linkType: hard
 
@@ -12492,13 +12506,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debounce@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "debounce@npm:1.2.1"
-  checksum: c6d705fa583a2280582ed3b4beb76b83d0727e20c9d16111c1d210f04c3b926ced882d97e054df172a615c0c781714ba2582220cfd0952213e97bc47fa364dfd
-  languageName: node
-  linkType: hard
-
 "debug-log@npm:^1.0.0":
   version: 1.0.1
   resolution: "debug-log@npm:1.0.1"
@@ -13371,13 +13378,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"duplexer@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "duplexer@npm:0.1.2"
-  checksum: 6624204ad40403546166a072d0e0ec34df52f8bc48e68bd52894ddca3acd9ad99e3adb14a029e8702c290024b24c2171553b9fbdb0a9503697a2240f3b093cb3
-  languageName: node
-  linkType: hard
-
 "duplexify@npm:^3.4.2, duplexify@npm:^3.6.0":
   version: 3.7.1
   resolution: "duplexify@npm:3.7.1"
@@ -14060,6 +14060,13 @@ __metadata:
   version: 2.0.0
   resolution: "escape-string-regexp@npm:2.0.0"
   checksum: eba6c3fb9b6d1fbad353258ce4aaf3875ee39506cbf525f95a4cd78435668b73c56b5a60b960225ab95ecb7274248ad0e05705468b850ba98e289bfa7021a68e
+  languageName: node
+  linkType: hard
+
+"escape-string-regexp@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "escape-string-regexp@npm:5.0.0"
+  checksum: 9c968d6e975030ef1349f1f011348de4b1fe5e13d5e0c407d38ab141d5e8a8b163ba727a9df22f3e796211aa340b73080455d3a1784af90409e2b8afaed02f76
   languageName: node
   linkType: hard
 
@@ -16852,15 +16859,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gzip-size@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "gzip-size@npm:6.0.0"
-  dependencies:
-    duplexer: "npm:^0.1.2"
-  checksum: 60f8d214e5cb1ba213f911a20a689d614909b772da0baacdf50d0af17be6d212c0386cbd84944e41bdcccc1527d13dae3f5b9b3314f6095fe4f4254181b3f54c
-  languageName: node
-  linkType: hard
-
 "handle-thing@npm:^2.0.0":
   version: 2.0.1
   resolution: "handle-thing@npm:2.0.1"
@@ -17323,10 +17321,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-escaper@npm:^2.0.0, html-escaper@npm:^2.0.2":
+"html-escaper@npm:^2.0.0":
   version: 2.0.2
   resolution: "html-escaper@npm:2.0.2"
   checksum: f13dc2e2ea3e037740597d93b96516baf728392777f4696fbe41b82522593d59a467884751a23cdbb440aa752a5f767c57b958c9dd02f6861eaf45b9b46a1c38
+  languageName: node
+  linkType: hard
+
+"html-escaper@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "html-escaper@npm:3.0.3"
+  checksum: 46981801804db16a93e9ebc3a0ebe0a58276651f6ec039b40c56b2b0011277072bab9cdf1db018b2f7bad8da95322d9965bb0822562e825708f9ec0a5ba872d8
   languageName: node
   linkType: hard
 
@@ -26692,14 +26697,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sirv@npm:^2.0.3":
-  version: 2.0.4
-  resolution: "sirv@npm:2.0.4"
+"sirv@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "sirv@npm:3.0.2"
   dependencies:
     "@polka/url": "npm:^1.0.0-next.24"
     mrmime: "npm:^2.0.0"
     totalist: "npm:^3.0.0"
-  checksum: 52854e716c0f4881bbe5df59b3adf35c3c00a4e1bd7418a4b3cd6251041f72023f331df28c65e9abe6c124890edb2368029a285707752f8496e66531f983f4ed
+  checksum: 05cca06ca580eb7eb65c2ddc8749cecbc6ef2ac84cecfb8e649430257f2a3ceed6225f613cf41e14492f715e015738e1de9b588a6e912978c58f88dc0cd3ef5b
   languageName: node
   linkType: hard
 
@@ -29918,25 +29923,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-bundle-analyzer@npm:^4.9.0":
-  version: 4.10.2
-  resolution: "webpack-bundle-analyzer@npm:4.10.2"
+"webpack-bundle-analyzer@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "webpack-bundle-analyzer@npm:5.3.1"
   dependencies:
-    "@discoveryjs/json-ext": "npm:0.5.7"
+    "@discoveryjs/json-ext": "npm:^0.6.3"
     acorn: "npm:^8.0.4"
     acorn-walk: "npm:^8.0.0"
-    commander: "npm:^7.2.0"
-    debounce: "npm:^1.2.1"
-    escape-string-regexp: "npm:^4.0.0"
-    gzip-size: "npm:^6.0.0"
-    html-escaper: "npm:^2.0.2"
+    commander: "npm:^14.0.2"
+    escape-string-regexp: "npm:^5.0.0"
+    html-escaper: "npm:^3.0.3"
     opener: "npm:^1.5.2"
     picocolors: "npm:^1.0.0"
-    sirv: "npm:^2.0.3"
-    ws: "npm:^7.3.1"
+    sirv: "npm:^3.0.2"
+    ws: "npm:^8.19.0"
   bin:
     webpack-bundle-analyzer: lib/bin/analyzer.js
-  checksum: a1c051d09c3e9a37881f7968a04456376ea2013d2589a04717aa5176caf21519f3b7c058dbad6d8d1ba283ce2e75a18d48a03c652ba87bc7b8488cbca9b71bb1
+  checksum: 5dc564c91a50c5e76c18422633000bd5d009c33119744de21200fb4e412b835096e81ada8a7455f6ae3c53baaebcff3d9d5a0517c0c33395ae588bf48588a83e
   languageName: node
   linkType: hard
 
@@ -30565,7 +30568,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.3.1, ws@npm:^7.4.6":
+"ws@npm:^7.4.6":
   version: 7.5.10
   resolution: "ws@npm:7.5.10"
   peerDependencies:
@@ -30592,6 +30595,21 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: eae046d5e69ed0021f6af8050aba83702bb57bf752847ea0dfc518aae2ed2cbcbc02b58bcd110d2574b45d77c7a52e5d7ca543a371ef3d0cc0998be5f03ad707
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.19.0":
+  version: 8.21.3
+  resolution: "ws@npm:8.21.3"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 64d69c923825fe7c2bad0538742662cb6ade48597d3a9065f7bf74658228fb4021b4868eb01901ddc212d307c7a7487d5d95a18b5cbb877343668149eaf98d8a
   languageName: node
   linkType: hard
 
