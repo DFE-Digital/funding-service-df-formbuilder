@@ -657,7 +657,7 @@ const duplicatePage = (
                 duplicateIndex === 1
                     ? existingExpression
                     : existingExpression.replace(/\(([^)]+)\)/g, (match, p1) =>
-                          p1.includes("->")
+                          p1.includes("->") || /^-?\d+(\.\d+)?$/.test(p1)
                               ? match
                               : `(${p1}-${duplicateIndex})`
                       );

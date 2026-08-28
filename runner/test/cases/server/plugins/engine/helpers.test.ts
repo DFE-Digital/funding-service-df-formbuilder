@@ -1862,6 +1862,297 @@ suite("Helpers", () => {
             expect(resultComp?.expression).to.equal("(input1-2)");
         });
 
+        test("Should not append the iteration suffix to a static number in a result expression", () => {
+            const groupedPages = [
+                [
+                    createPage({
+                        path: "repeat1",
+                        section: "section1",
+                        components: [
+                            { name: "input1", type: "NumberField" },
+                            {
+                                name: "result1",
+                                type: "Result",
+                                expression: "(input1) * (6000)",
+                            },
+                        ],
+                        next: [{ path: "end" }],
+                    }),
+                ],
+            ];
+
+            const usedRepeatableSections = [
+                createSection({
+                    name: "section1",
+                    repeatableSection: true,
+                    numberComp: "numComp1",
+                }),
+            ];
+
+            const payload = createPayload({
+                numComp1: "2",
+            });
+
+            const request = {
+                yar: {
+                    set: sinon.stub(),
+                },
+            };
+
+            const [expanded] = expandPages(
+                5,
+                groupedPages,
+                groupedPages,
+                usedRepeatableSections,
+                payload,
+                1,
+                {},
+                {} as any,
+                request
+            );
+
+            const secondIteration = expanded.find(
+                (p) => p.path === "repeat1-2"
+            );
+            expect(secondIteration).to.exist;
+            const resultComp = secondIteration?.components?.find(
+                (c) => c.type === "Result"
+            );
+            expect(resultComp?.expression).to.equal("(input1-2) * (6000)");
+        });
+
+        test("Should not append the iteration suffix to a decimal static number in a result expression", () => {
+            const groupedPages = [
+                [
+                    createPage({
+                        path: "repeat1",
+                        section: "section1",
+                        components: [
+                            { name: "input1", type: "NumberField" },
+                            {
+                                name: "result1",
+                                type: "Result",
+                                expression: "(input1) + (5.5)",
+                            },
+                        ],
+                        next: [{ path: "end" }],
+                    }),
+                ],
+            ];
+
+            const usedRepeatableSections = [
+                createSection({
+                    name: "section1",
+                    repeatableSection: true,
+                    numberComp: "numComp1",
+                }),
+            ];
+
+            const payload = createPayload({
+                numComp1: "2",
+            });
+
+            const request = {
+                yar: {
+                    set: sinon.stub(),
+                },
+            };
+
+            const [expanded] = expandPages(
+                5,
+                groupedPages,
+                groupedPages,
+                usedRepeatableSections,
+                payload,
+                1,
+                {},
+                {} as any,
+                request
+            );
+
+            const secondIteration = expanded.find(
+                (p) => p.path === "repeat1-2"
+            );
+            const resultComp = secondIteration?.components?.find(
+                (c) => c.type === "Result"
+            );
+            expect(resultComp?.expression).to.equal("(input1-2) + (5.5)");
+        });
+
+        test("Should not append the iteration suffix to a negative static number in a result expression", () => {
+            const groupedPages = [
+                [
+                    createPage({
+                        path: "repeat1",
+                        section: "section1",
+                        components: [
+                            { name: "input1", type: "NumberField" },
+                            {
+                                name: "result1",
+                                type: "Result",
+                                expression: "(input1) - (-3)",
+                            },
+                        ],
+                        next: [{ path: "end" }],
+                    }),
+                ],
+            ];
+
+            const usedRepeatableSections = [
+                createSection({
+                    name: "section1",
+                    repeatableSection: true,
+                    numberComp: "numComp1",
+                }),
+            ];
+
+            const payload = createPayload({
+                numComp1: "2",
+            });
+
+            const request = {
+                yar: {
+                    set: sinon.stub(),
+                },
+            };
+
+            const [expanded] = expandPages(
+                5,
+                groupedPages,
+                groupedPages,
+                usedRepeatableSections,
+                payload,
+                1,
+                {},
+                {} as any,
+                request
+            );
+
+            const secondIteration = expanded.find(
+                (p) => p.path === "repeat1-2"
+            );
+            const resultComp = secondIteration?.components?.find(
+                (c) => c.type === "Result"
+            );
+            expect(resultComp?.expression).to.equal("(input1-2) - (-3)");
+        });
+
+        test("Should not append the iteration suffix to a dataset reference in a result expression", () => {
+            const groupedPages = [
+                [
+                    createPage({
+                        path: "repeat1",
+                        section: "section1",
+                        components: [
+                            { name: "input1", type: "NumberField" },
+                            {
+                                name: "result1",
+                                type: "Result",
+                                expression: "(input1) + (dataset1->key-Value)",
+                            },
+                        ],
+                        next: [{ path: "end" }],
+                    }),
+                ],
+            ];
+
+            const usedRepeatableSections = [
+                createSection({
+                    name: "section1",
+                    repeatableSection: true,
+                    numberComp: "numComp1",
+                }),
+            ];
+
+            const payload = createPayload({
+                numComp1: "2",
+            });
+
+            const request = {
+                yar: {
+                    set: sinon.stub(),
+                },
+            };
+
+            const [expanded] = expandPages(
+                5,
+                groupedPages,
+                groupedPages,
+                usedRepeatableSections,
+                payload,
+                1,
+                {},
+                {} as any,
+                request
+            );
+
+            const secondIteration = expanded.find(
+                (p) => p.path === "repeat1-2"
+            );
+            const resultComp = secondIteration?.components?.find(
+                (c) => c.type === "Result"
+            );
+            expect(resultComp?.expression).to.equal(
+                "(input1-2) + (dataset1->key-Value)"
+            );
+        });
+
+        test("Should keep the result expression untouched for the first iteration", () => {
+            const groupedPages = [
+                [
+                    createPage({
+                        path: "repeat1",
+                        section: "section1",
+                        components: [
+                            { name: "input1", type: "NumberField" },
+                            {
+                                name: "result1",
+                                type: "Result",
+                                expression: "(input1) * (6000)",
+                            },
+                        ],
+                        next: [{ path: "end" }],
+                    }),
+                ],
+            ];
+
+            const usedRepeatableSections = [
+                createSection({
+                    name: "section1",
+                    repeatableSection: true,
+                    numberComp: "numComp1",
+                }),
+            ];
+
+            const payload = createPayload({
+                numComp1: "2",
+            });
+
+            const request = {
+                yar: {
+                    set: sinon.stub(),
+                },
+            };
+
+            const [expanded] = expandPages(
+                5,
+                groupedPages,
+                groupedPages,
+                usedRepeatableSections,
+                payload,
+                1,
+                {},
+                {} as any,
+                request
+            );
+
+            const firstIteration = expanded.find((p) => p.path === "repeat1");
+            const resultComp = firstIteration?.components?.find(
+                (c) => c.type === "Result"
+            );
+            expect(resultComp?.expression).to.equal("(input1) * (6000)");
+        });
+
         test("Should handle multiple next paths in repeatable sections", () => {
             const groupedPages = [
                 [

@@ -2321,6 +2321,39 @@ export class PageControllerBase {
             const evaluateRoute = (stateToUse: any): string | null => {
                 let selectedRoute: string | null = null;
 
+                // Move each section's values up to the root so conditions
+                // can find them by their plain field name.
+                let sectionState = {};
+                const sections = this.model.sections ?? [];
+                sections.forEach((sec: { name: string }) => {
+                    sectionState = {
+                        ...sectionState,
+                        ...(stateToUse?.[sec.name] ?? {}),
+                    };
+                });
+
+                // Map this page's own iteration values (e.g. hmqWgQ-2) onto
+                // their plain field name so the right iteration is used.
+                const path = page.path;
+                let sectionComponents = {};
+                for (const compId in sectionState) {
+                    const compIdPart = compId.includes("-")
+                        ? Number(compId.split("-")[1])
+                        : null;
+
+                    if (
+                        compIdPart === getNumberAfterLastHyphen(path) ||
+                        (compIdPart === 1 &&
+                            getNumberAfterLastHyphen(path) === null)
+                    ) {
+                        const compName = compId.split("-")[0];
+                        sectionComponents = {
+                            ...sectionComponents,
+                            [compName]: sectionState[compId],
+                        };
+                    }
+                }
+
                 for (const next of page.next) {
                     if (!next.condition) {
                         selectedRoute = next.path;
@@ -2328,7 +2361,15 @@ export class PageControllerBase {
                     }
 
                     const cond = this.model.conditions[next.condition];
-                    if (cond && cond.fn && cond.fn({ ...stateToUse })) {
+                    if (
+                        cond &&
+                        cond.fn &&
+                        cond.fn({
+                            ...stateToUse,
+                            ...sectionState,
+                            ...sectionComponents,
+                        })
+                    ) {
                         selectedRoute = next.path;
                         break;
                     }
@@ -2598,12 +2639,15 @@ export class PageControllerBase {
                         }
                         if (yesNoFieldChangedValue === true) {
                             const conditionalRoutes = evaluateConditionalRoutes(
-                                this.pageDef,
+                                page,
                                 state,
                                 oldState || {},
                                 new Set<string>()
                             );
-                            if (conditionalRoutes.newRoute) {
+                            if (
+                                conditionalRoutes.changed &&
+                                conditionalRoutes.newRoute
+                            ) {
                                 // Navigate to new conditional route
                                 const urlWithReturn = `/${
                                     this.model.basePath || ""
@@ -3044,6 +3088,21 @@ export class PageControllerBase {
                     ...new Set([...sectionResultPages, ...missingAllowedPages]),
                 ]
                     .filter((path) => orderedPaths.includes(path))
+                    // A candidate page can be wrongly matched just because
+                    // another iteration reuses its component names.
+                    // Restrict to the same iteration, but not for pages
+                    // outside this section - they have no iteration.
+                    .filter((path) => {
+                        const candidatePage = this.model.pages.find(
+                            (p) => p.path === path
+                        );
+                        if (candidatePage?.section?.name !== section?.name) {
+                            return true;
+                        }
+                        return (
+                            (path.match(/-(\d+)$/)?.[1] ?? "1") === currentGroup
+                        );
+                    })
                     .sort(
                         (a, b) =>
                             orderedPaths.indexOf(a) - orderedPaths.indexOf(b)
