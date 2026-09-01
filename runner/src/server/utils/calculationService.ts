@@ -15,6 +15,7 @@ import { getBlobContent } from "./tableTabService";
 import { create, all } from "mathjs";
 import { numberWithCommas } from "../plugins/engine/pageControllers/utils";
 import { FormModel } from "../plugins/engine/models";
+import { getNumberAfterLastHyphen } from "../plugins/engine/helpers";
 
 const confg = {};
 const math = create(all, confg);
@@ -660,9 +661,30 @@ export const setExpressionDataAndConditionEvaluation = async (
         return acc;
     }, {});
 
+    const pagePath = viewModel.page.path;
+    let sectionComponents = {};
+    for (const compId in sectionState) {
+        const compIdPart = compId.includes("-")
+            ? Number(compId.split("-")[1])
+            : null;
+
+        if (
+            compIdPart === getNumberAfterLastHyphen(pagePath) ||
+            (compIdPart === 1 &&
+                getNumberAfterLastHyphen(pagePath) === null)
+        ) {
+            const compName = compId.split("-")[0];
+            sectionComponents = {
+                ...sectionComponents,
+                [compName]: sectionState[compId],
+            };
+        }
+    }
+
     const conditionState = {
         ...state,
         ...sectionState,
+        ...sectionComponents
     };
     viewModel.components = viewModel?.components?.map((component) => {
         const evaluatedComponent = component;
