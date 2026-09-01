@@ -2780,14 +2780,14 @@ export class PageControllerBase {
                 // pageGroup < currentGroup
                 notAllowedPaths.add(page.path);
             });
-            const matchingPages = this.model.pages.filter((page) => {
-                const pageSectionName = page.section?.name;
-
-                return (
-                    (!pageSectionName || pageSectionName === section?.name) &&
-                    !notAllowedPaths.has(page.path)
-                );
-            });
+            // All pages except those excluded above by the current section's
+            // iteration guard. `notAllowedPaths` only ever contains paths
+            // from `sectionPages` (the current section), so pages belonging
+            // to any other section - or no section at all - are unaffected
+            // by it and always included here.
+            const matchingPages = this.model.pages.filter(
+                (page) => !notAllowedPaths.has(page.path)
+            );
             // --------------------------------------------------
             // REQUIREMENT 2: Find result components depending on changed numbers
             // --------------------------------------------------
