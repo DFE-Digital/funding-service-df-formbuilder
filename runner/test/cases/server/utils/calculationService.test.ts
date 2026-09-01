@@ -890,6 +890,134 @@ suite("CalculationService", () => {
             expect(viewModel.components[0].model.id).to.equal("html2");
         });
 
+        suite("repeated section conditions (second iteration)", () => {
+            test("evaluates condition using the current iteration's value, not the first iteration's", async () => {
+                const section: Section = {
+                    name: "repeatSection",
+                    title: "Repeat Section",
+                };
+                const component = createComponent({
+                    type: "Html",
+                    model: {
+                        id: "html1",
+                        content: [
+                            { text: "Always shown" },
+                            {
+                                text: "Shown when threshold met",
+                                condition: "condition1",
+                            },
+                        ],
+                    },
+                });
+                const viewModel = createPageViewModel([component]);
+                viewModel.page = { path: "/repeat-section-2" } as any;
+
+                const state: FormSubmissionState = {
+                    progress: [],
+                    dataImportStatus: {},
+                    result: {},
+                    repeatSection: {
+                        eYWQBR: 10, // iteration 1 value
+                        "eYWQBR-2": 20, // iteration 2 value
+                    },
+                } as any;
+
+                const formDefinition = createFormDefinition({
+                    sections: [section],
+                });
+                const formModel = {
+                    sections: [section],
+                    conditions: {
+                        condition1: {
+                            fn: sinon
+                                .stub()
+                                .callsFake(
+                                    (conditionState: any) =>
+                                        conditionState.eYWQBR > 15
+                                ),
+                        },
+                    },
+                } as any;
+                const organizations = createOrganizations();
+
+                await setExpressionDataAndConditionEvaluation(
+                    state,
+                    (str: string) => /[a-zA-Z]/.test(str),
+                    viewModel,
+                    formDefinition,
+                    formModel,
+                    organizations
+                );
+
+                // On iteration 2, eYWQBR should resolve to 20 (>15), so the
+                // conditional item must be present, not filtered out.
+                expect(component.model.content).to.have.length(2);
+            });
+
+            test("still evaluates condition using the first iteration's value on the first iteration", async () => {
+                const section: Section = {
+                    name: "repeatSection",
+                    title: "Repeat Section",
+                };
+                const component = createComponent({
+                    type: "Html",
+                    model: {
+                        id: "html1",
+                        content: [
+                            { text: "Always shown" },
+                            {
+                                text: "Shown when threshold met",
+                                condition: "condition1",
+                            },
+                        ],
+                    },
+                });
+                const viewModel = createPageViewModel([component]);
+                viewModel.page = { path: "/repeat-section" } as any;
+
+                const state: FormSubmissionState = {
+                    progress: [],
+                    dataImportStatus: {},
+                    result: {},
+                    repeatSection: {
+                        eYWQBR: 10, // iteration 1 value
+                        "eYWQBR-2": 20, // iteration 2 value
+                    },
+                } as any;
+
+                const formDefinition = createFormDefinition({
+                    sections: [section],
+                });
+                const formModel = {
+                    sections: [section],
+                    conditions: {
+                        condition1: {
+                            fn: sinon
+                                .stub()
+                                .callsFake(
+                                    (conditionState: any) =>
+                                        conditionState.eYWQBR > 15
+                                ),
+                        },
+                    },
+                } as any;
+                const organizations = createOrganizations();
+
+                await setExpressionDataAndConditionEvaluation(
+                    state,
+                    (str: string) => /[a-zA-Z]/.test(str),
+                    viewModel,
+                    formDefinition,
+                    formModel,
+                    organizations
+                );
+
+                // On iteration 1, eYWQBR should resolve to 10 (<=15), so the
+                // conditional item must be filtered out.
+                expect(component.model.content).to.have.length(1);
+            });
+        });
+
         test("handles currency prefix values (Euro)", async () => {
             const component = createComponent({
                 model: {

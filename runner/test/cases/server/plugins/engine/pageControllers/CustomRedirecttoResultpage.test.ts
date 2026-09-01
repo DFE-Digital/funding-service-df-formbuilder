@@ -477,4 +477,166 @@ suite("CustomRedirecttoResultpage (edit-from-summary navigation)", () => {
             );
         });
     });
+
+    /**
+     * Covers redirecting to a dependent Result page that belongs to a
+     * different section than the page holding the changed value, as
+     * distinct from that Result page belonging to the same section or to
+     * no section at all.
+     */
+    describe("Result page belongs to a different section", () => {
+        const otherSectionDef: any = {
+            metadata: {},
+            startPage: "/page-a",
+            pages: [
+                {
+                    path: "/page-a",
+                    title: "Page A",
+                    section: "secA",
+                    components: [
+                        {
+                            name: "numA",
+                            options: {},
+                            type: "NumberField",
+                            title: "Number A",
+                            schema: { min: 0, max: 9999 },
+                        },
+                        {
+                            name: "resA",
+                            options: {},
+                            type: "Result",
+                            title: "Result A",
+                            expression: "(numA)",
+                            schema: {},
+                        },
+                    ],
+                    next: [{ path: "/page-b" }],
+                },
+                {
+                    path: "/page-b",
+                    title: "Page B",
+                    section: "secB",
+                    components: [
+                        {
+                            name: "resB",
+                            options: {},
+                            type: "Result",
+                            title: "Result B",
+                            expression: "(numA)",
+                            schema: {},
+                        },
+                    ],
+                    next: [{ path: "/summary" }],
+                },
+                {
+                    path: "/summary",
+                    title: "Summary",
+                    controller: "./pages/summary.js",
+                    components: [],
+                },
+            ],
+            lists: [],
+            sections: [
+                { name: "secA", title: "Section A", repeatableSection: false },
+                { name: "secB", title: "Section B", repeatableSection: false },
+            ],
+            conditions: [],
+            fees: [],
+            outputs: [],
+            version: 2,
+            userId: "ab5e4f5b-16f5-4a4e-a6f6-7d7e43fff7fb",
+            createdBy: "UserTest1",
+            id: "otherSectionTest",
+            key: "otherSectionTest",
+            displayName: "other-section-test",
+            name: "other-section-test",
+            lastModified: "2023/05/12 02:22",
+            formStatus: "In development",
+            file: "TestFile",
+            feedback: {
+                url: "/feedback",
+                feedbackForm: true,
+                emailAddress: "test@abc.com",
+            },
+            importedDataSets: [],
+            lastUpdatedByName: "UserTest1",
+            lastUpdatedById: "ab5e4f5b-16f5-4a4e-a6f6-7d7e43fff7fb",
+            designedDataSets: [],
+            skipSummary: false,
+            signInRequired: true,
+            documents: [],
+            declaration: "",
+            calculations: [
+                {
+                    displayName: "CalcA",
+                    hint: "",
+                    type: "arithmetic",
+                    name: "calcA",
+                    pageLocation: "Page A",
+                    components: [
+                        {
+                            title: "Number A",
+                            name: "numA",
+                            type: "NumberField",
+                            options: {},
+                            schema: { min: 0, max: 9999 },
+                        },
+                    ],
+                    expression: "numA",
+                    title: "Calc A",
+                    hideResult: false,
+                    computeList: [
+                        {
+                            id: "cA1",
+                            type: "component",
+                            order: 1,
+                            value: "numA",
+                            entity: "numA",
+                        },
+                    ],
+                    calculationsMapped: [],
+                },
+            ],
+        };
+
+        let otherSectionModel: FormModel;
+
+        beforeEach(async () => {
+            otherSectionModel = new FormModel(otherSectionDef, options);
+            await otherSectionModel.init();
+        });
+
+        const pageForOtherSection = (path: string) => {
+            const pageDef = otherSectionModel.pages.find(
+                (p: any) => p.path === path
+            )?.pageDef;
+            return new PageControllerBase(otherSectionModel, pageDef);
+        };
+
+        it("redirects to a dependent Result page in a different section before returning to summary", async () => {
+            const page = pageForOtherSection("/page-a");
+            const secA = otherSectionModel.sections.find(
+                (s: any) => s.name === "secA"
+            );
+
+            const oldState = { secA: { numA: 10 }, secB: {} };
+            const newState = { secA: { numA: 20 }, secB: {} };
+
+            const result = await page.CustomRedirecttoResultpage(
+                returnurl,
+                h,
+                secA,
+                false,
+                null,
+                request,
+                newState,
+                newState,
+                oldState
+            );
+
+            expect(result).to.equal(
+                `/basePath/page-b?returnUrl=${encodeURIComponent(returnurl)}`
+            );
+        });
+    });
 });
