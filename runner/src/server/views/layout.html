@@ -96,6 +96,139 @@
   <!-- End Matomo Code -->
 
   <script src="{{ assetPath }}/accessible-autocomplete.min.js"></script>
+  <script>
+    (function () {
+      var tabKey = 'runner-tab-id';
+      var navTokenKey = 'runner-nav-token';
+      var lastValidPageKey = 'runner-last-valid-page';
+      var allowNextLoadKey = 'runner-nav-allow';
+
+      function generateToken() {
+        return (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID().replace(/-/g, '')
+          : String(Date.now()) + String(Math.random()).slice(2);
+      }
+
+      function isSameOrigin(url) {
+        try {
+          return url.origin === window.location.origin;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      function isAuthLandingRoute(pathname) {
+        return pathname === '/user-information';
+      }
+
+      function getTabId() {
+        var existingTabId = sessionStorage.getItem(tabKey);
+        if (!existingTabId) {
+          existingTabId = generateToken();
+          sessionStorage.setItem(tabKey, existingTabId);
+        }
+        return existingTabId;
+      }
+
+      function getNavigationToken() {
+        var existingToken = sessionStorage.getItem(navTokenKey);
+        if (!existingToken) {
+          existingToken = generateToken();
+          sessionStorage.setItem(navTokenKey, existingToken);
+        }
+        return existingToken;
+      }
+
+      function decorateAppUrl(url) {
+        if (!url || !isSameOrigin(url)) {
+          return url;
+        }
+
+        var nextToken = generateToken();
+        sessionStorage.setItem(navTokenKey, nextToken);
+        url.searchParams.set('tabId', getTabId());
+        url.searchParams.set('navToken', nextToken);
+        return url;
+      }
+
+      var currentUrl = new URL(window.location.href);
+      var currentNavToken = currentUrl.searchParams.get('navToken');
+      var storedNavToken = sessionStorage.getItem(navTokenKey);
+      if (currentNavToken) {
+        if (storedNavToken && currentNavToken !== storedNavToken) {
+          var lastValidUrlForToken = sessionStorage.getItem(lastValidPageKey);
+          if (lastValidUrlForToken) {
+            window.location.replace(new URL(lastValidUrlForToken, window.location.href).toString());
+            return;
+          }
+        }
+        sessionStorage.setItem(navTokenKey, currentNavToken);
+      }
+      var lastValidUrl = sessionStorage.getItem(lastValidPageKey);
+      var allowNextLoad = sessionStorage.getItem(allowNextLoadKey) === '1';
+
+      if (allowNextLoad) {
+        sessionStorage.removeItem(allowNextLoadKey);
+      } else if (lastValidUrl) {
+        var lastValidPage = new URL(lastValidUrl, window.location.href);
+        if (
+          currentUrl.href !== lastValidPage.href &&
+          !isAuthLandingRoute(currentUrl.pathname) &&
+          (!currentUrl.searchParams.get('navToken') || currentUrl.searchParams.get('navToken') !== sessionStorage.getItem(navTokenKey))
+        ) {
+          window.location.replace(lastValidPage.href);
+          return;
+        }
+      }
+
+      if (!currentUrl.searchParams.get('tabId')) {
+        currentUrl.searchParams.set('tabId', getTabId());
+        window.history.replaceState(null, '', currentUrl.toString());
+      }
+
+      sessionStorage.setItem(lastValidPageKey, currentUrl.href);
+
+      function markAppNavigation(url) {
+        if (!url || !isSameOrigin(url)) return;
+
+        var targetUrl = decorateAppUrl(new URL(url.href || url, window.location.href));
+        sessionStorage.setItem(allowNextLoadKey, '1');
+        sessionStorage.setItem(lastValidPageKey, targetUrl.href);
+        return targetUrl;
+      }
+
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest('a');
+        if (!link || link.target === '_blank' || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+
+        var linkUrl = new URL(link.href, window.location.href);
+        if (isSameOrigin(linkUrl)) {
+          var markedUrl = markAppNavigation(linkUrl);
+          if (markedUrl) {
+            link.href = markedUrl.toString();
+          }
+        }
+      });
+
+      document.addEventListener('submit', function (event) {
+        var form = event.target;
+        var formMethod = (form && form.method ? form.method : 'get').toLowerCase();
+        if (!form || (formMethod !== 'post' && formMethod !== 'get')) {
+          return;
+        }
+
+        var formUrl = new URL(form.action || window.location.href, window.location.href);
+        if (isSameOrigin(formUrl)) {
+          var completed = markAppNavigation(formUrl);
+          if (completed) {
+            form.action = completed.toString();
+          }
+        }
+      });
+    })();
+  </script>
 {% endblock %}
 
 {% block pageTitle %}
