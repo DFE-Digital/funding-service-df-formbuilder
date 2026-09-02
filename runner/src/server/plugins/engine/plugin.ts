@@ -84,6 +84,23 @@ function doSectionParamsMatchSections(
 function isUATLink(request: HapiRequest) {
     return request.url.hostname.toLocaleLowerCase().includes("uat");
 }
+
+export function getTabId(request: HapiRequest) {
+    const tabId = request.query?.tabId;
+    return typeof tabId === "string" && tabId.length > 0 ? tabId : undefined;
+}
+export function getNavigationToken(request: HapiRequest) {
+    const navToken = request.query?.navToken;
+    return typeof navToken === "string" && navToken.length > 0 ? navToken : undefined;
+}
+export function isTrustedNavigation(request: HapiRequest, session: any) {
+    const tabId = getTabId(request);
+    const navToken = getNavigationToken(request);
+    if (!tabId || !navToken) return false;
+    const expectedToken = session.get(`navToken:${tabId}`);
+    return expectedToken === navToken;
+}
+
 export function getSectionParams(
     sections: Section[],
     formPayload: FormPayload,
@@ -244,6 +261,41 @@ export const plugin = {
                 timeout: REQUEST_TIMEOUT,
             },
             handler: async (request: HapiRequest, h: HapiResponseToolkit) => {
+                const session = request.yar;
+                const tabId = getTabId(request);
+                const trustedNavigation = isTrustedNavigation(request, session);
+                const currentPage = tabId
+                    ? session.get(`currentPage:${tabId}`)
+                    : session.get("currentPage");
+                const requestedPage = request.params.path || "";
+                // const designerPreview = request.query?.fromDesigner === "preview";
+                const isAuthLandingRoute = request.path === "/user-information";
+
+                if (
+                    currentPage &&
+                    requestedPage !== currentPage &&
+                    !trustedNavigation &&
+                    // !designerPreview &&
+                    !isAuthLandingRoute &&
+                    request.headers.referer &&
+                    !request.headers.referer.includes(request.info.host)
+                ) {
+                    const redirectToken = tabId
+                        ? session.get(`navToken:${tabId}`)
+                        : undefined;
+                    const redirectPath = tabId
+                        ? `/${
+                              request.params.id
+                          }/${currentPage}?tabId=${encodeURIComponent(tabId)}${
+                              redirectToken
+                                  ? `&navToken=${encodeURIComponent(
+                                        redirectToken
+                                    )}`
+                                  : ""
+                          }`
+                        : `/${request.params.id}/${currentPage}`;
+                    return h.redirect(redirectPath);
+                }
                 let { path, id } = request.params;
                 store.set("formId", id);
                 id = id ?? request.yar.get("formId")
@@ -449,6 +501,16 @@ export const plugin = {
                 );
                 if (page) {
                     // NOTE: Start pages should live on gov.uk, but this allows prototypes to include signposting about having to log in.
+                    const pagePath = normalisePath(path);
+
+                    if (tabId) {
+                        session.set(`currentPage:${tabId}`, pagePath);
+                        if (request.query?.navToken) {
+                            session.set(`navToken:${tabId}`, request.query.navToken);
+                        }
+                    } else {
+                        session.set("currentPage", pagePath);
+                    }
                     if (page.path === "/summary") {
                         process.env.SERVICE_NAME = page.name;
                     }
