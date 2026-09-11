@@ -2,7 +2,7 @@
 # Stage 1
 # Base image contains the updated OS and
 # It also configures the non-root user that will be given permission to copied files/folders in every subsequent stages
-FROM node:18.16.0 AS base
+FROM node:20.19.4 AS base
 RUN mkdir -p /usr/src/app && \
     addgroup --gid 1001 appuser && \
     adduser --uid 1001 --ingroup appuser appuser && \

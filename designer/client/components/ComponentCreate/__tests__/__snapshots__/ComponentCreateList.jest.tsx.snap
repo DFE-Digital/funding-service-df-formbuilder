@@ -233,51 +233,12 @@ exports[`ComponentCreateList should match snapshot 1`] = `
               class="govuk-link"
               href="#0"
             >
-              Date
+              Date and time
             </a>
             <div
               class="govuk-hint"
             >
-              A calendar for users to specify a date
-            </div>
-          </li>
-          <li>
-            <a
-              class="govuk-link"
-              href="#0"
-            >
-              Date parts
-            </a>
-            <div
-              class="govuk-hint"
-            >
-              Allows users to manually enter a Day, Month and Year
-            </div>
-          </li>
-          <li>
-            <a
-              class="govuk-link"
-              href="#0"
-            >
-              Date time
-            </a>
-            <div
-              class="govuk-hint"
-            >
-              A calendar and clock for users to specify a date and time
-            </div>
-          </li>
-          <li>
-            <a
-              class="govuk-link"
-              href="#0"
-            >
-              Date time parts
-            </a>
-            <div
-              class="govuk-hint"
-            >
-              Allows users to manually enter a Day, Month, Year, Hour and Minute
+              Users can enter the date and time in all available combinations within the component
             </div>
           </li>
           <li>
@@ -304,19 +265,6 @@ exports[`ComponentCreateList should match snapshot 1`] = `
               class="govuk-hint"
             >
               Allows users to upload files from the device they are using
-            </div>
-          </li>
-          <li>
-            <a
-              class="govuk-link"
-              href="#0"
-            >
-              Month year parts
-            </a>
-            <div
-              class="govuk-hint"
-            >
-              Allows users to manually enter a Month and Year
             </div>
           </li>
           <li>
@@ -369,19 +317,6 @@ exports[`ComponentCreateList should match snapshot 1`] = `
               class="govuk-hint"
             >
               A text box that users can enter letters, numbers and symbols into
-            </div>
-          </li>
-          <li>
-            <a
-              class="govuk-link"
-              href="#0"
-            >
-              Time
-            </a>
-            <div
-              class="govuk-hint"
-            >
-              A clock for users to specify a time
             </div>
           </li>
           <li>
