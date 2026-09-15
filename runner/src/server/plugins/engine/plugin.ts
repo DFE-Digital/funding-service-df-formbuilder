@@ -263,6 +263,10 @@ export const plugin = {
             handler: async (request: HapiRequest, h: HapiResponseToolkit) => {
                 const session = request.yar;
                 const tabId = getTabId(request);
+                // A genuine click/submit always mints a brand-new navToken before navigating,
+                // so a request whose navToken still matches the one already stored for the
+                // current page can only be a stale query string carried over by editing the
+                // URL in place (e.g. changing just the path segment) — never a real navigation.
                 const trustedNavigation = isTrustedNavigation(request, session);
                 const currentPage = tabId
                     ? session.get(`currentPage:${tabId}`)
@@ -274,15 +278,26 @@ export const plugin = {
                 if (
                     currentPage &&
                     requestedPage !== currentPage &&
-                    !trustedNavigation &&
                     // !designerPreview &&
                     !isAuthLandingRoute &&
-                    request.headers.referer &&
-                    !request.headers.referer.includes(request.info.host)
+                    (trustedNavigation ||
+                        (request.headers.referer &&
+                            !request.headers.referer.includes(
+                                request.info.host
+                            )))
                 ) {
                     const redirectToken = tabId
                         ? session.get(`navToken:${tabId}`)
                         : undefined;
+                    // Preserve other params (e.g. returnUrl from a summary "Change" link).
+                    const otherParams = new URLSearchParams(
+                        Object.entries(request.query || {}).filter(
+                            ([key, value]) =>
+                                key !== "tabId" &&
+                                key !== "navToken" &&
+                                typeof value === "string"
+                        ) as [string, string][]
+                    ).toString();
                     const redirectPath = tabId
                         ? `/${
                               request.params.id
@@ -292,8 +307,10 @@ export const plugin = {
                                         redirectToken
                                     )}`
                                   : ""
-                          }`
-                        : `/${request.params.id}/${currentPage}`;
+                          }${otherParams ? `&${otherParams}` : ""}`
+                        : `/${request.params.id}/${currentPage}${
+                              otherParams ? `?${otherParams}` : ""
+                          }`;
                     return h.redirect(redirectPath);
                 }
                 let { path, id } = request.params;
