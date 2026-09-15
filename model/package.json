@@ -5,7 +5,7 @@
   "main": "dist/module/index.js",
   "browser": "./dist/browser/index.js",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "lint": "yarn run eslint .",
@@ -41,7 +41,7 @@
     "hmpo-components": "2.6.5",
     "joi": "17.2.1",
     "moment": "2.30.1",
-    "nanoid": "^3.1.20",
+    "nanoid": "3.3.11",
     "nunjucks": "3.2.1",
     "path": "0.12.7",
     "wreck": "14.2.0"
@@ -59,13 +59,13 @@
     "@types/jest": "^26.0.20",
     "@xgovformbuilder/lab-babel": "2.1.2",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
+    "babel-jest": "28.1.3",
     "cross-env": "^7.0.2",
     "eslint": "^7.6.0",
     "eslint-plugin-tsdoc": "^0.2.14",
     "jest": "^28.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^28.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "4.9.5"
   }
 }
