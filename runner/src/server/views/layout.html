@@ -117,6 +117,17 @@
         }
       }
 
+      // blob:, data:, mailto:, tel: and javascript: URLs can be same-origin but are
+      // not app pages. Appending tabId/navToken to a blob URL breaks it outright -
+      // the blob only resolves for the exact href handed out by createObjectURL - so
+      // only ever decorate real http(s) page URLs.
+      function isAppPageUrl(url) {
+        if (!url || !isSameOrigin(url)) {
+          return false;
+        }
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      }
+
       function isAuthLandingRoute(pathname) {
         return pathname === '/user-information';
       }
@@ -140,7 +151,7 @@
       }
 
       function decorateAppUrl(url) {
-        if (!url || !isSameOrigin(url)) {
+        if (!isAppPageUrl(url)) {
           return url;
         }
 
@@ -189,22 +200,50 @@
       sessionStorage.setItem(lastValidPageKey, currentUrl.href);
 
       function markAppNavigation(url) {
-        if (!url || !isSameOrigin(url)) return;
+        if (!isAppPageUrl(url)) return;
 
         var targetUrl = decorateAppUrl(new URL(url.href || url, window.location.href));
+        if (!isAppPageUrl(targetUrl)) return;
+
         sessionStorage.setItem(allowNextLoadKey, '1');
         sessionStorage.setItem(lastValidPageKey, targetUrl.href);
         return targetUrl;
       }
 
       document.addEventListener('click', function (event) {
-        var link = event.target.closest('a');
+        var link = event.target.closest ? event.target.closest('a') : null;
         if (!link || link.target === '_blank' || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
           return;
         }
 
-        var linkUrl = new URL(link.href, window.location.href);
-        if (isSameOrigin(linkUrl)) {
+        // File and PDF downloads click a generated anchor pointing at a blob URL.
+        // Leave those alone - rewriting the href invalidates the blob and the
+        // browser reports the download as a network failure.
+        if (link.hasAttribute('download')) {
+          return;
+        }
+
+        var linkUrl;
+        try {
+          linkUrl = new URL(link.href, window.location.href);
+        } catch (error) {
+          return;
+        }
+
+        // Fragment links ("Skip to main content", error-summary links) are
+        // same-document jumps. Minting a fresh navToken for one changes the query
+        // string, which turns the jump into a full page load - and because journey
+        // progress is keyed on the full path + query, the server then records a
+        // duplicate entry for the page you are already on, leaving the Back link
+        // pointing at the current page. Leave same-document links alone.
+        if (
+          linkUrl.pathname === window.location.pathname &&
+          linkUrl.search === window.location.search
+        ) {
+          return;
+        }
+
+        if (isAppPageUrl(linkUrl)) {
           var markedUrl = markAppNavigation(linkUrl);
           if (markedUrl) {
             link.href = markedUrl.toString();
@@ -220,7 +259,7 @@
         }
 
         var formUrl = new URL(form.action || window.location.href, window.location.href);
-        if (isSameOrigin(formUrl)) {
+        if (isAppPageUrl(formUrl)) {
           var completed = markAppNavigation(formUrl);
           if (completed) {
             form.action = completed.toString();
