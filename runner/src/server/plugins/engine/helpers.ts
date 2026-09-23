@@ -1181,6 +1181,36 @@ export const hasMatchingDynamicPages = (
     return true;
 };
 
+/**
+ * Maps a repeating section's iteration-suffixed values onto their plain
+ * component names, for the iteration that `path` belongs to.
+ *
+ * A repeating section's state is flat: `moreDt` (iteration 1), `moreDt-2`,
+ * `moreDt-3` all sit side by side. A condition is written against the plain
+ * name `moreDt`, so evaluating it against the raw section state always finds
+ * iteration 1's value and applies it to every iteration. This narrows the
+ * state to the iteration in question before the condition is evaluated.
+ */
+export const getIterationComponents = (sectionState: any, path: string) => {
+    const iteration = getNumberAfterLastHyphen(path);
+    const iterationComponents = {};
+
+    for (const compId in sectionState ?? {}) {
+        const compIdPart = compId.includes("-")
+            ? Number(compId.split("-")[1])
+            : null;
+
+        if (
+            compIdPart === iteration ||
+            (compIdPart === 1 && iteration === null)
+        ) {
+            iterationComponents[compId.split("-")[0]] = sectionState[compId];
+        }
+    }
+
+    return iterationComponents;
+};
+
 export const getNumberAfterLastHyphen = (url) => {
     if (!url) return null;
     // Find the last occurrence of a hyphen

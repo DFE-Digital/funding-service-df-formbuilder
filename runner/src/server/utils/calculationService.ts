@@ -681,11 +681,35 @@ export const setExpressionDataAndConditionEvaluation = async (
         }
     }
 
+    // On an iteration page (path ending -2, -3...) the flat section state still
+    // holds the FIRST iteration's values under their plain names. A condition
+    // names a field plainly, so without dropping those, a field this iteration
+    // never answered silently resolves to iteration one's answer. Suffixed keys
+    // are kept so a condition naming one directly still works, and plain names
+    // are then supplied by sectionComponents for this iteration only.
+    // Iteration one and non-repeating pages have no suffix and are unaffected.
+    const pageIteration = getNumberAfterLastHyphen(pagePath);
+    const scopedSectionState =
+        pageIteration === null
+            ? sectionState
+            : Object.keys(sectionState ?? {}).reduce((acc, key) => {
+                  if (key.includes("-")) {
+                      acc[key] = sectionState[key];
+                  }
+                  return acc;
+              }, {});
+
     const conditionState = {
         ...state,
-        ...sectionState,
+        ...scopedSectionState,
         ...sectionComponents
     };
+    // Result values are recomputed during the map below. `state` still holds the
+    // values persisted on the PREVIOUS render, so a condition that tests a Result
+    // must be evaluated against the value computed on this render - otherwise it
+    // is always one change behind, and the staleness survives a page refresh
+    // because the old value is what sits in session state.
+    const freshResultValues = {};
     viewModel.components = viewModel?.components?.map((component) => {
         const evaluatedComponent = component;
         const content = evaluatedComponent.model.content;
@@ -737,6 +761,29 @@ export const setExpressionDataAndConditionEvaluation = async (
             }
             evaluatedComponent.model.attributes.expressionData =
                 state.result[`${component.model.id}-temp`];
+
+            const freshValue = Number.parseFloat(
+                evaluatedComponent.model.value
+            );
+            const compName = evaluatedComponent.model.name;
+            if (!Number.isNaN(freshValue) && compName) {
+                freshResultValues[compName] = freshValue;
+
+                // A duplicated Result is named Lguqac-2, but a condition always
+                // names it plainly (Lguqac), so also expose this iteration's
+                // value under the plain name - otherwise iteration 2 onwards
+                // falls back to the first iteration's persisted value.
+                const compIdPart = compName.includes("-")
+                    ? Number(compName.split("-")[1])
+                    : null;
+                if (
+                    compIdPart === getNumberAfterLastHyphen(pagePath) ||
+                    (compIdPart === 1 &&
+                        getNumberAfterLastHyphen(pagePath) === null)
+                ) {
+                    freshResultValues[compName.split("-")[0]] = freshValue;
+                }
+            }
         }
 
         // apply condition to items for radios, checkboxes etc
@@ -755,6 +802,10 @@ export const setExpressionDataAndConditionEvaluation = async (
         return evaluatedComponent;
     });
 
+    // Every Result on this page has now been evaluated, so conditions can be
+    // resolved against current values rather than the previous render's.
+    const evaluationState = { ...conditionState, ...freshResultValues };
+
     viewModel.components = viewModel.components?.filter(
         (component) => {
             if (
@@ -767,7 +818,7 @@ export const setExpressionDataAndConditionEvaluation = async (
                 const condition = formModel.conditions[
                     component.model.condition
                 ];
-                return condition.fn(conditionState);
+                return condition.fn(evaluationState);
             }
             if (
                 component?.type === "Result" &&
@@ -780,7 +831,7 @@ export const setExpressionDataAndConditionEvaluation = async (
                 let resultValue = component.model.value;
                 resultValue = Number.parseFloat(resultValue);
                 return condition.fn({
-                    ...conditionState,
+                    ...evaluationState,
                     ...{
                         //@ts-ignore
                         [resultName]: resultValue,

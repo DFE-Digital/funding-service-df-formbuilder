@@ -639,4 +639,56 @@ suite("CustomRedirecttoResultpage (edit-from-summary navigation)", () => {
             );
         });
     });
+
+    /**
+     * A repeatable section's state is flat - yesNoA (iteration one) and
+     * yesNoA-2 sit side by side - and a condition names the plain field. When
+     * getNext resolved that name by scanning the whole state it always found
+     * iteration one's answer and applied it to every iteration, so answering
+     * "yes" on iteration one sent iteration two down the conditional branch
+     * regardless of what iteration two answered.
+     */
+    describe("conditional routing uses the current iteration's answer", () => {
+        it("does not send iteration 2 down the branch when only iteration 1 said yes", () => {
+            const page = pageFor("/page-a-2");
+
+            const state: any = {
+                repSec: { yesNoA: true, "yesNoA-2": false },
+            };
+
+            const next = page.getNext(state);
+
+            expect(next).to.not.contain("/page-b-2");
+            expect(next).to.contain("/page-summary-2");
+        });
+
+        it("sends iteration 2 down the branch when iteration 2 itself said yes", () => {
+            const page = pageFor("/page-a-2");
+
+            const state: any = {
+                repSec: { yesNoA: false, "yesNoA-2": true },
+            };
+
+            expect(page.getNext(state)).to.contain("/page-b-2");
+        });
+
+        it("still routes iteration 1 on its own answer", () => {
+            const state: any = {
+                repSec: { yesNoA: true, "yesNoA-2": false },
+            };
+
+            expect(pageFor("/page-a").getNext(state)).to.contain("/page-b");
+        });
+
+        it("skips the branch for iteration 1 when only iteration 2 said yes", () => {
+            const state: any = {
+                repSec: { yesNoA: false, "yesNoA-2": true },
+            };
+
+            const next = pageFor("/page-a").getNext(state);
+
+            expect(next).to.not.contain("/page-b");
+            expect(next).to.contain("/page-summary");
+        });
+    });
 });
