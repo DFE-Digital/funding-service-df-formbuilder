@@ -9,7 +9,7 @@
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '20.x'
+    versionSpec: '22.x'
 
 - task: Bash@3
   displayName: Install root dependencies

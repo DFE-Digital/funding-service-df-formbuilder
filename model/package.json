@@ -5,11 +5,11 @@
   "main": "dist/module/index.js",
   "browser": "./dist/browser/index.js",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
-    "lint": "yarn run eslint .",
-    "fix-lint": "yarn run eslint . --fix",
+    "lint": "DISABLE_V8_COMPILE_CACHE=1 yarn run eslint .",
+    "fix-lint": "DISABLE_V8_COMPILE_CACHE=1 yarn run eslint . --fix",
     "test": "yarn lint && yarn type-check &&  yarn test-cov",
     "test:dev": "jest --watch",
     "test-cov": "jest --coverage",

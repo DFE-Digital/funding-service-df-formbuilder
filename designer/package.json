@@ -4,7 +4,7 @@
   "description": "Cross government digital form builder (designer)",
   "main": "server/index.js",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "watch": "NODE_ENV=development webpack",
@@ -13,8 +13,8 @@
     "start": "nodemon dist/server.js",
     "start:local": "NODE_TLS_REJECT_UNAUTHORIZED=0 ts-node-dev --inspect --respawn --transpile-only server/index.ts",
     "dev": "concurrently 'yarn watch' 'yarn start:local'",
-    "lint": "yarn run eslint .",
-    "fix-lint": "yarn run eslint . --fix",
+    "lint": "DISABLE_V8_COMPILE_CACHE=1 yarn run eslint .",
+    "fix-lint": "DISABLE_V8_COMPILE_CACHE=1 yarn run eslint . --fix",
     "symlink-env": "./bin/symlink-config",
     "test": "yarn lint && yarn test-lab && yarn jest",
     "test-cov": "yarn lint && yarn jest",
