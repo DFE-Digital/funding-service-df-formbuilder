@@ -16,9 +16,15 @@ function setUpDomEnvironment() {
 
     global.window = window;
     global.document = window.document;
-    global.navigator = {
-        userAgent: "node.js",
-    };
+    // Node 22 defines `navigator` as a getter-only global, so a plain
+    // assignment silently no-ops. Define the property instead.
+    Object.defineProperty(global, "navigator", {
+        value: {
+            userAgent: "node.js",
+        },
+        writable: true,
+        configurable: true,
+    });
     copyProps(window, global);
 }
 

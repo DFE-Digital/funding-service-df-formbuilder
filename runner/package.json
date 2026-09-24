@@ -30,8 +30,8 @@
     "url": "https://github.com/XGovFormBuilder/digital-form-builder/tree/main/builder"
   },
   "engines": {
-    "node": ">=20",
-    "npm": ">=9"
+    "node": ">=22",
+    "npm": ">=10"
   },
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
