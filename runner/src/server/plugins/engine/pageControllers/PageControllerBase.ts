@@ -4,9 +4,11 @@ import { messages } from "server/plugins/engine/pageControllers/validationOption
 
 import {
     feedbackReturnInfoKey,
+    getIterationComponents,
     getNumberAfterLastHyphen,
     proceed,
     redirectTo,
+    withoutNavigationParams,
 } from "../helpers";
 import { ComponentCollection } from "../components/ComponentCollection";
 import {
@@ -447,6 +449,18 @@ export class PageControllerBase {
             let condName = false;
             const currentPath = this.path;
             let condGiven;
+            // A repeating section's state holds every iteration at once
+            // (moreDt, moreDt-2, moreDt-3). The lookup below searches state by
+            // the condition's plain field name, which would always find the
+            // first iteration's value and apply it to every iteration, so
+            // resolve this page's own iteration first.
+            let iterationState = {};
+            (this.model.sections ?? []).forEach((section: any) => {
+                iterationState = {
+                    ...iterationState,
+                    ...getIterationComponents(state[section.name], currentPath),
+                };
+            });
             this.components.formItems?.forEach((item) => {
                 nextPage.def.pages.find((x, index) => {
                     if (x.path === currentPath) {
@@ -477,10 +491,18 @@ export class PageControllerBase {
                                             let subValue = toBool(
                                                 sub.value.value
                                             );
-                                            // Look for the field value in the entire state
+                                            // Look for the field value in this
+                                            // page's own iteration first, then
+                                            // fall back to the entire state.
                                             condName = toBool(
-                                                state[sub.field.name] !==
-                                                    undefined
+                                                iterationState[
+                                                    sub.field.name
+                                                ] !== undefined
+                                                    ? iterationState[
+                                                          sub.field.name
+                                                      ]
+                                                    : state[sub.field.name] !==
+                                                      undefined
                                                     ? state[sub.field.name]
                                                     : Object.values(state).find(
                                                           (section) =>
@@ -936,7 +958,12 @@ export class PageControllerBase {
 
                 const progress = [...(state.progress || [])];
                 const { num } = request.query;
-                const currentPath = `/${this.model.basePath}${this.path}${request.url.search}`;
+                // Identify the page without the URL guard's tabId/navToken, which
+                // change on every navigation - otherwise the back-link history
+                // never recognises a return visit and Back ping-pongs.
+                const currentPath = `/${this.model.basePath}${
+                    this.path
+                }${withoutNavigationParams(request.url.search)}`;
                 const startPage = this.model.def.startPage;
                 const formData = this.getFormDataFromState(state, num - 1);
                 trackEvent(

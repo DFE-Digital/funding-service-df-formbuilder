@@ -1016,6 +1016,133 @@ suite("CalculationService", () => {
                 // conditional item must be filtered out.
                 expect(component.model.content).to.have.length(1);
             });
+
+            /**
+             * A repeating section's state is flat, so the first iteration's
+             * values sit under their plain names alongside every later
+             * iteration's suffixed ones. A condition names a field plainly, so
+             * a field the CURRENT iteration never answered used to fall back to
+             * the first iteration's answer - showing, for example, "you have
+             * entered 3 leases" on a school where only one was entered.
+             */
+            test("does not fall back to the first iteration's value for a field this iteration never answered", async () => {
+                const section: Section = {
+                    name: "repeatSection",
+                    title: "Repeat Section",
+                };
+                const component = createComponent({
+                    type: "Html",
+                    model: {
+                        id: "html1",
+                        content: [
+                            { text: "Always shown" },
+                            {
+                                text: "Shown when the flag is set",
+                                condition: "condition1",
+                            },
+                        ],
+                    },
+                });
+                const viewModel = createPageViewModel([component]);
+                viewModel.page = { path: "/repeat-section-2" } as any;
+
+                const state: FormSubmissionState = {
+                    progress: [],
+                    dataImportStatus: {},
+                    result: {},
+                    repeatSection: {
+                        // Only iteration 1 answered this. Iteration 2 never
+                        // reached the page that asks it, so there is no
+                        // "flagFld-2".
+                        flagFld: true,
+                    },
+                } as any;
+
+                const formModel = {
+                    sections: [section],
+                    conditions: {
+                        condition1: {
+                            fn: sinon
+                                .stub()
+                                .callsFake(
+                                    (conditionState: any) =>
+                                        conditionState.flagFld === true
+                                ),
+                        },
+                    },
+                } as any;
+
+                await setExpressionDataAndConditionEvaluation(
+                    state,
+                    (str: string) => /[a-zA-Z]/.test(str),
+                    viewModel,
+                    createFormDefinition({ sections: [section] }),
+                    formModel,
+                    createOrganizations()
+                );
+
+                // Iteration 2 has no answer, so the condition must be false and
+                // the conditional item filtered out.
+                expect(component.model.content).to.have.length(1);
+            });
+
+            test("still resolves a condition that names an iteration-suffixed field directly", async () => {
+                const section: Section = {
+                    name: "repeatSection",
+                    title: "Repeat Section",
+                };
+                const component = createComponent({
+                    type: "Html",
+                    model: {
+                        id: "html1",
+                        content: [
+                            { text: "Always shown" },
+                            {
+                                text: "Shown when the flag is set",
+                                condition: "condition1",
+                            },
+                        ],
+                    },
+                });
+                const viewModel = createPageViewModel([component]);
+                viewModel.page = { path: "/repeat-section-2" } as any;
+
+                const state: FormSubmissionState = {
+                    progress: [],
+                    dataImportStatus: {},
+                    result: {},
+                    repeatSection: {
+                        flagFld: false,
+                        "flagFld-2": true,
+                    },
+                } as any;
+
+                const formModel = {
+                    sections: [section],
+                    conditions: {
+                        condition1: {
+                            fn: sinon
+                                .stub()
+                                .callsFake(
+                                    (conditionState: any) =>
+                                        conditionState["flagFld-2"] === true
+                                ),
+                        },
+                    },
+                } as any;
+
+                await setExpressionDataAndConditionEvaluation(
+                    state,
+                    (str: string) => /[a-zA-Z]/.test(str),
+                    viewModel,
+                    createFormDefinition({ sections: [section] }),
+                    formModel,
+                    createOrganizations()
+                );
+
+                expect(component.model.content).to.have.length(2);
+            });
+
         });
 
         test("handles currency prefix values (Euro)", async () => {

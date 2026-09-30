@@ -10,7 +10,9 @@ import {
     isNewLessThanOldValue,
     clearStateFromSection,
     getPreviousValueFromState,
+    getIterationComponents,
     getNumberAfterLastHyphen,
+    withoutNavigationParams,
     hasMatchingDynamicPages,
     hasSectionTriggerLowered,
     filterPages,
@@ -562,6 +564,114 @@ suite("Helpers", () => {
 
         test("Should return null for empty string after hyphen", () => {
             expect(getNumberAfterLastHyphen("path-")).to.be.null;
+        });
+    });
+
+    /**
+     * A repeating section's state is flat. The first iteration keeps the plain
+     * component names and later iterations are suffixed, so `moreDt`,
+     * `moreDt-2` and `moreDt-3` all sit side by side in one object. Conditions
+     * always name a component plainly, so before evaluating one the state has
+     * to be narrowed to the iteration the page belongs to - otherwise the first
+     * iteration's answer decides the outcome for every iteration.
+     */
+    describe("getIterationComponents", () => {
+        const sectionState = {
+            moreDt: true,
+            "moreDt-2": false,
+            "moreDt-3": true,
+            itmVal: 10,
+            "itmVal-2": 20,
+            "itmVal-3": 30,
+        };
+
+        test("Should map the unsuffixed components for a path with no iteration", () => {
+            expect(
+                getIterationComponents(sectionState, "/item-details")
+            ).to.equal({ moreDt: true, itmVal: 10 });
+        });
+
+        test("Should treat a trailing hyphenated word as no iteration", () => {
+            // "/lease-summary" ends in a hyphen followed by a word, not a
+            // number, so it is the first iteration - not iteration NaN.
+            expect(
+                getIterationComponents(sectionState, "/lease-summary")
+            ).to.equal({ moreDt: true, itmVal: 10 });
+        });
+
+        test("Should map an iteration's values onto the plain names", () => {
+            expect(
+                getIterationComponents(sectionState, "/item-details-2")
+            ).to.equal({ moreDt: false, itmVal: 20 });
+        });
+
+        test("Should work beyond the second iteration", () => {
+            expect(
+                getIterationComponents(sectionState, "/item-details-3")
+            ).to.equal({ moreDt: true, itmVal: 30 });
+        });
+
+        test("Should omit a component this iteration never answered", () => {
+            // The page asking hmqWgQ was only reached on iteration 1, so
+            // iteration 2 must resolve it to nothing rather than inheriting.
+            const partial = { hmqWgQ: true, itmVal: 10, "itmVal-2": 20 };
+
+            // Deep equality: hmqWgQ must be absent, not merely falsy.
+            expect(
+                getIterationComponents(partial, "/item-details-2")
+            ).to.equal({ itmVal: 20 });
+        });
+
+        test("Should return nothing for an empty section state", () => {
+            expect(getIterationComponents({}, "/item-details-2")).to.equal({});
+        });
+
+        test("Should return nothing when the section has no state at all", () => {
+            expect(
+                getIterationComponents(undefined, "/item-details-2")
+            ).to.equal({});
+        });
+
+        test("Should not throw on a path with no hyphen", () => {
+            expect(getIterationComponents(sectionState, "/summary")).to.equal({
+                moreDt: true,
+                itmVal: 10,
+            });
+        });
+    });
+
+    /**
+     * The URL guard stamps every navigation with a tabId and a fresh navToken.
+     * The back-link history identifies pages by URL, so if those two are kept,
+     * a return visit to the previous page never matches the stored entry - it
+     * is pushed rather than popped, and Back ping-pongs between the last two
+     * pages forever.
+     */
+    describe("withoutNavigationParams", () => {
+        test("Should drop tabId and navToken", () => {
+            expect(
+                withoutNavigationParams("?tabId=abc123&navToken=def456")
+            ).to.equal("");
+        });
+
+        test("Should keep parameters that distinguish one visit from another", () => {
+            expect(
+                withoutNavigationParams(
+                    "?num=2&tabId=abc123&navToken=def456&returnUrl=%2Fform%2Fsummary"
+                )
+            ).to.equal("?num=2&returnUrl=%2Fform%2Fsummary");
+        });
+
+        test("Should treat two visits differing only by navToken as the same page", () => {
+            // The regression: arriving back on a page via the Back link carries a
+            // freshly minted navToken, so it never matched its history entry.
+            expect(
+                withoutNavigationParams("?tabId=abc123&navToken=first")
+            ).to.equal(withoutNavigationParams("?tabId=abc123&navToken=second"));
+        });
+
+        test("Should return an empty string for an empty query", () => {
+            expect(withoutNavigationParams("")).to.equal("");
         });
     });
 
