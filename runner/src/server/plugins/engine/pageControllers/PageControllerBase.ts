@@ -8,6 +8,7 @@ import {
     getNumberAfterLastHyphen,
     proceed,
     redirectTo,
+    withoutNavigationParams,
 } from "../helpers";
 import { ComponentCollection } from "../components/ComponentCollection";
 import {
@@ -957,7 +958,12 @@ export class PageControllerBase {
 
                 const progress = [...(state.progress || [])];
                 const { num } = request.query;
-                const currentPath = `/${this.model.basePath}${this.path}${request.url.search}`;
+                // Identify the page without the URL guard's tabId/navToken, which
+                // change on every navigation - otherwise the back-link history
+                // never recognises a return visit and Back ping-pongs.
+                const currentPath = `/${this.model.basePath}${
+                    this.path
+                }${withoutNavigationParams(request.url.search)}`;
                 const startPage = this.model.def.startPage;
                 const formData = this.getFormDataFromState(state, num - 1);
                 trackEvent(

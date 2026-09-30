@@ -1182,6 +1182,24 @@ export const hasMatchingDynamicPages = (
 };
 
 /**
+ * Returns a query string with the URL guard's navigation parameters removed.
+ *
+ * The URL guard stamps every navigation with a tabId and a freshly minted
+ * navToken, so no two visits to the same page share a query string. Anything
+ * that identifies a page by its URL - the back-link history in particular - has
+ * to ignore those two, otherwise a return visit is never recognised as one and
+ * the Back link ping-pongs between the last two pages. Other parameters (num,
+ * returnUrl) are kept because they genuinely distinguish one visit from another.
+ */
+export const withoutNavigationParams = (search: string) => {
+    const params = new URLSearchParams(search);
+    params.delete("tabId");
+    params.delete("navToken");
+    const query = params.toString();
+    return query ? `?${query}` : "";
+};
+
+/**
  * Maps a repeating section's iteration-suffixed values onto their plain
  * component names, for the iteration that `path` belongs to.
  *
