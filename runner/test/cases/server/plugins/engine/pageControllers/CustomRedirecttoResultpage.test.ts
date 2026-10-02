@@ -691,4 +691,250 @@ suite("CustomRedirecttoResultpage (edit-from-summary navigation)", () => {
             expect(next).to.contain("/page-summary");
         });
     });
+
+    /**
+     * An edited field, then an answered page that doesn't depend on it, then
+     * the page holding the Result that does.
+     *
+     * Content components (Para, Html...) never hold an answer, so they sit in
+     * state as undefined. They mustn't count as unanswered questions -
+     * otherwise any answered page carrying one is visited first, nothing has
+     * changed there, and the walk returns to the summary without revisiting
+     * the Result page, leaving a stale total.
+     */
+    describe("an answered page between the edited field and its Result page", () => {
+        const chainDef: any = {
+            metadata: {},
+            startPage: "/amount-page",
+            pages: [
+                {
+                    path: "/amount-page",
+                    title: "Amount page",
+                    section: "items",
+                    components: [
+                        {
+                            name: "amount",
+                            options: {},
+                            type: "NumberField",
+                            title: "Amount",
+                            schema: {},
+                        },
+                        {
+                            name: "addMore",
+                            options: {},
+                            type: "YesNoField",
+                            title: "Add another?",
+                            schema: {},
+                        },
+                    ],
+                    next: [
+                        { path: "/other-page", condition: "hasMore" },
+                        { path: "/result-page" },
+                    ],
+                },
+                {
+                    path: "/other-page",
+                    title: "Other page",
+                    section: "items",
+                    components: [
+                        {
+                            name: "otherValue",
+                            options: {},
+                            type: "NumberField",
+                            title: "Other value",
+                            schema: {},
+                        },
+                        {
+                            name: "guidance",
+                            type: "Para",
+                            content: "Guidance text.",
+                        },
+                    ],
+                    next: [{ path: "/result-page" }],
+                },
+                {
+                    path: "/result-page",
+                    title: "Result page",
+                    section: "items",
+                    components: [
+                        {
+                            name: "total",
+                            options: {},
+                            type: "Result",
+                            title: "Total",
+                            expression: "(amount)",
+                            calculationName: "calcTotal",
+                            schema: {},
+                        },
+                    ],
+                    next: [{ path: "/summary" }],
+                },
+                {
+                    path: "/summary",
+                    title: "Summary",
+                    controller: "./pages/summary.js",
+                    components: [],
+                },
+            ],
+            lists: [],
+            sections: [
+                {
+                    name: "items",
+                    title: "Items",
+                    repeatableSection: true,
+                    conditionComp: "addMore",
+                },
+            ],
+            conditions: [
+                {
+                    displayName: "hasMore",
+                    name: "hasMore",
+                    value: {
+                        name: "hasMore",
+                        conditions: [
+                            {
+                                field: {
+                                    name: "addMore",
+                                    type: "YesNoField",
+                                    display: "Add another?",
+                                },
+                                operator: "is",
+                                value: {
+                                    type: "Value",
+                                    value: "true",
+                                    display: "true",
+                                },
+                            },
+                        ],
+                    },
+                },
+            ],
+            calculations: [
+                {
+                    name: "calcTotal",
+                    title: "Total",
+                    components: [
+                        {
+                            title: "Amount",
+                            name: "amount",
+                            type: "NumberField",
+                            options: {},
+                            schema: {},
+                        },
+                    ],
+                    expression: "(amount)",
+                    hideResult: false,
+                    computeList: [
+                        {
+                            id: "c1",
+                            type: "component",
+                            order: 1,
+                            value: "amount",
+                            entity: "amount",
+                        },
+                    ],
+                    calculationsMapped: [],
+                },
+            ],
+            fees: [],
+            outputs: [],
+            version: 2,
+        };
+
+        let chainModel: FormModel;
+        let itemsSection: any;
+
+        beforeEach(async () => {
+            chainModel = new FormModel(chainDef, options);
+            await chainModel.init();
+            itemsSection = chainModel.sections.find(
+                (s: any) => s.name === "items"
+            );
+        });
+
+        const chainPageFor = (path: string) => {
+            const pageDef = chainModel.pages.find((p: any) => p.path === path)
+                ?.pageDef;
+            return new PageControllerBase(chainModel, pageDef);
+        };
+
+        // The walk works out its route from stored state, so the mocked cache
+        // has to return it - otherwise the route never reaches /other-page.
+        const requestWithState = (stored: any) => ({
+            query: {},
+            yar: { get: () => undefined, set: () => undefined },
+            services: () => ({ cacheService: { getState: async () => stored } }),
+            server: { logger: { debug: () => null } },
+        });
+
+        it("goes straight to the Result page when the page in between is fully answered", async () => {
+            const oldState = {
+                items: { amount: 200, addMore: true, otherValue: 7, total: 200 },
+            };
+            // guidance is stored as undefined, as content components are.
+            const newState = {
+                items: {
+                    amount: 250,
+                    addMore: true,
+                    otherValue: 7,
+                    guidance: undefined,
+                    total: 200,
+                },
+            };
+
+            const result = await chainPageFor(
+                "/amount-page"
+            ).CustomRedirecttoResultpage(
+                returnurl,
+                h,
+                itemsSection,
+                false,
+                null,
+                requestWithState(newState),
+                newState,
+                newState,
+                oldState
+            );
+
+            expect(result).to.equal(
+                `/basePath/result-page?returnUrl=${encodeURIComponent(
+                    returnurl
+                )}`
+            );
+        });
+
+        it("still visits the page in between when it has a genuinely unanswered question", async () => {
+            const oldState = {
+                items: { amount: 200, addMore: true, total: 200 },
+            };
+            // otherValue is a real question with no answer.
+            const newState = {
+                items: {
+                    amount: 250,
+                    addMore: true,
+                    otherValue: undefined,
+                    guidance: undefined,
+                    total: 200,
+                },
+            };
+
+            const result = await chainPageFor(
+                "/amount-page"
+            ).CustomRedirecttoResultpage(
+                returnurl,
+                h,
+                itemsSection,
+                false,
+                null,
+                requestWithState(newState),
+                newState,
+                newState,
+                oldState
+            );
+
+            expect(result).to.equal(
+                `/basePath/other-page?returnUrl=${encodeURIComponent(returnurl)}`
+            );
+        });
+    });
 });
