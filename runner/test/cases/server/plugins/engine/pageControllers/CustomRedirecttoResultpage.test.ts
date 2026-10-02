@@ -936,5 +936,104 @@ suite("CustomRedirecttoResultpage (edit-from-summary navigation)", () => {
                 `/basePath/other-page?returnUrl=${encodeURIComponent(returnurl)}`
             );
         });
+
+        /**
+         * The page in between holds its own Result (an unrelated counter), and
+         * a second Result elsewhere reuses the changed total's calculation -
+         * as every later iteration's copy of it does.
+         *
+         * The counter must only be revisited if it shares inputs with the
+         * changed total. Checking whether any Result in the form shared them
+         * matched every Result once a second one existed, putting the page in
+         * between ahead of the Result page.
+         */
+        it("doesn't visit a page whose Result is unrelated to the changed one", async () => {
+            const def = JSON.parse(JSON.stringify(chainDef));
+            const pageAt = (path: string) =>
+                def.pages.find((p: any) => p.path === path);
+
+            pageAt("/other-page").components.push({
+                name: "counter",
+                options: {},
+                type: "Result",
+                title: "Counter",
+                expression: "(1)",
+                calculationName: "calcCount",
+                schema: {},
+            });
+            pageAt("/result-page").next = [{ path: "/overview" }];
+            def.pages.push({
+                path: "/overview",
+                title: "Overview",
+                components: [
+                    {
+                        name: "overallTotal",
+                        options: {},
+                        type: "Result",
+                        title: "Overall total",
+                        expression: "(amount)",
+                        calculationName: "calcTotal",
+                        schema: {},
+                    },
+                ],
+                next: [{ path: "/summary" }],
+            });
+            def.calculations.push({
+                name: "calcCount",
+                title: "Counter",
+                components: [],
+                expression: "1",
+                hideResult: false,
+                computeList: [
+                    { id: "c2", type: "number", order: 1, value: "1" },
+                ],
+                calculationsMapped: [],
+            });
+
+            const model = new FormModel(def, options);
+            await model.init();
+            const pageDef = model.pages.find(
+                (p: any) => p.path === "/amount-page"
+            )?.pageDef;
+            const section = model.sections.find(
+                (s: any) => s.name === "items"
+            );
+
+            const oldState = {
+                items: {
+                    amount: 200,
+                    addMore: true,
+                    otherValue: 7,
+                    counter: 1,
+                    total: 200,
+                },
+                overallTotal: 200,
+            };
+            const newState = {
+                items: { ...oldState.items, amount: 250 },
+                overallTotal: 200,
+            };
+
+            const result = await new PageControllerBase(
+                model,
+                pageDef
+            ).CustomRedirecttoResultpage(
+                returnurl,
+                h,
+                section,
+                false,
+                null,
+                requestWithState(newState),
+                newState,
+                newState,
+                oldState
+            );
+
+            expect(result).to.equal(
+                `/basePath/result-page?returnUrl=${encodeURIComponent(
+                    returnurl
+                )}`
+            );
+        });
     });
 });
