@@ -3084,6 +3084,15 @@ export class PageControllerBase {
                         const items = page.components?.items || [];
 
                         return items.some((item) => {
+                            // Content components (Para, Html, Details...) never
+                            // hold an answer, so an undefined value for one isn't
+                            // an unanswered question. Counting them flagged every
+                            // answered page carrying a paragraph, pulling the walk
+                            // onto pages with nothing to recalculate - where it
+                            // ended, skipping the Result pages after them.
+                            if (!item.isFormComponent) {
+                                return false;
+                            }
                             const componentName = item.name;
 
                             const hasUndefinedValue = (obj: any): boolean => {
