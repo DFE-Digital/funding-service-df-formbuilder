@@ -2940,6 +2940,14 @@ export class PageControllerBase {
                                         ) {
                                             return false;
                                         }
+                                        // Only the Result being checked
+                                        // counts. Matching any Result in the
+                                        // form pulled in every Result page.
+                                        if (
+                                            otherResultComp.name !== comp.name
+                                        ) {
+                                            return false;
+                                        }
 
                                         // Other calculation
                                         const otherCalculation = this.model.def.calculations.find(
