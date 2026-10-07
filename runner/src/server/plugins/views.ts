@@ -28,6 +28,32 @@ function resolveFrom(pkgName: string) {
     return resolve.sync(pkgName);
 }
 
+/**
+ * Pages the system sends the browser to (not the user typing a URL). The
+ * client-side URL guard in layout.html must not bounce these back to the last
+ * form page.
+ *  - terminal: the session has ended, so the last form page is dead.
+ *  - info: stateless/error pages; the last form page is still valid to return to.
+ */
+const SYSTEM_PAGE_KINDS: Record<string, "terminal" | "info"> = {
+    "/clear-session": "terminal",
+    "/timeout": "terminal",
+    "/service-unavailable": "info",
+    "/cookies": "info",
+    "/help/cookies": "info",
+    "/accessibility-statement": "info",
+};
+
+function getSystemPageKind(request: HapiRequest): string {
+    // Error views (404/403/500) render at whatever URL failed, so
+    // errorPages.ts flags them on request.app instead of by path.
+    return (
+        (request?.app as any)?.systemPage ??
+        SYSTEM_PAGE_KINDS[request?.path?.replace(/\/$/, "") ?? ""] ??
+        ""
+    );
+}
+
 export default {
     plugin: vision,
     options: {
@@ -102,6 +128,7 @@ export default {
             privacyPolicyUrl: config.privacyPolicyUrl || "#",
             phaseTag: config.phaseTag,
             isAuthenticated: request?.auth.isAuthenticated,
+            systemPage: getSystemPageKind(request),
             loadTesting: config.loadTesting || false,
             navigation: request?.auth.isAuthenticated
                 ? [{ text: "Sign out", href: "/logout" }]

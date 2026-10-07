@@ -162,10 +162,25 @@
         return url;
       }
 
+      // Set by the server for pages the system sends the browser to (sign out,
+      // timeout, service unavailable, cookies, 404/403/500...). These loads are
+      // not a human editing the URL bar, so the URL guard must not redirect them:
+      //   'terminal' - session ended; forget the last form page so nothing can
+      //                bounce back to it afterwards.
+      //   'info'     - keep the last form page so the user can still return to it.
+      var systemPage = {{ systemPage | default('') | dump | safe }};
+
       var currentUrl = new URL(window.location.href);
       var currentNavToken = currentUrl.searchParams.get('navToken');
       var storedNavToken = sessionStorage.getItem(navTokenKey);
-      if (currentNavToken) {
+      if (systemPage) {
+        sessionStorage.removeItem(allowNextLoadKey);
+        if (systemPage === 'terminal') {
+          sessionStorage.removeItem(lastValidPageKey);
+          sessionStorage.removeItem(navTokenKey);
+          sessionStorage.removeItem(tabKey);
+        }
+      } else if (currentNavToken) {
         if (storedNavToken && currentNavToken !== storedNavToken) {
           var lastValidUrlForToken = sessionStorage.getItem(lastValidPageKey);
           if (lastValidUrlForToken) {
@@ -178,7 +193,9 @@
       var lastValidUrl = sessionStorage.getItem(lastValidPageKey);
       var allowNextLoad = sessionStorage.getItem(allowNextLoadKey) === '1';
 
-      if (allowNextLoad) {
+      if (systemPage) {
+        // System-rendered page: never redirect, never record as the last form page.
+      } else if (allowNextLoad) {
         sessionStorage.removeItem(allowNextLoadKey);
       } else if (lastValidUrl) {
         var lastValidPage = new URL(lastValidUrl, window.location.href);
@@ -192,12 +209,14 @@
         }
       }
 
-      if (!currentUrl.searchParams.get('tabId')) {
-        currentUrl.searchParams.set('tabId', getTabId());
-        window.history.replaceState(null, '', currentUrl.toString());
-      }
+      if (!systemPage) {
+        if (!currentUrl.searchParams.get('tabId')) {
+          currentUrl.searchParams.set('tabId', getTabId());
+          window.history.replaceState(null, '', currentUrl.toString());
+        }
 
-      sessionStorage.setItem(lastValidPageKey, currentUrl.href);
+        sessionStorage.setItem(lastValidPageKey, currentUrl.href);
+      }
 
       function markAppNavigation(url) {
         if (!isAppPageUrl(url)) return;

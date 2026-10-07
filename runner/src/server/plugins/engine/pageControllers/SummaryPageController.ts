@@ -121,11 +121,17 @@ export class SummaryPageController extends PageController {
                 viewModel,
                 state
             );
-            if (missingFields && missingFields?.length > 0) {
+            // A mandatory field that lives on the summary page itself cannot be
+            // fixed by redirecting back to the summary page - doing so loops
+            // forever (302 to the same URL), so only redirect to other pages.
+            const missingFieldsElsewhere = missingFields?.filter(
+                (field) => field.path !== this.path
+            );
+            if (missingFieldsElsewhere && missingFieldsElsewhere.length > 0) {
                 return redirectTo(
                     request,
                     h,
-                    `/${model.basePath}${missingFields[0].path}`
+                    `/${model.basePath}${missingFieldsElsewhere[0].path}`
                 );
             }
 
