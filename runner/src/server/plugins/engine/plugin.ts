@@ -272,14 +272,10 @@ export const plugin = {
                     ? session.get(`currentPage:${tabId}`)
                     : session.get("currentPage");
                 const requestedPage = request.params.path || "";
-                // const designerPreview = request.query?.fromDesigner === "preview";
-                const isAuthLandingRoute = request.path === "/user-information";
 
                 if (
                     currentPage &&
                     requestedPage !== currentPage &&
-                    // !designerPreview &&
-                    !isAuthLandingRoute &&
                     (trustedNavigation ||
                         (request.headers.referer &&
                             !request.headers.referer.includes(
