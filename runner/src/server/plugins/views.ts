@@ -42,9 +42,20 @@ const SYSTEM_PAGE_KINDS: Record<string, "terminal" | "info"> = {
     "/cookies": "info",
     "/help/cookies": "info",
     "/accessibility-statement": "info",
+    "/help/accessibility-statement": "info",
+    "/help/terms-and-conditions": "info",
+    // Landing page after the identity provider redirects back to the runner.
+    "/user-information": "info",
 };
 
 function getSystemPageKind(request: HapiRequest): string {
+    // Post-submission confirmation (and pay-error) page. Matched on the route
+    // pattern, not the URL, so a form page that is itself named "status"
+    // (served by /{id}/{path*}) stays guarded. The form is finished, so the
+    // last form page is dead: treat it as terminal.
+    if (request?.route?.path === "/{id}/status") {
+        return "terminal";
+    }
     // Error views (404/403/500) render at whatever URL failed, so
     // errorPages.ts flags them on request.app instead of by path.
     return (

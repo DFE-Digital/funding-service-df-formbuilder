@@ -128,10 +128,6 @@
         return url.protocol === 'http:' || url.protocol === 'https:';
       }
 
-      function isAuthLandingRoute(pathname) {
-        return pathname === '/user-information';
-      }
-
       function getTabId() {
         var existingTabId = sessionStorage.getItem(tabKey);
         if (!existingTabId) {
@@ -201,7 +197,6 @@
         var lastValidPage = new URL(lastValidUrl, window.location.href);
         if (
           currentUrl.href !== lastValidPage.href &&
-          !isAuthLandingRoute(currentUrl.pathname) &&
           (!currentUrl.searchParams.get('navToken') || currentUrl.searchParams.get('navToken') !== sessionStorage.getItem(navTokenKey))
         ) {
           window.location.replace(lastValidPage.href);
