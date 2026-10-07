@@ -6,7 +6,7 @@ server.
 ## Assumptions
 
 * You're using either a Linux based OS or MacOSX
-* Node.js 12.x LTS and Yarn are installed on your machine
+* Node.js 24.x LTS and Yarn are installed on your machine
 
 ## Pre-requisites
 

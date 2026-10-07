@@ -16,7 +16,7 @@ function setUpDomEnvironment() {
 
     global.window = window;
     global.document = window.document;
-    // Node 22 defines `navigator` as a getter-only global, so a plain
+    // Node 22+ defines `navigator` as a getter-only global, so a plain
     // assignment silently no-ops. Define the property instead.
     Object.defineProperty(global, "navigator", {
         value: {

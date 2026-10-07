@@ -5,7 +5,7 @@
   "main": "dist/module/index.js",
   "browser": "./dist/browser/index.js",
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "scripts": {
     "lint": "DISABLE_V8_COMPILE_CACHE=1 yarn run eslint .",
