@@ -1625,21 +1625,7 @@ export class PageControllerBase {
 
             const newState = this.getStateFromValidForm(formResult.value);
             const stateResult = this.validateState(newState);
-            // structuredClone throws "Cannot clone object of unsupported type"
-            // if the cached state holds a non-cloneable value (function,
-            // native-backed object). State is plain data, so fall back to a
-            // JSON copy rather than failing the whole POST with a 500.
-            let oldFullState;
-            try {
-                oldFullState = structuredClone(state);
-            } catch (cloneError: any) {
-                trackEvent(
-                    "2.10_pageController:makePostRouteHandler:structuredCloneFallback",
-                    { path: this.path, error: cloneError?.message },
-                    false
-                );
-                oldFullState = JSON.parse(JSON.stringify(state));
-            }
+            const oldFullState = structuredClone(state);
             const oldState = {
                 value: Object.keys(stateResult.value).reduce((acc, key) => {
                     acc[key] = state.formData[key];
