@@ -4,9 +4,11 @@ import { messages } from "server/plugins/engine/pageControllers/validationOption
 
 import {
     feedbackReturnInfoKey,
+    getIterationComponents,
     getNumberAfterLastHyphen,
     proceed,
     redirectTo,
+    withoutNavigationParams,
 } from "../helpers";
 import { ComponentCollection } from "../components/ComponentCollection";
 import {
@@ -447,6 +449,18 @@ export class PageControllerBase {
             let condName = false;
             const currentPath = this.path;
             let condGiven;
+            // A repeating section's state holds every iteration at once
+            // (moreDt, moreDt-2, moreDt-3). The lookup below searches state by
+            // the condition's plain field name, which would always find the
+            // first iteration's value and apply it to every iteration, so
+            // resolve this page's own iteration first.
+            let iterationState = {};
+            (this.model.sections ?? []).forEach((section: any) => {
+                iterationState = {
+                    ...iterationState,
+                    ...getIterationComponents(state[section.name], currentPath),
+                };
+            });
             this.components.formItems?.forEach((item) => {
                 nextPage.def.pages.find((x, index) => {
                     if (x.path === currentPath) {
@@ -477,10 +491,18 @@ export class PageControllerBase {
                                             let subValue = toBool(
                                                 sub.value.value
                                             );
-                                            // Look for the field value in the entire state
+                                            // Look for the field value in this
+                                            // page's own iteration first, then
+                                            // fall back to the entire state.
                                             condName = toBool(
-                                                state[sub.field.name] !==
-                                                    undefined
+                                                iterationState[
+                                                    sub.field.name
+                                                ] !== undefined
+                                                    ? iterationState[
+                                                          sub.field.name
+                                                      ]
+                                                    : state[sub.field.name] !==
+                                                      undefined
                                                     ? state[sub.field.name]
                                                     : Object.values(state).find(
                                                           (section) =>
@@ -936,7 +958,12 @@ export class PageControllerBase {
 
                 const progress = [...(state.progress || [])];
                 const { num } = request.query;
-                const currentPath = `/${this.model.basePath}${this.path}${request.url.search}`;
+                // Identify the page without the URL guard's tabId/navToken, which
+                // change on every navigation - otherwise the back-link history
+                // never recognises a return visit and Back ping-pongs.
+                const currentPath = `/${this.model.basePath}${
+                    this.path
+                }${withoutNavigationParams(request.url.search)}`;
                 const startPage = this.model.def.startPage;
                 const formData = this.getFormDataFromState(state, num - 1);
                 trackEvent(
@@ -2321,6 +2348,39 @@ export class PageControllerBase {
             const evaluateRoute = (stateToUse: any): string | null => {
                 let selectedRoute: string | null = null;
 
+                // Move each section's values up to the root so conditions
+                // can find them by their plain field name.
+                let sectionState = {};
+                const sections = this.model.sections ?? [];
+                sections.forEach((sec: { name: string }) => {
+                    sectionState = {
+                        ...sectionState,
+                        ...(stateToUse?.[sec.name] ?? {}),
+                    };
+                });
+
+                // Map this page's own iteration values (e.g. hmqWgQ-2) onto
+                // their plain field name so the right iteration is used.
+                const path = page.path;
+                let sectionComponents = {};
+                for (const compId in sectionState) {
+                    const compIdPart = compId.includes("-")
+                        ? Number(compId.split("-")[1])
+                        : null;
+
+                    if (
+                        compIdPart === getNumberAfterLastHyphen(path) ||
+                        (compIdPart === 1 &&
+                            getNumberAfterLastHyphen(path) === null)
+                    ) {
+                        const compName = compId.split("-")[0];
+                        sectionComponents = {
+                            ...sectionComponents,
+                            [compName]: sectionState[compId],
+                        };
+                    }
+                }
+
                 for (const next of page.next) {
                     if (!next.condition) {
                         selectedRoute = next.path;
@@ -2328,7 +2388,15 @@ export class PageControllerBase {
                     }
 
                     const cond = this.model.conditions[next.condition];
-                    if (cond && cond.fn && cond.fn({ ...stateToUse })) {
+                    if (
+                        cond &&
+                        cond.fn &&
+                        cond.fn({
+                            ...stateToUse,
+                            ...sectionState,
+                            ...sectionComponents,
+                        })
+                    ) {
                         selectedRoute = next.path;
                         break;
                     }
@@ -2598,12 +2666,15 @@ export class PageControllerBase {
                         }
                         if (yesNoFieldChangedValue === true) {
                             const conditionalRoutes = evaluateConditionalRoutes(
-                                this.pageDef,
+                                page,
                                 state,
                                 oldState || {},
                                 new Set<string>()
                             );
-                            if (conditionalRoutes.newRoute) {
+                            if (
+                                conditionalRoutes.changed &&
+                                conditionalRoutes.newRoute
+                            ) {
                                 // Navigate to new conditional route
                                 const urlWithReturn = `/${
                                     this.model.basePath || ""
@@ -2736,14 +2807,14 @@ export class PageControllerBase {
                 // pageGroup < currentGroup
                 notAllowedPaths.add(page.path);
             });
-            const matchingPages = this.model.pages.filter((page) => {
-                const pageSectionName = page.section?.name;
-
-                return (
-                    (!pageSectionName || pageSectionName === section?.name) &&
-                    !notAllowedPaths.has(page.path)
-                );
-            });
+            // All pages except those excluded above by the current section's
+            // iteration guard. `notAllowedPaths` only ever contains paths
+            // from `sectionPages` (the current section), so pages belonging
+            // to any other section - or no section at all - are unaffected
+            // by it and always included here.
+            const matchingPages = this.model.pages.filter(
+                (page) => !notAllowedPaths.has(page.path)
+            );
             // --------------------------------------------------
             // REQUIREMENT 2: Find result components depending on changed numbers
             // --------------------------------------------------
@@ -2866,6 +2937,14 @@ export class PageControllerBase {
                                         if (
                                             otherResultComp.name ===
                                             resultCompName
+                                        ) {
+                                            return false;
+                                        }
+                                        // Only the Result being checked
+                                        // counts. Matching any Result in the
+                                        // form pulled in every Result page.
+                                        if (
+                                            otherResultComp.name !== comp.name
                                         ) {
                                             return false;
                                         }
@@ -3013,6 +3092,15 @@ export class PageControllerBase {
                         const items = page.components?.items || [];
 
                         return items.some((item) => {
+                            // Content components (Para, Html, Details...) never
+                            // hold an answer, so an undefined value for one isn't
+                            // an unanswered question. Counting them flagged every
+                            // answered page carrying a paragraph, pulling the walk
+                            // onto pages with nothing to recalculate - where it
+                            // ended, skipping the Result pages after them.
+                            if (!item.isFormComponent) {
+                                return false;
+                            }
                             const componentName = item.name;
 
                             const hasUndefinedValue = (obj: any): boolean => {
@@ -3044,6 +3132,21 @@ export class PageControllerBase {
                     ...new Set([...sectionResultPages, ...missingAllowedPages]),
                 ]
                     .filter((path) => orderedPaths.includes(path))
+                    // A candidate page can be wrongly matched just because
+                    // another iteration reuses its component names.
+                    // Restrict to the same iteration, but not for pages
+                    // outside this section - they have no iteration.
+                    .filter((path) => {
+                        const candidatePage = this.model.pages.find(
+                            (p) => p.path === path
+                        );
+                        if (candidatePage?.section?.name !== section?.name) {
+                            return true;
+                        }
+                        return (
+                            (path.match(/-(\d+)$/)?.[1] ?? "1") === currentGroup
+                        );
+                    })
                     .sort(
                         (a, b) =>
                             orderedPaths.indexOf(a) - orderedPaths.indexOf(b)
