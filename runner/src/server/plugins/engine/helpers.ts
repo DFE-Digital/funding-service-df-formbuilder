@@ -657,7 +657,7 @@ const duplicatePage = (
                 duplicateIndex === 1
                     ? existingExpression
                     : existingExpression.replace(/\(([^)]+)\)/g, (match, p1) =>
-                          p1.includes("->")
+                          p1.includes("->") || /^-?\d+(\.\d+)?$/.test(p1)
                               ? match
                               : `(${p1}-${duplicateIndex})`
                       );
@@ -1179,6 +1179,54 @@ export const hasMatchingDynamicPages = (
         }
     }
     return true;
+};
+
+/**
+ * Returns a query string with the URL guard's navigation parameters removed.
+ *
+ * The URL guard stamps every navigation with a tabId and a freshly minted
+ * navToken, so no two visits to the same page share a query string. Anything
+ * that identifies a page by its URL - the back-link history in particular - has
+ * to ignore those two, otherwise a return visit is never recognised as one and
+ * the Back link ping-pongs between the last two pages. Other parameters (num,
+ * returnUrl) are kept because they genuinely distinguish one visit from another.
+ */
+export const withoutNavigationParams = (search: string) => {
+    const params = new URLSearchParams(search);
+    params.delete("tabId");
+    params.delete("navToken");
+    const query = params.toString();
+    return query ? `?${query}` : "";
+};
+
+/**
+ * Maps a repeating section's iteration-suffixed values onto their plain
+ * component names, for the iteration that `path` belongs to.
+ *
+ * A repeating section's state is flat: `moreDt` (iteration 1), `moreDt-2`,
+ * `moreDt-3` all sit side by side. A condition is written against the plain
+ * name `moreDt`, so evaluating it against the raw section state always finds
+ * iteration 1's value and applies it to every iteration. This narrows the
+ * state to the iteration in question before the condition is evaluated.
+ */
+export const getIterationComponents = (sectionState: any, path: string) => {
+    const iteration = getNumberAfterLastHyphen(path);
+    const iterationComponents = {};
+
+    for (const compId in sectionState ?? {}) {
+        const compIdPart = compId.includes("-")
+            ? Number(compId.split("-")[1])
+            : null;
+
+        if (
+            compIdPart === iteration ||
+            (compIdPart === 1 && iteration === null)
+        ) {
+            iterationComponents[compId.split("-")[0]] = sectionState[compId];
+        }
+    }
+
+    return iterationComponents;
 };
 
 export const getNumberAfterLastHyphen = (url) => {

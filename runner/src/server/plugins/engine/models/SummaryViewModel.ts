@@ -711,6 +711,18 @@ function Item(
         ...sectionState,
         model,
     };
+    if (component.type === "Filedownload" && component.options?.condition) {
+        const state = request.yar.get("state");
+        const conditionName = component.options.condition;
+        const conditions =
+            model.conditions?.[conditionName]?.value?.conditions || [];
+        conditions.forEach((condition) => {
+            const conditionKey = condition.field?.name;
+            if (state && conditionKey && state[conditionKey] !== undefined) {
+                tempsectionState[conditionKey] = state[conditionKey];
+            }
+        });
+    }
 
     const displayValue = component.getDisplayStringFromState(tempsectionState);
     let formattedDisplayValue = displayValue;
