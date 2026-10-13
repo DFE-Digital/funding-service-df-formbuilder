@@ -24,6 +24,9 @@ export default {
                         // processing the request
                         const statusCode = response.output.statusCode;
                         console.error(response.message);
+                        // Error views are system-rendered at whatever URL failed;
+                        // tell the client URL guard not to bounce them.
+                        (request.app as any).systemPage = "info";
                         // In the event of 404
                         // return the `404` view
                         if (statusCode === 404) {

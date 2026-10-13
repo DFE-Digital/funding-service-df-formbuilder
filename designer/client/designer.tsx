@@ -173,8 +173,7 @@ export default class Designer extends Component<Props, State> {
         }
         if (data != undefined) {
             previewUrl =
-                data.formStatus !== FormStatus.Published &&
-                data.formStatus !== FormStatus.Closed
+                data.formStatus !== FormStatus.Published
                     ? preprodPreviewUrl
                     : previewUrl;
         }

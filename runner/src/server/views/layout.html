@@ -96,6 +96,192 @@
   <!-- End Matomo Code -->
 
   <script src="{{ assetPath }}/accessible-autocomplete.min.js"></script>
+  <script>
+    (function () {
+      var tabKey = 'runner-tab-id';
+      var navTokenKey = 'runner-nav-token';
+      var lastValidPageKey = 'runner-last-valid-page';
+      var allowNextLoadKey = 'runner-nav-allow';
+
+      function generateToken() {
+        return (window.crypto && window.crypto.randomUUID)
+          ? window.crypto.randomUUID().replace(/-/g, '')
+          : String(Date.now()) + String(Math.random()).slice(2);
+      }
+
+      function isSameOrigin(url) {
+        try {
+          return url.origin === window.location.origin;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      // blob:, data:, mailto:, tel: and javascript: URLs can be same-origin but are
+      // not app pages. Appending tabId/navToken to a blob URL breaks it outright -
+      // the blob only resolves for the exact href handed out by createObjectURL - so
+      // only ever decorate real http(s) page URLs.
+      function isAppPageUrl(url) {
+        if (!url || !isSameOrigin(url)) {
+          return false;
+        }
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      }
+
+      function getTabId() {
+        var existingTabId = sessionStorage.getItem(tabKey);
+        if (!existingTabId) {
+          existingTabId = generateToken();
+          sessionStorage.setItem(tabKey, existingTabId);
+        }
+        return existingTabId;
+      }
+
+      function getNavigationToken() {
+        var existingToken = sessionStorage.getItem(navTokenKey);
+        if (!existingToken) {
+          existingToken = generateToken();
+          sessionStorage.setItem(navTokenKey, existingToken);
+        }
+        return existingToken;
+      }
+
+      function decorateAppUrl(url) {
+        if (!isAppPageUrl(url)) {
+          return url;
+        }
+
+        var nextToken = generateToken();
+        sessionStorage.setItem(navTokenKey, nextToken);
+        url.searchParams.set('tabId', getTabId());
+        url.searchParams.set('navToken', nextToken);
+        return url;
+      }
+
+      // Set by the server for pages the system sends the browser to (sign out,
+      // timeout, service unavailable, cookies, 404/403/500...). These loads are
+      // not a human editing the URL bar, so the URL guard must not redirect them:
+      //   'terminal' - session ended; forget the last form page so nothing can
+      //                bounce back to it afterwards.
+      //   'info'     - keep the last form page so the user can still return to it.
+      var systemPage = {{ systemPage | default('') | dump | safe }};
+
+      var currentUrl = new URL(window.location.href);
+      var currentNavToken = currentUrl.searchParams.get('navToken');
+      var storedNavToken = sessionStorage.getItem(navTokenKey);
+      if (systemPage) {
+        sessionStorage.removeItem(allowNextLoadKey);
+        if (systemPage === 'terminal') {
+          sessionStorage.removeItem(lastValidPageKey);
+          sessionStorage.removeItem(navTokenKey);
+          sessionStorage.removeItem(tabKey);
+        }
+      } else if (currentNavToken) {
+        if (storedNavToken && currentNavToken !== storedNavToken) {
+          var lastValidUrlForToken = sessionStorage.getItem(lastValidPageKey);
+          if (lastValidUrlForToken) {
+            window.location.replace(new URL(lastValidUrlForToken, window.location.href).toString());
+            return;
+          }
+        }
+        sessionStorage.setItem(navTokenKey, currentNavToken);
+      }
+      var lastValidUrl = sessionStorage.getItem(lastValidPageKey);
+      var allowNextLoad = sessionStorage.getItem(allowNextLoadKey) === '1';
+
+      if (systemPage) {
+        // System-rendered page: never redirect, never record as the last form page.
+      } else if (allowNextLoad) {
+        sessionStorage.removeItem(allowNextLoadKey);
+      } else if (lastValidUrl) {
+        var lastValidPage = new URL(lastValidUrl, window.location.href);
+        if (
+          currentUrl.href !== lastValidPage.href &&
+          (!currentUrl.searchParams.get('navToken') || currentUrl.searchParams.get('navToken') !== sessionStorage.getItem(navTokenKey))
+        ) {
+          window.location.replace(lastValidPage.href);
+          return;
+        }
+      }
+
+      if (!systemPage) {
+        if (!currentUrl.searchParams.get('tabId')) {
+          currentUrl.searchParams.set('tabId', getTabId());
+          window.history.replaceState(null, '', currentUrl.toString());
+        }
+
+        sessionStorage.setItem(lastValidPageKey, currentUrl.href);
+      }
+
+      function markAppNavigation(url) {
+        if (!isAppPageUrl(url)) return;
+
+        var targetUrl = decorateAppUrl(new URL(url.href || url, window.location.href));
+        if (!isAppPageUrl(targetUrl)) return;
+
+        sessionStorage.setItem(allowNextLoadKey, '1');
+        sessionStorage.setItem(lastValidPageKey, targetUrl.href);
+        return targetUrl;
+      }
+
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest ? event.target.closest('a') : null;
+        if (!link || link.target === '_blank' || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+
+        // File and PDF downloads click a generated anchor pointing at a blob URL.
+        // Leave those alone - rewriting the href invalidates the blob and the
+        // browser reports the download as a network failure.
+        if (link.hasAttribute('download')) {
+          return;
+        }
+
+        var linkUrl;
+        try {
+          linkUrl = new URL(link.href, window.location.href);
+        } catch (error) {
+          return;
+        }
+
+        // Fragment links ("Skip to main content", error-summary links) are
+        // same-document jumps. Minting a fresh navToken for one changes the query
+        // string, which turns the jump into a full page load - and because journey
+        // progress is keyed on the full path + query, the server then records a
+        // duplicate entry for the page you are already on, leaving the Back link
+        // pointing at the current page. Leave same-document links alone.
+        if (
+          linkUrl.pathname === window.location.pathname &&
+          linkUrl.search === window.location.search
+        ) {
+          return;
+        }
+
+        if (isAppPageUrl(linkUrl)) {
+          var markedUrl = markAppNavigation(linkUrl);
+          if (markedUrl) {
+            link.href = markedUrl.toString();
+          }
+        }
+      });
+
+      document.addEventListener('submit', function (event) {
+        var form = event.target;
+        var formMethod = (form && form.method ? form.method : 'get').toLowerCase();
+        if (!form || (formMethod !== 'post' && formMethod !== 'get')) {
+          return;
+        }
+
+        var formUrl = new URL(form.action || window.location.href, window.location.href);
+        if (isAppPageUrl(formUrl)) {
+          var completed = markAppNavigation(formUrl);
+          if (completed) {
+            form.action = completed.toString();
+          }
+        }
+      });
+    })();
+  </script>
 {% endblock %}
 
 {% block pageTitle %}
