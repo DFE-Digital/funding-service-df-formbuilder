@@ -24315,12 +24315,12 @@ __metadata:
   linkType: hard
 
 "proxy-addr@npm:~2.0.7":
-  version: 2.0.7
-  resolution: "proxy-addr@npm:2.0.7"
+  version: 2.0.8
+  resolution: "proxy-addr@npm:2.0.8"
   dependencies:
     forwarded: "npm:0.2.0"
     ipaddr.js: "npm:1.9.1"
-  checksum: c03f00d8f882b97636262d0ae7da0c502325474ea215f21b4f0664ad8f40f49d2071b52c18257d011338be3db21ca65a6e8cbc0d95fb23efc00516ce9ee37c27
+  checksum: 2310730b881f2b363fc66e466de924256b5cad65073fc6e27e7e5c2e703a747e2d6b714c08bab63a2e79a27643c7a1b2b7695427e6a2f760a2b5f907fa5681cf
   languageName: node
   linkType: hard
 
