@@ -440,7 +440,7 @@ This keeps the authoring UI and the runtime app aligned. If a form author create
 
 ### Prerequisites
 
-- Node 18+
+- Node 24+
 - Yarn
 - Docker and Docker Compose (for Redis and local stack)
 - optional: mkcert / local TLS setup depending on environment requirements
