@@ -20199,12 +20199,12 @@ __metadata:
   linkType: hard
 
 "launch-editor@npm:^2.6.0":
-  version: 2.11.1
-  resolution: "launch-editor@npm:2.11.1"
+  version: 2.14.2
+  resolution: "launch-editor@npm:2.14.2"
   dependencies:
     picocolors: "npm:^1.1.1"
-    shell-quote: "npm:^1.8.3"
-  checksum: 756193aa91151a16be844b155bcd00870fdb4d8bcb87b915951b5a6ea3fccd4c0a227a7cd6d3e3d02f97d6090843ed8eb849ffecc0c4cbf22d1984ec7ff702c8
+    shell-quote: "npm:^1.10.0"
+  checksum: cd7f739b5dcd21386aa928fba257a18ddf23e7d28cc065f53add0f524001946d3b6b1853f2625057e213172a1ad7ad520d570baecfb8cfd1bb64f7109eed3fe4
   languageName: node
   linkType: hard
 
@@ -26265,10 +26265,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shell-quote@npm:^1.8.3":
-  version: 1.8.3
-  resolution: "shell-quote@npm:1.8.3"
-  checksum: 7c883e9ab7c7a09a0f1e9fcbefdec0fc8499a88da09d316ec0c7cf059d4ce9c803075c082d0ddb84049bc30d6e3049107c689b6f67cd55474cdacf0c27da907f
+"shell-quote@npm:^1.10.0":
+  version: 1.12.0
+  resolution: "shell-quote@npm:1.12.0"
+  checksum: 31b0b83f1e776a7935956f8717d7d25ba2317b24d9f0f769347183212265e6f77ef2949e6e0df9a8f21bf10172df1cf19f1192d9b0ce9a5a346fe85270427ae2
   languageName: node
   linkType: hard
 
